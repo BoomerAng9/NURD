@@ -11,8 +11,11 @@ import Gallery from "@/pages/Gallery";
 import AdminDashboard from "@/pages/AdminDashboard";
 import Learning from "@/pages/Learning";
 import ProfileSettings from "@/pages/ProfileSettings";
+import JoinOurTeam from "@/pages/Join-Our-Team";
+import Cohorts from "@/pages/Cohorts";
 import AuthPage from "@/pages/auth-page";
 import { useEffect } from "react";
+import AuthGuard from "@/lib/auth-guard";
 
 function Router() {
   const [location] = useLocation();
@@ -30,9 +33,23 @@ function Router() {
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/trainers" component={Trainers} />
       <Route path="/gallery" component={Gallery} />
-      <Route path="/admin" component={AdminDashboard} />
+      <Route path="/admin">
+        {() => (
+          <AuthGuard allowedRoles={['admin']}>
+            <AdminDashboard />
+          </AuthGuard>
+        )}
+      </Route>
       <Route path="/learning" component={Learning} />
+      <Route path="/cohorts" component={Cohorts} />
       <Route path="/profile/settings" component={ProfileSettings} />
+      <Route path="/join-our-team">
+        {() => (
+          <AuthGuard allowedRoles={['admin', 'freelancer']}>
+            <JoinOurTeam />
+          </AuthGuard>
+        )}
+      </Route>
       <Route component={NotFound} />
     </Switch>
   );
