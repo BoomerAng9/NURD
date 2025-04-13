@@ -1,8 +1,11 @@
 import React from 'react';
+import greenLogo from '@assets/2C98236B-53D8-48A4-9DB3-E47C7540F061.png';
+import blueLogo from '@assets/D99F2978-B63A-4C6D-965A-FF2112479490.png';
+import camoLogo from '@assets/7A376D52-0A97-45E2-AA29-8DE667BD2CD3.png';
 
 type NurdLogoProps = {
   variant?: 'default' | 'large' | 'small';
-  color?: 'green' | 'blue' | 'purple' | 'white';
+  color?: 'green' | 'blue' | 'camo' | 'white';
   showTagline?: boolean;
   className?: string;
 };
@@ -13,45 +16,35 @@ const NurdLogo: React.FC<NurdLogoProps> = ({
   showTagline = false,
   className = ''
 }) => {
-  // Color mapping
-  const colorMap = {
-    green: 'text-[#22C55E]',
-    blue: 'text-[#3B82F6]',
-    purple: 'text-[#8B5CF6]',
-    white: 'text-white',
+  // Logo mapping
+  const logoMap = {
+    green: greenLogo,
+    blue: blueLogo,
+    camo: camoLogo,
+    white: greenLogo, // Default to green for white (could create a white version)
   };
 
   // Size mapping
   const sizeMap = {
-    small: 'text-xl',
-    default: 'text-2xl',
-    large: 'text-4xl',
-  };
-
-  // Drip color mapping
-  const dripColorMap = {
-    green: 'bg-[#F97316]', // Orange drip for green logo
-    blue: 'bg-[#F97316]',  // Orange drip for blue logo
-    purple: 'bg-[#22C55E]', // Green drip for purple logo
-    white: 'bg-[#F97316]',  // Orange drip for white logo
+    small: 'h-6 md:h-8',
+    default: 'h-8 md:h-10',
+    large: 'h-12 md:h-16',
   };
 
   return (
     <div className={`relative ${className}`}>
       <div className="relative">
-        <span className={`font-accent font-bold tracking-tight ${colorMap[color]} ${sizeMap[variant]}`}>
-          NURD
-        </span>
-        <span className="w-2 h-2 bg-[#22C55E] rounded-full ml-1 mt-0 inline-block animate-pulse-slow"></span>
+        <img 
+          src={logoMap[color]} 
+          alt="NURD Logo" 
+          className={`${sizeMap[variant]} w-auto object-contain`}
+        />
         
         {showTagline && (
-          <div className="text-sm text-gray-400 mt-1 font-normal">
+          <div className="text-sm text-gray-400 mt-2 font-normal">
             Naturally Unstoppable Resourceful Dreamers
           </div>
         )}
-      </div>
-      <div className="absolute -bottom-3 left-0 w-full">
-        <div className={`h-1.5 ${dripColorMap[color]} rounded-full w-full animate-drip`}></div>
       </div>
     </div>
   );
