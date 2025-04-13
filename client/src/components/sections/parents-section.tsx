@@ -23,8 +23,8 @@ const ParentsSection: React.FC = () => {
                 <p className="text-gray-600">Transforming creativity into tangible skills for the future.</p>
               </div>
             </div>
-            <Link href="/register">
-              <a className="btn-nurd inline-block">Schedule a Parent Info Session</a>
+            <Link href="/register" className="btn-nurd inline-block">
+              Schedule a Parent Info Session
             </Link>
           </div>
           <div className="md:w-1/2 order-1 md:order-2 relative">

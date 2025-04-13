@@ -4,11 +4,13 @@ import { motion } from 'framer-motion';
 import Navbar from '@/components/ui/navbar';
 import Footer from '@/components/sections/footer';
 import ProfileEditor from '@/components/profile/profile-editor';
+import ThemeCustomizer, { ThemeFormValues } from '@/components/profile/theme-customizer';
 import { useSupabase } from '@/components/ui/supabase-provider';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AlertCircle, ArrowLeft } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AlertCircle, ArrowLeft, User, Palette } from 'lucide-react';
 
 type ProfileData = {
   displayName: string;
