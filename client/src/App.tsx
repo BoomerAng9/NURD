@@ -10,6 +10,7 @@ import Trainers from "@/pages/Trainers";
 import Gallery from "@/pages/Gallery";
 import AdminDashboard from "@/pages/AdminDashboard";
 import Learning from "@/pages/Learning";
+import ProfileSettings from "@/pages/ProfileSettings";
 import AuthPage from "@/pages/auth-page";
 import { useEffect } from "react";
 
@@ -31,6 +32,7 @@ function Router() {
       <Route path="/gallery" component={Gallery} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/learning" component={Learning} />
+      <Route path="/profile/settings" component={ProfileSettings} />
       <Route component={NotFound} />
     </Switch>
   );
