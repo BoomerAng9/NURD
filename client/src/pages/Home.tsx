@@ -6,6 +6,7 @@ import WhatIsNurdSection from '@/components/sections/what-is-nurd-section';
 import MethodologySection from '@/components/sections/methodology-section';
 import WhyChooseSection from '@/components/sections/why-choose-section';
 import SummerExperienceSection from '@/components/sections/summer-experience-section';
+import VibeCodingSection from '@/components/sections/vibe-coding-section';
 import RegistrationSection from '@/components/sections/registration-section';
 import Footer from '@/components/sections/footer';
 
@@ -19,6 +20,7 @@ const Home: React.FC = () => {
       <MethodologySection />
       <WhyChooseSection />
       <SummerExperienceSection />
+      <VibeCodingSection />
       <RegistrationSection />
       <Footer />
     </div>
