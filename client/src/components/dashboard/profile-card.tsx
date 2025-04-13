@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'wouter';
 import { User } from '@shared/schema';
 
 interface ProfileCardProps {
@@ -70,9 +71,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
         </div>
         
         <div className="mt-6">
-          <button className="w-full text-center py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
-            Edit Profile
-          </button>
+          <Link href="/profile/settings">
+            <button className="w-full text-center py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
+              Edit Profile
+            </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -7,9 +7,11 @@ import Footer from '@/components/sections/footer';
 import WelcomeBanner from '@/components/dashboard/welcome-banner';
 import ProfileCard from '@/components/dashboard/profile-card';
 import ActivityCard from '@/components/dashboard/activity-card';
+import AnimatedMenu from '@/components/ui/animated-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSupabase } from '@/components/ui/supabase-provider';
+import { User } from '@shared/schema';
 
 // Mock activities until we have a proper API endpoint
 const activities = [
@@ -60,7 +62,7 @@ const Dashboard: React.FC = () => {
   }, []);
 
   // Fetch user data from API
-  const { data: userData, isLoading, error } = useQuery({
+  const { data: userData, isLoading, error } = useQuery<User>({
     queryKey: ['/api/user/' + (username || 'undefined')],
     enabled: !!username
   });
@@ -86,6 +88,9 @@ const Dashboard: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
+      
+      {/* Animated Side Menu */}
+      <AnimatedMenu className="hidden md:block" />
       
       <div className="flex-grow pt-20">
         <div className="container mx-auto px-4 py-8">
