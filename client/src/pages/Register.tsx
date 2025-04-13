@@ -64,7 +64,21 @@ const Register: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Register user with Express backend
+      // Step 1: Register with Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: `${formData.username}@nurd.example.com`, // Creating email from username for auth
+        password: formData.password,
+        options: {
+          data: {
+            first_name: formData.first_name,
+            username: formData.username
+          }
+        }
+      });
+
+      if (authError) throw new Error(authError.message);
+
+      // Step 2: Register user with Express backend to store in PostgreSQL
       const response = await apiRequest('POST', '/api/register', {
         first_name: formData.first_name,
         age: parseInt(formData.age),
@@ -76,31 +90,33 @@ const Register: React.FC = () => {
         password: formData.password
       });
 
-      if (response.ok) {
-        // Also add to Supabase for the demo
-        const { error: supabaseError } = await supabase
-          .from('users')
-          .insert([{
-            first_name: formData.first_name,
-            age: parseInt(formData.age),
-            grade_level: formData.grade_level,
-            user_type: formData.user_type,
-            gender: formData.gender,
-            path_choice: formData.path_choice || null
-          }]);
-
-        if (supabaseError) throw new Error(supabaseError.message);
-        
-        toast({
-          title: "Registration Successful!",
-          description: "You're now part of the NURD community!",
-        });
-        
-        // Redirect to dashboard
-        setLocation('/dashboard');
-      } else {
-        throw new Error('Registration failed');
+      if (!response.ok) {
+        throw new Error('Registration failed in database');
       }
+      
+      // Step 3: Also add user data to Supabase 'users' table for additional info
+      const { error: supabaseError } = await supabase
+        .from('users')
+        .insert([{
+          auth_id: authData.user?.id, // Link to auth user
+          first_name: formData.first_name,
+          age: parseInt(formData.age),
+          grade_level: formData.grade_level,
+          user_type: formData.user_type,
+          gender: formData.gender,
+          path_choice: formData.path_choice || null,
+          username: formData.username
+        }]);
+
+      if (supabaseError) throw new Error(supabaseError.message);
+      
+      toast({
+        title: "Registration Successful!",
+        description: "You're now part of the NURD community!",
+      });
+      
+      // Redirect to dashboard
+      setLocation('/dashboard');
     } catch (error) {
       console.error('Registration error:', error);
       toast({
