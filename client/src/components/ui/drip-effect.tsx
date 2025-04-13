@@ -11,12 +11,12 @@ const DripEffect: React.FC<DripEffectProps> = ({
   count = 6,
   className = ''
 }) => {
-  // Color mapping
+  // Color mapping with NURD colors
   const colorMap = {
-    green: '#22C55E',
-    blue: '#3B82F6',
-    purple: '#8B5CF6',
-    orange: '#F97316',
+    green: '#3DE053',
+    blue: '#3EC6E0',
+    purple: '#6A2FF8',
+    orange: '#FF8A00',
   };
 
   // Generate random position, size and delay for each drip
