@@ -265,8 +265,6 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
                                 value="system"
                                 id="appearance-system"
                                 className="sr-only"
-                                checked={field.value === 'system'}
-                                onCheckedChange={() => field.onChange('system')}
                               />
                             </FormControl>
                             <FormLabel

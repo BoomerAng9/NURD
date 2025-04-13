@@ -44,6 +44,7 @@ const ProfileSettings: React.FC = () => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("profile");
   
   // Sample profile data (in a real app, this would come from the database)
   const [profileData, setProfileData] = useState<ProfileData>({
@@ -70,6 +71,14 @@ const ProfileSettings: React.FC = () => {
     showOnlineStatus: true,
     showProgressInGallery: true,
     allowTagging: true,
+  });
+  
+  const [themeSettings, setThemeSettings] = useState<ThemeFormValues>({
+    colorScheme: 'default' as const,
+    appearance: 'system' as const,
+    radius: 0.5,
+    animations: true,
+    hapticFeedback: true,
   });
   
   useEffect(() => {
@@ -114,6 +123,16 @@ const ProfileSettings: React.FC = () => {
     toast({
       title: "Settings saved",
       description: "Your profile settings have been updated",
+    });
+  };
+  
+  const handleSaveThemeSettings = (values: ThemeFormValues) => {
+    setThemeSettings(prev => ({ ...prev, ...values }));
+    
+    // This simulates saving to a database
+    toast({
+      title: "Theme updated",
+      description: "Your dashboard theme settings have been saved",
     });
   };
   
@@ -187,12 +206,34 @@ const ProfileSettings: React.FC = () => {
             <h1 className="text-3xl font-bold">Profile Settings</h1>
           </div>
           
-          <ProfileEditor 
-            initialProfileData={profileData}
-            initialNotificationSettings={notificationSettings}
-            initialPrivacySettings={privacySettings}
-            onSave={handleSaveSettings}
-          />
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-8">
+            <TabsList className="grid grid-cols-2 w-full max-w-md mx-auto">
+              <TabsTrigger value="profile" className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                <span>Profile</span>
+              </TabsTrigger>
+              <TabsTrigger value="theme" className="flex items-center gap-2">
+                <Palette className="h-4 w-4" />
+                <span>Theme</span>
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="profile" className="space-y-6">
+              <ProfileEditor 
+                initialProfileData={profileData}
+                initialNotificationSettings={notificationSettings}
+                initialPrivacySettings={privacySettings}
+                onSave={handleSaveSettings}
+              />
+            </TabsContent>
+            
+            <TabsContent value="theme" className="space-y-6">
+              <ThemeCustomizer
+                initialTheme={themeSettings}
+                onSave={handleSaveThemeSettings}
+              />
+            </TabsContent>
+          </Tabs>
         </div>
       </motion.div>
       

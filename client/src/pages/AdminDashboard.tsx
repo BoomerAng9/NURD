@@ -483,19 +483,489 @@ const AdminDashboard = () => {
               
               {currentTab === 'settings' && (
                 <div className="space-y-6">
-                  <h1 className="text-3xl font-bold">Settings</h1>
+                  <h1 className="text-3xl font-bold">Platform Settings</h1>
                   
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="text-center p-12">
-                        <Settings className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                        <h3 className="text-lg font-medium">System Settings Coming Soon</h3>
-                        <p className="text-gray-500 mt-2">
-                          This section will allow you to configure system preferences and manage user permissions.
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <Tabs defaultValue="general" className="w-full">
+                    <TabsList className="grid w-full grid-cols-4 mb-8">
+                      <TabsTrigger value="general">General</TabsTrigger>
+                      <TabsTrigger value="appearance">Appearance</TabsTrigger>
+                      <TabsTrigger value="users">User Management</TabsTrigger>
+                      <TabsTrigger value="advanced">Advanced</TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="general" className="space-y-4">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Platform Configuration</CardTitle>
+                          <CardDescription>
+                            Customize core settings for the NURD platform
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                              <label htmlFor="platform-name" className="text-sm font-medium">
+                                Platform Name
+                              </label>
+                              <input
+                                id="platform-name"
+                                type="text"
+                                className="w-full p-2 border rounded-md"
+                                defaultValue="NURD Summer Initiative"
+                              />
+                              <p className="text-sm text-gray-500">
+                                The name displayed throughout the platform
+                              </p>
+                            </div>
+                            <div className="space-y-2">
+                              <label htmlFor="platform-email" className="text-sm font-medium">
+                                Contact Email
+                              </label>
+                              <input
+                                id="platform-email"
+                                type="email"
+                                className="w-full p-2 border rounded-md"
+                                defaultValue="nurds@achievemor.io"
+                              />
+                              <p className="text-sm text-gray-500">
+                                Primary email for notifications and support
+                              </p>
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">
+                              Platform Features
+                            </label>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="flex items-center space-x-2">
+                                <input
+                                  id="feature-gallery"
+                                  type="checkbox"
+                                  className="h-4 w-4"
+                                  defaultChecked
+                                />
+                                <label htmlFor="feature-gallery" className="text-sm">
+                                  Enable Community Gallery
+                                </label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <input
+                                  id="feature-messaging"
+                                  type="checkbox"
+                                  className="h-4 w-4"
+                                  defaultChecked
+                                />
+                                <label htmlFor="feature-messaging" className="text-sm">
+                                  Enable Messaging System
+                                </label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <input
+                                  id="feature-achievements"
+                                  type="checkbox"
+                                  className="h-4 w-4"
+                                  defaultChecked
+                                />
+                                <label htmlFor="feature-achievements" className="text-sm">
+                                  Enable Achievements & Badges
+                                </label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <input
+                                  id="feature-meetings"
+                                  type="checkbox"
+                                  className="h-4 w-4"
+                                  defaultChecked
+                                />
+                                <label htmlFor="feature-meetings" className="text-sm">
+                                  Enable Meeting Spaces
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                        <CardFooter>
+                          <Button 
+                            className="ml-auto"
+                            onClick={() => {
+                              toast({
+                                title: "Settings saved",
+                                description: "Platform settings have been updated successfully.",
+                              });
+                            }}
+                          >
+                            Save Changes
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                      
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Program Schedule</CardTitle>
+                          <CardDescription>
+                            Configure program dates and availability
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                              <label htmlFor="summer-start" className="text-sm font-medium">
+                                Summer Program Start Date
+                              </label>
+                              <input
+                                id="summer-start"
+                                type="date"
+                                className="w-full p-2 border rounded-md"
+                                defaultValue="2025-06-15"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <label htmlFor="summer-end" className="text-sm font-medium">
+                                Summer Program End Date
+                              </label>
+                              <input
+                                id="summer-end"
+                                type="date"
+                                className="w-full p-2 border rounded-md"
+                                defaultValue="2025-08-10"
+                              />
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">
+                              Registration Status
+                            </label>
+                            <div className="grid grid-cols-1 gap-4">
+                              <div className="flex items-center space-x-2">
+                                <input
+                                  id="registration-open"
+                                  type="radio"
+                                  name="registration"
+                                  className="h-4 w-4"
+                                  defaultChecked
+                                />
+                                <label htmlFor="registration-open" className="text-sm">
+                                  Open for Registration
+                                </label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <input
+                                  id="registration-waitlist"
+                                  type="radio"
+                                  name="registration"
+                                  className="h-4 w-4"
+                                />
+                                <label htmlFor="registration-waitlist" className="text-sm">
+                                  Waitlist Only
+                                </label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <input
+                                  id="registration-closed"
+                                  type="radio"
+                                  name="registration"
+                                  className="h-4 w-4"
+                                />
+                                <label htmlFor="registration-closed" className="text-sm">
+                                  Registration Closed
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                        <CardFooter>
+                          <Button 
+                            className="ml-auto"
+                            onClick={() => {
+                              toast({
+                                title: "Schedule updated",
+                                description: "Program schedule has been updated successfully.",
+                              });
+                            }}
+                          >
+                            Save Schedule
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    </TabsContent>
+                    
+                    <TabsContent value="appearance" className="space-y-4">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Brand Customization</CardTitle>
+                          <CardDescription>
+                            Personalize the look and feel of the NURD platform
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-4">
+                              <label className="text-sm font-medium">
+                                Primary Color Theme
+                              </label>
+                              <div className="grid grid-cols-4 gap-3">
+                                <div className="cursor-pointer">
+                                  <div className="h-12 w-full rounded-md bg-gradient-to-br from-[#23c55e] to-[#16a34a] border-2 border-primary"></div>
+                                  <p className="text-xs mt-1 text-center">Green</p>
+                                </div>
+                                <div className="cursor-pointer">
+                                  <div className="h-12 w-full rounded-md bg-gradient-to-br from-[#3b82f6] to-[#1e40af]"></div>
+                                  <p className="text-xs mt-1 text-center">Blue</p>
+                                </div>
+                                <div className="cursor-pointer">
+                                  <div className="h-12 w-full rounded-md bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9]"></div>
+                                  <p className="text-xs mt-1 text-center">Purple</p>
+                                </div>
+                                <div className="cursor-pointer">
+                                  <div className="h-12 w-full rounded-md bg-gradient-to-br from-[#f97316] to-[#ea580c]"></div>
+                                  <p className="text-xs mt-1 text-center">Orange</p>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="space-y-4">
+                              <label className="text-sm font-medium">
+                                Default Appearance
+                              </label>
+                              <div className="grid grid-cols-3 gap-3">
+                                <div className="cursor-pointer">
+                                  <div className="h-12 w-full rounded-md bg-white border border-gray-200 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                                    </svg>
+                                  </div>
+                                  <p className="text-xs mt-1 text-center">Light</p>
+                                </div>
+                                <div className="cursor-pointer">
+                                  <div className="h-12 w-full rounded-md bg-gray-900 border border-gray-700 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                                    </svg>
+                                  </div>
+                                  <p className="text-xs mt-1 text-center">Dark</p>
+                                </div>
+                                <div className="cursor-pointer">
+                                  <div className="h-12 w-full rounded-md bg-gradient-to-r from-white to-gray-900 border border-gray-200 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                  </div>
+                                  <p className="text-xs mt-1 text-center">System</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">
+                              Upload Custom Logo
+                            </label>
+                            <div className="flex items-center justify-center h-32 border-2 border-dashed border-gray-300 rounded-md">
+                              <div className="text-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <p className="mt-1 text-sm text-gray-600">
+                                  Drag and drop or click to upload logo
+                                </p>
+                                <p className="mt-1 text-xs text-gray-500">
+                                  PNG, JPG, SVG up to 2MB
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                        <CardFooter>
+                          <Button 
+                            className="ml-auto"
+                            onClick={() => {
+                              toast({
+                                title: "Appearance updated",
+                                description: "Brand customization settings have been saved.",
+                              });
+                            }}
+                          >
+                            Save Appearance
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    </TabsContent>
+                    
+                    <TabsContent value="users" className="space-y-4">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>User Management</CardTitle>
+                          <CardDescription>
+                            Configure permissions and user roles
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Role</TableHead>
+                                <TableHead>Description</TableHead>
+                                <TableHead>Permissions</TableHead>
+                                <TableHead>Actions</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell className="font-medium">Admin</TableCell>
+                                <TableCell>Full system access</TableCell>
+                                <TableCell>All permissions</TableCell>
+                                <TableCell>
+                                  <Button variant="outline" size="sm">Edit</Button>
+                                </TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell className="font-medium">Trainer</TableCell>
+                                <TableCell>Can manage courses and students</TableCell>
+                                <TableCell>Create/edit courses, grade work</TableCell>
+                                <TableCell>
+                                  <Button variant="outline" size="sm">Edit</Button>
+                                </TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell className="font-medium">Student</TableCell>
+                                <TableCell>Can access learning content</TableCell>
+                                <TableCell>View courses, submit work</TableCell>
+                                <TableCell>
+                                  <Button variant="outline" size="sm">Edit</Button>
+                                </TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell className="font-medium">Parent</TableCell>
+                                <TableCell>Can monitor student progress</TableCell>
+                                <TableCell>View progress, messages</TableCell>
+                                <TableCell>
+                                  <Button variant="outline" size="sm">Edit</Button>
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </CardContent>
+                        <CardFooter className="justify-between">
+                          <Button variant="outline">
+                            Add Custom Role
+                          </Button>
+                          <Button 
+                            onClick={() => {
+                              toast({
+                                title: "Roles saved",
+                                description: "User roles and permissions have been updated.",
+                              });
+                            }}
+                          >
+                            Save Changes
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    </TabsContent>
+                    
+                    <TabsContent value="advanced" className="space-y-4">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Advanced Settings</CardTitle>
+                          <CardDescription>
+                            Configure system-level settings and integrations
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">
+                              External Integrations
+                            </label>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="flex items-center space-x-2">
+                                <input
+                                  id="zoom-integration"
+                                  type="checkbox"
+                                  className="h-4 w-4"
+                                  defaultChecked
+                                />
+                                <label htmlFor="zoom-integration" className="text-sm">
+                                  Zoom Video Conferencing
+                                </label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <input
+                                  id="github-integration"
+                                  type="checkbox"
+                                  className="h-4 w-4"
+                                  defaultChecked
+                                />
+                                <label htmlFor="github-integration" className="text-sm">
+                                  GitHub Classroom
+                                </label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <input
+                                  id="discord-integration"
+                                  type="checkbox"
+                                  className="h-4 w-4"
+                                />
+                                <label htmlFor="discord-integration" className="text-sm">
+                                  Discord Community
+                                </label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <input
+                                  id="google-integration"
+                                  type="checkbox"
+                                  className="h-4 w-4"
+                                />
+                                <label htmlFor="google-integration" className="text-sm">
+                                  Google Workspace
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">
+                              System Maintenance
+                            </label>
+                            <div className="grid grid-cols-1 gap-4">
+                              <div className="flex justify-between items-center p-4 border rounded-md">
+                                <div>
+                                  <h4 className="font-medium">Database Backup</h4>
+                                  <p className="text-sm text-gray-500">Last backup: April 10, 2025</p>
+                                </div>
+                                <Button variant="outline" size="sm">
+                                  Run Backup
+                                </Button>
+                              </div>
+                              <div className="flex justify-between items-center p-4 border rounded-md">
+                                <div>
+                                  <h4 className="font-medium">Cache Management</h4>
+                                  <p className="text-sm text-gray-500">Clear system caches</p>
+                                </div>
+                                <Button variant="outline" size="sm">
+                                  Clear Cache
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                        <CardFooter>
+                          <Button 
+                            className="ml-auto"
+                            onClick={() => {
+                              toast({
+                                title: "Advanced settings saved",
+                                description: "System configuration has been updated successfully.",
+                              });
+                            }}
+                          >
+                            Save Configuration
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    </TabsContent>
+                  </Tabs>
                 </div>
               )}
             </div>
