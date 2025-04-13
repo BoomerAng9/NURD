@@ -85,7 +85,7 @@ const SummerExperienceSection: React.FC = () => {
         
         <div className="text-center mt-12">
           <Link href="/register">
-            <a className="btn-nurd text-lg">Reserve Your Spot</a>
+            <div className="btn-nurd text-lg inline-block cursor-pointer">Reserve Your Spot</div>
           </Link>
         </div>
       </div>
