@@ -8,6 +8,7 @@ import Register from "@/pages/Register";
 import Dashboard from "@/pages/Dashboard";
 import Trainers from "@/pages/Trainers";
 import Gallery from "@/pages/Gallery";
+import AuthPage from "@/pages/auth-page";
 import { useEffect } from "react";
 
 function Router() {
@@ -22,6 +23,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/register" component={Register} />
+      <Route path="/auth" component={AuthPage} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/trainers" component={Trainers} />
       <Route path="/gallery" component={Gallery} />

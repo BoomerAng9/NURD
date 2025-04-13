@@ -86,9 +86,18 @@ const Navbar = () => {
               </Link>
             </>
           ) : (
-            <Link href="/register">
-              <div className="btn-nurd text-sm cursor-pointer">Join the Summer Initiative</div>
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link href="/auth">
+                <div className={`font-medium ${
+                  scrolled ? 'text-[#121645] hover:text-[#6A2FF8]' : 'text-white hover:text-[#3EC6E0]'
+                } transition duration-300 cursor-pointer`}>
+                  Login
+                </div>
+              </Link>
+              <Link href="/register">
+                <div className="btn-nurd text-sm cursor-pointer">Join the Summer Initiative</div>
+              </Link>
+            </div>
           )}
         </div>
         
@@ -137,9 +146,16 @@ const Navbar = () => {
               </Link>
             </>
           ) : (
-            <Link href="/register">
-              <div className="block btn-nurd text-center mt-6 cursor-pointer">Join the Summer Initiative</div>
-            </Link>
+            <>
+              <Link href="/auth">
+                <div className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300">
+                  Login
+                </div>
+              </Link>
+              <Link href="/register">
+                <div className="block btn-nurd text-center mt-6 cursor-pointer">Join the Summer Initiative</div>
+              </Link>
+            </>
           )}
         </div>
       </div>
