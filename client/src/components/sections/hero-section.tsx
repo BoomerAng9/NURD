@@ -28,9 +28,9 @@ const HeroSection: React.FC = () => {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link href="/register">
-                <a className="btn-nurd text-center text-lg">
+                <div className="btn-nurd text-center text-lg cursor-pointer">
                   Join the Summer Initiative
-                </a>
+                </div>
               </Link>
               <a href="#about" className="py-3 px-6 rounded-lg border-2 border-[#FF8A00] text-[#FF8A00] font-heading font-bold hover:bg-[#FF8A00] hover:text-white transition-all duration-300 text-lg">
                 Learn More
