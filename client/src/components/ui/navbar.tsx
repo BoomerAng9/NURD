@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import NurdLogo from './nurd-logo';
+import { NotificationCenter } from './notification-center';
+import { useSupabase } from './supabase-provider';
 import greenLogo from '@assets/2C98236B-53D8-48A4-9DB3-E47C7540F061.png';
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [location] = useLocation();
+  const { user } = useSupabase();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,9 +61,19 @@ const Navbar = () => {
           } transition duration-300`}>
             Experience
           </a>
-          <Link href="/register">
-            <div className="btn-nurd text-sm cursor-pointer">Join the Summer Initiative</div>
-          </Link>
+          
+          {user ? (
+            <>
+              <NotificationCenter className={scrolled ? 'text-[#121645]' : 'text-white'} />
+              <Link href="/dashboard">
+                <div className="btn-nurd text-sm cursor-pointer">My Dashboard</div>
+              </Link>
+            </>
+          ) : (
+            <Link href="/register">
+              <div className="btn-nurd text-sm cursor-pointer">Join the Summer Initiative</div>
+            </Link>
+          )}
         </div>
         
         <button 
@@ -86,9 +99,22 @@ const Navbar = () => {
           <a href="/#experience" className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300">
             Experience
           </a>
-          <Link href="/register">
-            <div className="block btn-nurd text-center mt-6 cursor-pointer">Join the Summer Initiative</div>
-          </Link>
+          
+          {user ? (
+            <>
+              <div className="flex items-center justify-between my-4 py-4 border-t border-b border-gray-100">
+                <span className="font-medium text-[#121645]">Notifications</span>
+                <NotificationCenter />
+              </div>
+              <Link href="/dashboard">
+                <div className="block btn-nurd text-center mt-4 cursor-pointer">My Dashboard</div>
+              </Link>
+            </>
+          ) : (
+            <Link href="/register">
+              <div className="block btn-nurd text-center mt-6 cursor-pointer">Join the Summer Initiative</div>
+            </Link>
+          )}
         </div>
       </div>
     </nav>

@@ -89,7 +89,7 @@ const Footer: React.FC = () => {
         </div>
         
         <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
-          <p>&copy; {new Date().getFullYear()} NURD Summer Initiative by ACHIEVEMOR, Inc. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} NURD by: ACHIEVEMOR, Inc. All rights reserved.</p>
           <div className="mt-2 space-x-4">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
