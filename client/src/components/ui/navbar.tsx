@@ -46,14 +46,13 @@ const Navbar = () => {
         </Link>
         
         <div className="hidden md:flex space-x-6 items-center">
-          <div 
-            onClick={() => window.location.href = '/#about'} 
-            className={`font-medium ${
+          <Link href="/about">
+            <div className={`font-medium ${
               scrolled ? 'text-[#121645] hover:text-[#6A2FF8]' : 'text-white hover:text-[#3DE053]'
-            } transition duration-300 cursor-pointer`}
-          >
-            About
-          </div>
+            } transition duration-300 cursor-pointer`}>
+              About
+            </div>
+          </Link>
           <div 
             onClick={() => window.location.href = '/#methodology'} 
             className={`font-medium ${
@@ -124,12 +123,11 @@ const Navbar = () => {
       {/* Mobile menu */}
       <div className={`md:hidden ${mobileMenuOpen ? 'block' : 'hidden'} bg-white shadow-xl border-t-2 border-[#3DE053]`}>
         <div className="px-4 py-6 space-y-4">
-          <div 
-            onClick={() => window.location.href = '/#about'} 
-            className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300 cursor-pointer"
-          >
-            About
-          </div>
+          <Link href="/about">
+            <div className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300 cursor-pointer">
+              About
+            </div>
+          </Link>
           <div 
             onClick={() => window.location.href = '/#methodology'} 
             className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300 cursor-pointer"

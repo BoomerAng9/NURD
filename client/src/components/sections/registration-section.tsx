@@ -17,13 +17,13 @@ const RegistrationSection: React.FC = () => {
               </p>
               
               <Link href="/register">
-                <a className="btn-nurd w-full text-center py-4">
+                <div className="btn-nurd w-full text-center py-4 cursor-pointer">
                   Start Your NURD Journey
-                </a>
+                </div>
               </Link>
 
               <p className="text-center text-gray-500 mt-4 text-sm">
-                Already registered? <Link href="/dashboard"><a className="text-blue-600 hover:underline">Sign in to your dashboard</a></Link>
+                Already registered? <Link href="/dashboard"><span className="text-blue-600 hover:underline cursor-pointer">Sign in to your dashboard</span></Link>
               </p>
             </div>
             
