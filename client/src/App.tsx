@@ -6,6 +6,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Register from "@/pages/Register";
 import Dashboard from "@/pages/Dashboard";
+import Trainers from "@/pages/Trainers";
 import { useEffect } from "react";
 
 function Router() {
@@ -21,6 +22,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/register" component={Register} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/trainers" component={Trainers} />
       <Route component={NotFound} />
     </Switch>
   );
