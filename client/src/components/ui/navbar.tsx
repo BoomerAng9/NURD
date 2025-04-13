@@ -70,6 +70,14 @@ const Navbar = () => {
             </div>
           </Link>
           
+          <Link href="/gallery">
+            <div className={`font-medium ${
+              scrolled ? 'text-[#121645] hover:text-[#6A2FF8]' : 'text-white hover:text-[#3EC6E0]'
+            } transition duration-300 cursor-pointer`}>
+              Gallery
+            </div>
+          </Link>
+          
           {user ? (
             <>
               <NotificationCenter className={scrolled ? 'text-[#121645]' : 'text-white'} />
@@ -110,6 +118,11 @@ const Navbar = () => {
           <Link href="/trainers">
             <div className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300">
               Trainers
+            </div>
+          </Link>
+          <Link href="/gallery">
+            <div className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300">
+              Gallery
             </div>
           </Link>
           
