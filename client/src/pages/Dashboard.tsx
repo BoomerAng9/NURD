@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSupabase } from '@/components/ui/supabase-provider';
 import { User } from '@shared/schema';
+import ProgressDashboard from '@/components/progress/progress-dashboard';
 
 // Mock activities until we have a proper API endpoint
 const activities = [
@@ -124,8 +125,9 @@ const Dashboard: React.FC = () => {
                 <Tabs defaultValue="activities" className="w-full">
                   <div className="px-6 pt-6">
                     <h2 className="font-heading font-bold text-2xl text-gray-900 mb-4">My NURD Journey</h2>
-                    <TabsList className="grid grid-cols-3 mb-4">
+                    <TabsList className="grid grid-cols-4 mb-4">
                       <TabsTrigger value="activities">Activities</TabsTrigger>
+                      <TabsTrigger value="progress">Progress</TabsTrigger>
                       <TabsTrigger value="projects">Projects</TabsTrigger>
                       <TabsTrigger value="achievements">Achievements</TabsTrigger>
                     </TabsList>
@@ -151,6 +153,47 @@ const Dashboard: React.FC = () => {
                       )}
                     </div>
                   </TabsContent>
+                  
+                  <TabsContent value="progress" className="p-6 pt-2">
+                    {isLoading ? (
+                      <div className="space-y-4">
+                        <Skeleton className="h-8 w-1/4 mb-2" />
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <Skeleton className="h-28 w-full rounded-lg" />
+                          <Skeleton className="h-28 w-full rounded-lg" />
+                          <Skeleton className="h-28 w-full rounded-lg" />
+                        </div>
+                        <Skeleton className="h-64 w-full rounded-lg mt-6" />
+                      </div>
+                    ) : (
+                      <div>
+                        {userData && (
+                          <p className="text-muted-foreground mb-6">
+                            Track your progress through courses, earn achievements, and build your learning streak.
+                          </p>
+                        )}
+                        <div className="py-4 px-1">
+                          {userData ? (
+                            <div className="text-center py-8">
+                              <h3 className="font-heading font-bold text-xl text-gray-900 mb-2">Progress Tracking Feature</h3>
+                              <p className="text-gray-600 max-w-md mx-auto mb-6">
+                                Your progress data will appear here as you complete courses and earn achievements.
+                              </p>
+                              <Link href="/learning">
+                                <div className="inline-flex bg-purple-100 text-purple-700 hover:bg-purple-200 transition-colors py-2 px-6 rounded-lg font-medium cursor-pointer">
+                                  Start Learning
+                                </div>
+                              </Link>
+                            </div>
+                          ) : (
+                            <div className="flex justify-center items-center h-32">
+                              <Skeleton className="h-32 w-full max-w-md" />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </TabsContent>
 
                   <TabsContent value="projects" className="p-6">
                     <div className="text-center py-10">
@@ -173,9 +216,9 @@ const Dashboard: React.FC = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                         </svg>
                       </div>
-                      <h3 className="font-heading font-bold text-xl text-gray-900 mb-2">Coming Soon!</h3>
+                      <h3 className="font-heading font-bold text-xl text-gray-900 mb-2">Achievement Tracking</h3>
                       <p className="text-gray-600 max-w-md mx-auto">
-                        Complete activities and projects to earn achievements and showcase your skills. Check back soon!
+                        Complete activities and projects to earn achievements and showcase your skills. Your achievements will be displayed here as you progress through the NURD program.
                       </p>
                     </div>
                   </TabsContent>
