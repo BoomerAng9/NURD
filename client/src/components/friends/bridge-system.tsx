@@ -96,13 +96,13 @@ export function BridgeSystem({
             </div>
             
             <div className="p-4 bg-gray-900 rounded-lg flex flex-col items-center">
-              <Bridge className="h-8 w-8 text-purple-400 mb-2" />
+              <Network className="h-8 w-8 text-purple-400 mb-2" />
               <span className="text-2xl font-bold">{bridges}</span>
               <span className="text-sm text-gray-400">Bridges Built</span>
             </div>
             
             <div className="p-4 bg-gray-900 rounded-lg flex flex-col items-center">
-              <Home className="h-8 w-8 text-amber-400 mb-2" />
+              <HomeIcon className="h-8 w-8 text-amber-400 mb-2" />
               <span className="text-2xl font-bold">{houses}</span>
               <span className="text-sm text-gray-400">Houses Established</span>
             </div>
@@ -124,7 +124,7 @@ export function BridgeSystem({
                     i < currentBridges ? 'border-purple-500 bg-purple-900 text-white' : 'border-gray-700 bg-gray-800 text-gray-500'
                   }`}
                 >
-                  <Bridge className="h-5 w-5" />
+                  <Network className="h-5 w-5" />
                 </div>
               ))}
             </div>
@@ -137,7 +137,7 @@ export function BridgeSystem({
               <div className="flex flex-wrap gap-2">
                 {Array.from({ length: houses }).map((_, i) => (
                   <div key={i} className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center">
-                    <Home className="h-6 w-6 text-white" />
+                    <HomeIcon className="h-6 w-6 text-white" />
                   </div>
                 ))}
               </div>
