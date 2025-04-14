@@ -3,6 +3,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
+import { Navbar } from '@/components/ui/navbar';
 
 export default function Landing() {
   const { data: landingContent } = useQuery({
@@ -12,10 +13,11 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      <Navbar />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="container mx-auto px-4 py-8"
+        className="container mx-auto px-4 py-8 pt-20"
       >
         <Card className="bg-black/50 border-none p-6 backdrop-blur">
           <h1 className="text-4xl font-bold mb-4">
