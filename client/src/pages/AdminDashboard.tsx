@@ -18,9 +18,15 @@ import {
   MessageSquare,
   BookOpen,
   GraduationCap,
-  BarChart3
+  BarChart3,
+  Trophy,
+  Award,
+  Medal,
+  Star,
+  Zap
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -394,21 +400,177 @@ const AdminDashboard = () => {
                   <div className="flex justify-between items-center">
                     <h1 className="text-3xl font-bold">Courses</h1>
                     <div className="flex gap-2">
+                      <Button variant="outline">Filter</Button>
                       <Button>Create Course</Button>
                     </div>
                   </div>
                   
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="text-center p-12">
-                        <BookOpen className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                        <h3 className="text-lg font-medium">Course Management Coming Soon</h3>
-                        <p className="text-gray-500 mt-2">
-                          This section will allow you to create and manage courses, modules, and learning materials.
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <Tabs defaultValue="active" className="w-full">
+                    <TabsList className="grid w-full grid-cols-4">
+                      <TabsTrigger value="active">Active Courses</TabsTrigger>
+                      <TabsTrigger value="drafts">Drafts</TabsTrigger>
+                      <TabsTrigger value="archived">Archived</TabsTrigger>
+                      <TabsTrigger value="analytics">Analytics</TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="active" className="mt-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Active NURD Program Courses</CardTitle>
+                          <CardDescription>
+                            Manage courses that are currently available to students
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Course</TableHead>
+                                <TableHead>Category</TableHead>
+                                <TableHead>Level</TableHead>
+                                <TableHead>Enrolled</TableHead>
+                                <TableHead>Completion Rate</TableHead>
+                                <TableHead>Actions</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell>
+                                  <div className="font-medium">Programming Fundamentals</div>
+                                  <div className="text-sm text-muted-foreground">12 lessons</div>
+                                </TableCell>
+                                <TableCell>Coding</TableCell>
+                                <TableCell>
+                                  <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-50">
+                                    Beginner
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>32 students</TableCell>
+                                <TableCell>
+                                  <div className="flex items-center gap-2">
+                                    <Progress value={78} className="h-2 w-16" />
+                                    <span className="text-sm">78%</span>
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  <Button variant="ghost" size="sm">Edit</Button>
+                                </TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell>
+                                  <div className="font-medium">Game Development Basics</div>
+                                  <div className="text-sm text-muted-foreground">8 lessons</div>
+                                </TableCell>
+                                <TableCell>Game Design</TableCell>
+                                <TableCell>
+                                  <Badge variant="outline" className="bg-blue-50 text-blue-700 hover:bg-blue-50">
+                                    Intermediate
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>18 students</TableCell>
+                                <TableCell>
+                                  <div className="flex items-center gap-2">
+                                    <Progress value={64} className="h-2 w-16" />
+                                    <span className="text-sm">64%</span>
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  <Button variant="ghost" size="sm">Edit</Button>
+                                </TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell>
+                                  <div className="font-medium">AI and Machine Learning</div>
+                                  <div className="text-sm text-muted-foreground">14 lessons</div>
+                                </TableCell>
+                                <TableCell>AI</TableCell>
+                                <TableCell>
+                                  <Badge variant="outline" className="bg-purple-50 text-purple-700 hover:bg-purple-50">
+                                    Advanced
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>12 students</TableCell>
+                                <TableCell>
+                                  <div className="flex items-center gap-2">
+                                    <Progress value={45} className="h-2 w-16" />
+                                    <span className="text-sm">45%</span>
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  <Button variant="ghost" size="sm">Edit</Button>
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </CardContent>
+                        <CardFooter className="flex justify-between">
+                          <Button variant="outline" size="sm">Previous</Button>
+                          <Button variant="outline" size="sm">Next</Button>
+                        </CardFooter>
+                      </Card>
+                    </TabsContent>
+                    
+                    <TabsContent value="drafts" className="mt-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Course Drafts</CardTitle>
+                          <CardDescription>
+                            Courses in development that are not yet published to students
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-center py-8">
+                            <BookOpen className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                            <h3 className="text-lg font-medium">No Draft Courses</h3>
+                            <p className="text-gray-500 mt-2 max-w-md mx-auto">
+                              Start creating new courses by clicking the "Create Course" button above.
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                    
+                    <TabsContent value="archived" className="mt-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Archived Courses</CardTitle>
+                          <CardDescription>
+                            Previously offered courses that are no longer active
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-center py-8">
+                            <BookOpen className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                            <h3 className="text-lg font-medium">No Archived Courses</h3>
+                            <p className="text-gray-500 mt-2 max-w-md mx-auto">
+                              Courses that are no longer active will appear here.
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                    
+                    <TabsContent value="analytics" className="mt-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Course Analytics</CardTitle>
+                          <CardDescription>
+                            Performance metrics for all NURD program courses
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-center py-8">
+                            <BarChart3 className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                            <h3 className="text-lg font-medium">Course Analytics Coming Soon</h3>
+                            <p className="text-gray-500 mt-2 max-w-md mx-auto">
+                              This section will provide detailed analytics on course performance, including completion rates, 
+                              time spent, and student feedback.
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                  </Tabs>
                 </div>
               )}
               
@@ -440,21 +602,270 @@ const AdminDashboard = () => {
                   <div className="flex justify-between items-center">
                     <h1 className="text-3xl font-bold">Reports</h1>
                     <div className="flex gap-2">
-                      <Button variant="outline">Export</Button>
+                      <Button variant="outline">Print</Button>
+                      <Button variant="outline">Export to CSV</Button>
                     </div>
                   </div>
                   
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="text-center p-12">
-                        <BarChart3 className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                        <h3 className="text-lg font-medium">Analytics Dashboard Coming Soon</h3>
-                        <p className="text-gray-500 mt-2">
-                          This section will provide detailed analytics and reports on student performance and engagement.
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <Tabs defaultValue="overview" className="w-full">
+                    <TabsList className="grid w-full grid-cols-4">
+                      <TabsTrigger value="overview">Overview</TabsTrigger>
+                      <TabsTrigger value="achievements">Achievements</TabsTrigger>
+                      <TabsTrigger value="progress">Progress Tracking</TabsTrigger>
+                      <TabsTrigger value="activity">Activity Log</TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="overview" className="mt-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Program Overview</CardTitle>
+                          <CardDescription>
+                            Combined metrics for all NURD program participants
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                            <div className="flex flex-col items-center justify-center p-6 border rounded-lg bg-blue-50">
+                              <BarChart3 className="h-10 w-10 text-blue-600 mb-2" />
+                              <div className="text-3xl font-bold">72%</div>
+                              <p className="text-center text-sm text-gray-600 mt-1">Average Completion Rate</p>
+                            </div>
+                            
+                            <div className="flex flex-col items-center justify-center p-6 border rounded-lg bg-green-50">
+                              <Trophy className="h-10 w-10 text-green-600 mb-2" />
+                              <div className="text-3xl font-bold">258</div>
+                              <p className="text-center text-sm text-gray-600 mt-1">Achievements Earned</p>
+                            </div>
+                            
+                            <div className="flex flex-col items-center justify-center p-6 border rounded-lg bg-purple-50">
+                              <Zap className="h-10 w-10 text-purple-600 mb-2" />
+                              <div className="text-3xl font-bold">12,540</div>
+                              <p className="text-center text-sm text-gray-600 mt-1">Total XP Earned</p>
+                            </div>
+                          </div>
+                          
+                          <div className="p-6 border rounded-lg">
+                            <h3 className="text-lg font-medium mb-4">Most Popular Courses</h3>
+                            <div className="space-y-4">
+                              <div>
+                                <div className="flex justify-between mb-1">
+                                  <span className="text-sm font-medium">Programming Fundamentals</span>
+                                  <span className="text-sm text-gray-500">32 students</span>
+                                </div>
+                                <Progress value={80} className="h-2" />
+                              </div>
+                              
+                              <div>
+                                <div className="flex justify-between mb-1">
+                                  <span className="text-sm font-medium">Game Development Basics</span>
+                                  <span className="text-sm text-gray-500">18 students</span>
+                                </div>
+                                <Progress value={45} className="h-2" />
+                              </div>
+                              
+                              <div>
+                                <div className="flex justify-between mb-1">
+                                  <span className="text-sm font-medium">AI and Machine Learning</span>
+                                  <span className="text-sm text-gray-500">12 students</span>
+                                </div>
+                                <Progress value={30} className="h-2" />
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                    
+                    <TabsContent value="achievements" className="mt-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Achievement Reports</CardTitle>
+                          <CardDescription>
+                            Track achievement badges earned across the program
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                            <div className="p-4 border rounded-lg text-center">
+                              <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                                <Trophy className="h-6 w-6 text-amber-600" />
+                              </div>
+                              <h3 className="font-medium">Completion</h3>
+                              <div className="text-2xl font-bold mt-1">124</div>
+                              <p className="text-xs text-gray-500 mt-1">Course completion badges</p>
+                            </div>
+                            
+                            <div className="p-4 border rounded-lg text-center">
+                              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                                <Zap className="h-6 w-6 text-blue-600" />
+                              </div>
+                              <h3 className="font-medium">Streak</h3>
+                              <div className="text-2xl font-bold mt-1">56</div>
+                              <p className="text-xs text-gray-500 mt-1">Consistency badges</p>
+                            </div>
+                            
+                            <div className="p-4 border rounded-lg text-center">
+                              <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                                <Award className="h-6 w-6 text-emerald-600" />
+                              </div>
+                              <h3 className="font-medium">Milestone</h3>
+                              <div className="text-2xl font-bold mt-1">48</div>
+                              <p className="text-xs text-gray-500 mt-1">Progress milestone badges</p>
+                            </div>
+                            
+                            <div className="p-4 border rounded-lg text-center">
+                              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                                <Star className="h-6 w-6 text-purple-600" />
+                              </div>
+                              <h3 className="font-medium">Special</h3>
+                              <div className="text-2xl font-bold mt-1">30</div>
+                              <p className="text-xs text-gray-500 mt-1">Special achievement badges</p>
+                            </div>
+                          </div>
+                          
+                          <div className="text-center p-8">
+                            <BarChart3 className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                            <h3 className="text-lg font-medium">Detailed Achievement Analytics Coming Soon</h3>
+                            <p className="text-gray-500 mt-2 max-w-md mx-auto">
+                              More detailed achievement statistics and visualizations will be available in a future update.
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                    
+                    <TabsContent value="progress" className="mt-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Student Progress Reports</CardTitle>
+                          <CardDescription>
+                            Detailed progress tracking for all program participants
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-8">
+                            <div className="border rounded-lg overflow-hidden">
+                              <Table>
+                                <TableHeader>
+                                  <TableRow>
+                                    <TableHead>Student</TableHead>
+                                    <TableHead>Courses Enrolled</TableHead>
+                                    <TableHead>Courses Completed</TableHead>
+                                    <TableHead>Average Progress</TableHead>
+                                    <TableHead>XP Earned</TableHead>
+                                    <TableHead>Last Active</TableHead>
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  <TableRow>
+                                    <TableCell>
+                                      <div className="flex items-center gap-2">
+                                        <Avatar className="h-8 w-8">
+                                          <AvatarFallback>AJ</AvatarFallback>
+                                        </Avatar>
+                                        <div className="font-medium">Alex Johnson</div>
+                                      </div>
+                                    </TableCell>
+                                    <TableCell>3</TableCell>
+                                    <TableCell>2</TableCell>
+                                    <TableCell>
+                                      <div className="flex items-center gap-2">
+                                        <Progress value={85} className="h-2 w-16" />
+                                        <span>85%</span>
+                                      </div>
+                                    </TableCell>
+                                    <TableCell>1,250</TableCell>
+                                    <TableCell>2 hours ago</TableCell>
+                                  </TableRow>
+                                  
+                                  <TableRow>
+                                    <TableCell>
+                                      <div className="flex items-center gap-2">
+                                        <Avatar className="h-8 w-8">
+                                          <AvatarFallback>MP</AvatarFallback>
+                                        </Avatar>
+                                        <div className="font-medium">Maya Patel</div>
+                                      </div>
+                                    </TableCell>
+                                    <TableCell>2</TableCell>
+                                    <TableCell>1</TableCell>
+                                    <TableCell>
+                                      <div className="flex items-center gap-2">
+                                        <Progress value={72} className="h-2 w-16" />
+                                        <span>72%</span>
+                                      </div>
+                                    </TableCell>
+                                    <TableCell>980</TableCell>
+                                    <TableCell>1 day ago</TableCell>
+                                  </TableRow>
+                                  
+                                  <TableRow>
+                                    <TableCell>
+                                      <div className="flex items-center gap-2">
+                                        <Avatar className="h-8 w-8">
+                                          <AvatarFallback>JS</AvatarFallback>
+                                        </Avatar>
+                                        <div className="font-medium">Jordan Smith</div>
+                                      </div>
+                                    </TableCell>
+                                    <TableCell>3</TableCell>
+                                    <TableCell>0</TableCell>
+                                    <TableCell>
+                                      <div className="flex items-center gap-2">
+                                        <Progress value={45} className="h-2 w-16" />
+                                        <span>45%</span>
+                                      </div>
+                                    </TableCell>
+                                    <TableCell>540</TableCell>
+                                    <TableCell>3 hours ago</TableCell>
+                                  </TableRow>
+                                </TableBody>
+                              </Table>
+                            </div>
+                          </div>
+                        </CardContent>
+                        <CardFooter className="flex justify-between">
+                          <Button variant="outline" size="sm">Previous</Button>
+                          <div className="text-sm text-gray-500">Page 1 of 3</div>
+                          <Button variant="outline" size="sm">Next</Button>
+                        </CardFooter>
+                      </Card>
+                    </TabsContent>
+                    
+                    <TabsContent value="activity" className="mt-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Activity Logs</CardTitle>
+                          <CardDescription>
+                            Recent platform activity across all users
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-4">
+                            {recentActivities.map((activity) => (
+                              <div key={activity.id} className="flex items-start gap-3 p-3 border rounded-lg">
+                                <Avatar className="h-8 w-8">
+                                  <AvatarFallback>{activity.user.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                <div className="flex-grow">
+                                  <p className="text-sm font-medium">{activity.user}</p>
+                                  <p className="text-xs text-gray-500">
+                                    {activity.action} - {activity.item}
+                                  </p>
+                                </div>
+                                <span className="text-xs text-gray-400">{activity.time}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </CardContent>
+                        <CardFooter>
+                          <Button variant="ghost" size="sm" className="w-full">
+                            View All Activity
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    </TabsContent>
+                  </Tabs>
                 </div>
               )}
               
