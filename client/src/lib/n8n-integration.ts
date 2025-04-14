@@ -1,5 +1,11 @@
 import { apiRequest } from './queryClient';
 
+// Cast the API response to our expected types
+// The apiRequest function returns a Response object that we need to cast to our expected types
+function parseApiResponse<T>(response: any): T {
+  return response as unknown as T;
+}
+
 // Interface for n8n webhook configuration
 export interface N8nWebhook {
   id: string;
@@ -54,8 +60,8 @@ export class N8nApi {
   private apiKey: string | null = null;
 
   constructor(apiUrl: string = '', apiKey: string | null = null) {
-    this.apiUrl = apiUrl || process.env.N8N_API_URL || '';
-    this.apiKey = apiKey || process.env.N8N_API_KEY || null;
+    this.apiUrl = apiUrl || import.meta.env.VITE_N8N_API_URL || '';
+    this.apiKey = apiKey || import.meta.env.VITE_N8N_API_KEY || null;
   }
 
   // Set or update API key
@@ -101,7 +107,8 @@ export class N8nApi {
         throw new Error(`N8n API error (${response.status}): ${errorData.message || response.statusText}`);
       }
       
-      return await response.json();
+      const responseData = await response.json();
+      return responseData as T;
     } catch (error) {
       console.error('N8n API request failed:', error);
       throw error;
@@ -160,23 +167,27 @@ export class N8nApi {
     };
     
     // Save the agent config to your backend
-    return await apiRequest('POST', '/api/agents', agentWithWorkflow);
+    const response = await apiRequest('POST', '/api/agents', agentWithWorkflow);
+    return parseApiResponse<AgentConfig>(response);
   }
 
   // Get all agents
   async getAgents(): Promise<AgentConfig[]> {
-    return await apiRequest('GET', '/api/agents');
+    const response = await apiRequest('GET', '/api/agents');
+    return parseApiResponse<AgentConfig[]>(response);
   }
 
   // Update an agent
   async updateAgent(id: string, config: Partial<AgentConfig>): Promise<AgentConfig> {
-    return await apiRequest('PUT', `/api/agents/${id}`, config);
+    const response = await apiRequest('PUT', `/api/agents/${id}`, config);
+    return parseApiResponse<AgentConfig>(response);
   }
 
   // Delete an agent
   async deleteAgent(id: string): Promise<void> {
     // First get the agent to find its workflow
-    const agent = await apiRequest('GET', `/api/agents/${id}`);
+    const response = await apiRequest('GET', `/api/agents/${id}`);
+    const agent = parseApiResponse<AgentConfig>(response);
     
     if (agent?.workflowId) {
       // Deactivate the workflow first
@@ -196,11 +207,12 @@ export class N8nApi {
     channelId: string, 
     botToken?: string
   ): Promise<AgentConfig> {
-    return await apiRequest('PUT', `/api/agents/${agentId}/integrations/discord`, {
+    const response = await apiRequest('PUT', `/api/agents/${agentId}/integrations/discord`, {
       channelId,
       botToken,
       enabled: true
     });
+    return parseApiResponse<AgentConfig>(response);
   }
 
   // Connect an agent to YouTube
@@ -209,11 +221,12 @@ export class N8nApi {
     channelId: string, 
     apiKey?: string
   ): Promise<AgentConfig> {
-    return await apiRequest('PUT', `/api/agents/${agentId}/integrations/youtube`, {
+    const response = await apiRequest('PUT', `/api/agents/${agentId}/integrations/youtube`, {
       channelId,
       apiKey,
       enabled: true
     });
+    return parseApiResponse<AgentConfig>(response);
   }
 
   // Connect an agent to OpenNote
@@ -222,11 +235,12 @@ export class N8nApi {
     notebookId: string, 
     apiKey?: string
   ): Promise<AgentConfig> {
-    return await apiRequest('PUT', `/api/agents/${agentId}/integrations/opennote`, {
+    const response = await apiRequest('PUT', `/api/agents/${agentId}/integrations/opennote`, {
       notebookId,
       apiKey,
       enabled: true
     });
+    return parseApiResponse<AgentConfig>(response);
   }
 }
 

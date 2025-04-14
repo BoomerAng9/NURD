@@ -6,6 +6,7 @@ import Footer from '@/components/sections/footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Card,
   CardContent,
@@ -38,12 +39,30 @@ const DiscordConnect: React.FC = () => {
   const { user, supabase } = useSupabase();
   const [isLoading, setIsLoading] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [isN8nConfigOpen, setIsN8nConfigOpen] = useState(false);
+  const [isAgentDialogOpen, setIsAgentDialogOpen] = useState(false);
+  const [n8nApiKey, setN8nApiKey] = useState('');
+  const [n8nApiUrl, setN8nApiUrl] = useState('');
+  const [selectedChannelId, setSelectedChannelId] = useState('');
   const [discordUser, setDiscordUser] = useState<{
     id: string;
     username: string;
     avatar: string;
     discriminator: string;
   } | null>(null);
+  
+  // State for agent creation
+  const [newAgent, setNewAgent] = useState<Partial<AgentConfig>>({
+    name: '',
+    description: '',
+    triggers: [],
+    actions: [],
+    isActive: true,
+    discordIntegration: {
+      channelId: '',
+      enabled: false
+    }
+  });
   
   // Check if user is already connected to Discord
   useEffect(() => {
@@ -356,6 +375,288 @@ const DiscordConnect: React.FC = () => {
                 )}
               </CardFooter>
             </Card>
+            
+            {isConnected && (
+              <Card className="mt-8 overflow-hidden border-2 border-gray-100">
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-600 h-2" />
+                
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="flex items-center gap-2">
+                        <Bot className="h-5 w-5" />
+                        n8n Agent Builder
+                      </CardTitle>
+                      <CardDescription>
+                        Configure automated agents to help manage Discord interactions
+                      </CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                
+                <CardContent>
+                  <Tabs defaultValue="configure" className="w-full">
+                    <TabsList className="grid grid-cols-3 mb-4">
+                      <TabsTrigger value="configure">
+                        <Settings className="h-4 w-4 mr-2" />
+                        API Configuration
+                      </TabsTrigger>
+                      <TabsTrigger value="create">
+                        <Bot className="h-4 w-4 mr-2" />
+                        Create Agent
+                      </TabsTrigger>
+                      <TabsTrigger value="manage">
+                        <Server className="h-4 w-4 mr-2" />
+                        Manage Agents
+                      </TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="configure">
+                      <div className="space-y-6">
+                        <div className="bg-blue-50 p-4 rounded-lg">
+                          <h3 className="font-medium text-lg mb-2 text-blue-900">
+                            Connect n8n for Advanced Integration
+                          </h3>
+                          <p className="text-blue-800 text-sm mb-3">
+                            Provide your n8n API details to enable advanced automation and agent building.
+                          </p>
+                          
+                          <div className="space-y-4">
+                            <div>
+                              <Label htmlFor="apiUrl">n8n API URL</Label>
+                              <Input
+                                id="apiUrl"
+                                placeholder="https://your-n8n-instance.com/api/v1"
+                                value={n8nApiUrl}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setN8nApiUrl(e.target.value)}
+                              />
+                              <p className="text-xs text-gray-500 mt-1">
+                                The full URL to your n8n API endpoint
+                              </p>
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor="apiKey">n8n API Key</Label>
+                              <Input
+                                id="apiKey"
+                                type="password"
+                                placeholder="Your n8n API Key"
+                                value={n8nApiKey}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setN8nApiKey(e.target.value)}
+                              />
+                              <p className="text-xs text-gray-500 mt-1">
+                                The API key to authenticate with your n8n instance
+                              </p>
+                            </div>
+                            
+                            <Button
+                              onClick={() => {
+                                // Configure the n8n API
+                                n8nApi.setApiKey(n8nApiKey);
+                                
+                                // Store the API URL
+                                (n8nApi as any).apiUrl = n8nApiUrl;
+                                
+                                toast({
+                                  title: "n8n API Configured",
+                                  description: "Your n8n API connection has been configured successfully.",
+                                });
+                              }}
+                            >
+                              Save Configuration
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="create">
+                      <div className="space-y-6">
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                          <h3 className="font-medium text-lg mb-4">Create a Discord Agent</h3>
+                          
+                          <div className="space-y-4">
+                            <div>
+                              <Label htmlFor="agentName">Agent Name</Label>
+                              <Input
+                                id="agentName"
+                                placeholder="NURD Bot Assistant"
+                                value={newAgent.name}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewAgent({...newAgent, name: e.target.value})}
+                              />
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor="agentDesc">Description</Label>
+                              <Textarea
+                                id="agentDesc"
+                                placeholder="This agent helps manage the NURD Discord server..."
+                                value={newAgent.description}
+                                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNewAgent({...newAgent, description: e.target.value})}
+                                className="min-h-[100px] resize-none"
+                              />
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor="channelId">Discord Channel ID</Label>
+                              <Input
+                                id="channelId"
+                                placeholder="123456789012345678"
+                                value={selectedChannelId}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                  setSelectedChannelId(e.target.value);
+                                  setNewAgent({
+                                    ...newAgent, 
+                                    discordIntegration: {
+                                      ...newAgent.discordIntegration as any,
+                                      channelId: e.target.value,
+                                      enabled: !!e.target.value
+                                    }
+                                  });
+                                }}
+                              />
+                              <p className="text-xs text-gray-500 mt-1">
+                                The Discord channel ID where this agent will operate
+                              </p>
+                            </div>
+                            
+                            <div className="space-y-2">
+                              <Label>Agent Triggers</Label>
+                              <div className="grid grid-cols-2 gap-2">
+                                {['message', 'reaction', 'join', 'scheduled'].map((trigger) => (
+                                  <div key={trigger} className="flex items-center space-x-2">
+                                    <input
+                                      type="checkbox"
+                                      id={`trigger-${trigger}`}
+                                      checked={(newAgent.triggers || []).includes(trigger)}
+                                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        if (e.target.checked) {
+                                          setNewAgent({
+                                            ...newAgent,
+                                            triggers: [...(newAgent.triggers || []), trigger]
+                                          });
+                                        } else {
+                                          setNewAgent({
+                                            ...newAgent,
+                                            triggers: (newAgent.triggers || []).filter(t => t !== trigger)
+                                          });
+                                        }
+                                      }}
+                                      className="rounded border-gray-300"
+                                    />
+                                    <Label htmlFor={`trigger-${trigger}`} className="cursor-pointer text-sm">
+                                      {trigger.charAt(0).toUpperCase() + trigger.slice(1)}
+                                    </Label>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                            
+                            <div className="space-y-2">
+                              <Label>Agent Actions</Label>
+                              <div className="grid grid-cols-2 gap-2">
+                                {['send-message', 'dm-user', 'add-role', 'create-event'].map((action) => (
+                                  <div key={action} className="flex items-center space-x-2">
+                                    <input
+                                      type="checkbox"
+                                      id={`action-${action}`}
+                                      checked={(newAgent.actions || []).includes(action)}
+                                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        if (e.target.checked) {
+                                          setNewAgent({
+                                            ...newAgent,
+                                            actions: [...(newAgent.actions || []), action]
+                                          });
+                                        } else {
+                                          setNewAgent({
+                                            ...newAgent,
+                                            actions: (newAgent.actions || []).filter(a => a !== action)
+                                          });
+                                        }
+                                      }}
+                                      className="rounded border-gray-300"
+                                    />
+                                    <Label htmlFor={`action-${action}`} className="cursor-pointer text-sm">
+                                      {action.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                                    </Label>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                            
+                            <Button
+                              className="w-full"
+                              onClick={async () => {
+                                try {
+                                  setIsLoading(true);
+                                  
+                                  // Create the agent
+                                  await n8nApi.createAgent(newAgent as AgentConfig);
+                                  
+                                  // Reset form and show success message
+                                  setNewAgent({
+                                    name: '',
+                                    description: '',
+                                    triggers: [],
+                                    actions: [],
+                                    isActive: true,
+                                    discordIntegration: {
+                                      channelId: '',
+                                      enabled: false
+                                    }
+                                  });
+                                  
+                                  setSelectedChannelId('');
+                                  
+                                  toast({
+                                    title: "Agent Created",
+                                    description: "Your Discord agent has been created successfully!",
+                                  });
+                                  
+                                } catch (error) {
+                                  console.error("Error creating agent:", error);
+                                  toast({
+                                    title: "Agent Creation Failed",
+                                    description: error instanceof Error ? error.message : "Failed to create the agent.",
+                                    variant: "destructive",
+                                  });
+                                } finally {
+                                  setIsLoading(false);
+                                }
+                              }}
+                              disabled={isLoading || !newAgent.name || !selectedChannelId || (newAgent.triggers || []).length === 0}
+                            >
+                              {isLoading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Bot className="h-4 w-4 mr-2" />}
+                              Create Discord Agent
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="manage">
+                      <div className="space-y-6">
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                          <h3 className="font-medium text-lg mb-4">Manage Discord Agents</h3>
+                          
+                          <div className="text-center py-8">
+                            <Server className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                            <h4 className="font-medium text-lg">No Agents Found</h4>
+                            <p className="text-gray-600 mt-2 mb-4">
+                              You haven't created any Discord agents yet. Create your first agent to get started.
+                            </p>
+                            <Button onClick={() => {}}>
+                              <Bot className="h-4 w-4 mr-2" />
+                              Create Your First Agent
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </Card>
+            )}
             
             <div className="mt-8 text-center">
               <p className="text-gray-600 mb-4">
