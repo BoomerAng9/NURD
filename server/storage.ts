@@ -28,6 +28,10 @@ import { eq, and, desc, sql, asc } from "drizzle-orm";
 // you might need
 
 export interface IStorage {
+  // Landing content methods
+  getLandingContent(): Promise<any>;
+  updateLandingContent(content: any): Promise<any>;
+  
   // User methods
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
@@ -71,6 +75,28 @@ export interface IStorage {
 
 // Database storage implementation using Drizzle ORM
 export class DatabaseStorage implements IStorage {
+  // Landing content methods
+  async getLandingContent(): Promise<any> {
+    const [content] = await db.select().from(landingContent).orderBy(desc(landingContent.created_at)).limit(1);
+    return content || {
+      title: 'Welcome to NURD',
+      content: 'Where innovation meets education',
+      mediaUrl: null,
+      mediaType: null
+    };
+  }
+
+  async updateLandingContent(content: any): Promise<any> {
+    const [updatedContent] = await db
+      .insert(landingContent)
+      .values({
+        ...content,
+        updated_at: new Date()
+      })
+      .returning();
+    return updatedContent;
+  }
+
   // User methods
   async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));

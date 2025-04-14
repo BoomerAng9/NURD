@@ -121,6 +121,17 @@ export const streaks = pgTable("streaks", {
   last_activity_date: timestamp("last_activity_date").defaultNow(),
 });
 
+// Landing Content Table
+export const landingContent = pgTable("landing_content", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  mediaUrl: text("media_url"),
+  mediaType: text("media_type"),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+});
+
 // Activity Logs (for detailed tracking)
 export const activityLogs = pgTable("activity_logs", {
   id: serial("id").primaryKey(),
