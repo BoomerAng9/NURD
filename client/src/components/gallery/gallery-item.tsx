@@ -55,6 +55,9 @@ export const GalleryItemCard: React.FC<GalleryItemCardProps> = ({
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(item.likes);
   const [modalOpen, setModalOpen] = useState(false);
+  const [commentOpen, setCommentOpen] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const [comments, setComments] = useState<{ text: string, author: string, timestamp: string }[]>([]);
 
   const handleLike = () => {
     setLiked(!liked);
@@ -63,11 +66,50 @@ export const GalleryItemCard: React.FC<GalleryItemCardProps> = ({
   };
 
   const handleComment = () => {
+    setModalOpen(true);
+    setCommentOpen(true);
     if (onComment) onComment(item.id);
   };
 
   const handleShare = () => {
+    // Create a shareable link for the item
+    const shareLink = `${window.location.origin}/gallery/item/${item.id}`;
+    
+    // If Web Share API is available, use it
+    if (navigator.share) {
+      navigator.share({
+        title: item.title,
+        text: item.description || `Check out "${item.title}" on NURD Gallery`,
+        url: shareLink,
+      })
+      .catch((error) => console.log('Error sharing:', error));
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(shareLink)
+        .then(() => {
+          alert('Link copied to clipboard! Share it with your friends.');
+        })
+        .catch((err) => {
+          console.error('Could not copy link: ', err);
+        });
+    }
+    
     if (onShare) onShare(item.id);
+  };
+  
+  const submitComment = () => {
+    if (commentText.trim()) {
+      const newComment = {
+        text: commentText,
+        author: 'You',
+        timestamp: new Date().toISOString()
+      };
+      setComments([...comments, newComment]);
+      setCommentText('');
+      
+      // In a real app, this would send the comment to the backend
+      console.log(`New comment on ${item.id}: ${commentText}`);
+    }
   };
 
   // Format date to be more readable
@@ -226,22 +268,103 @@ export const GalleryItemCard: React.FC<GalleryItemCardProps> = ({
                 </div>
               </div>
               
-              {item.description && (
-                <div className="mb-6">
-                  <h3 className="font-medium mb-2">Description</h3>
-                  <p className="text-gray-700">{item.description}</p>
-                </div>
+              {!commentOpen && (
+                <>
+                  {item.description && (
+                    <div className="mb-6">
+                      <h3 className="font-medium mb-2">Description</h3>
+                      <p className="text-gray-700">{item.description}</p>
+                    </div>
+                  )}
+                  
+                  {item.tags.length > 0 && (
+                    <div className="mb-6">
+                      <h3 className="font-medium mb-2">Tags</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {item.tags.map((tag) => (
+                          <Badge key={tag} variant="secondary" className="bg-blue-100 text-blue-800">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
               
-              {item.tags.length > 0 && (
+              {commentOpen && (
                 <div className="mb-6">
-                  <h3 className="font-medium mb-2">Tags</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {item.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="bg-blue-100 text-blue-800">
-                        {tag}
-                      </Badge>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-medium">Comments ({item.comments + comments.length})</h3>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => setCommentOpen(false)}
+                      className="text-gray-500 text-xs"
+                    >
+                      Show Details
+                    </Button>
+                  </div>
+                  
+                  <div className="space-y-4 mb-4 max-h-[30vh] overflow-y-auto">
+                    {/* Example comments */}
+                    <div className="p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center mb-2">
+                        <Avatar className="h-6 w-6 mr-2">
+                          <AvatarFallback>U</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-medium text-sm">User923</p>
+                          <p className="text-xs text-gray-500">2 days ago</p>
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-700">This is amazing work! I love the attention to detail.</p>
+                    </div>
+                    
+                    <div className="p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center mb-2">
+                        <Avatar className="h-6 w-6 mr-2">
+                          <AvatarFallback>T</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-medium text-sm">TechGuru</p>
+                          <p className="text-xs text-gray-500">1 week ago</p>
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-700">What tools did you use to create this?</p>
+                    </div>
+                    
+                    {/* User's new comments */}
+                    {comments.map((comment, index) => (
+                      <div key={index} className="p-3 bg-blue-50 rounded-lg">
+                        <div className="flex items-center mb-2">
+                          <Avatar className="h-6 w-6 mr-2">
+                            <AvatarFallback>Y</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-medium text-sm">{comment.author}</p>
+                            <p className="text-xs text-gray-500">Just now</p>
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-700">{comment.text}</p>
+                      </div>
                     ))}
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="Add a comment..."
+                      className="flex-grow px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          submitComment();
+                        }
+                      }}
+                    />
+                    <Button onClick={submitComment} size="sm">Post</Button>
                   </div>
                 </div>
               )}
@@ -258,9 +381,17 @@ export const GalleryItemCard: React.FC<GalleryItemCardProps> = ({
                     {liked ? 'Liked' : 'Like'} ({likes})
                   </Button>
                   
-                  <Button variant="ghost" size="sm" onClick={handleComment}>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => {
+                      setCommentOpen(!commentOpen);
+                      if (onComment) onComment(item.id);
+                    }}
+                    className={commentOpen ? 'text-blue-600' : ''}
+                  >
                     <MessageSquare className="h-4 w-4 mr-1" />
-                    Comment ({item.comments})
+                    Comment ({item.comments + comments.length})
                   </Button>
                 </div>
                 

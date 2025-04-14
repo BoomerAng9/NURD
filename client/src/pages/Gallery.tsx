@@ -133,7 +133,9 @@ const Gallery: React.FC = () => {
               </div>
             </div>
             
-            <GalleryGrid onUpload={handleOpenUploadDialog} />
+            <GalleryGrid 
+              onUpload={handleOpenUploadDialog} 
+            />
             
             {/* Upload Form Dialog */}
             <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
