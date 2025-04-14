@@ -1,0 +1,30 @@
+Objective:
+Update the “Methodology” page to incorporate detailed additions regarding our FDH methodology integration into the NURD character building program and enhancements to the VIBE coding initiative.
+
+Instructions:
+	1.	FDH Methodology Integration:
+	•	Overview: Clearly explain how the FDH methodology—framed from an “achieve more business perspective”—is integrated into the NURD character building program.
+	•	Details to Include:
+	•	Outline that our process is a step-by-step approach.
+	•	Highlight that it encompasses not only technical training but also soft skills, career development, career guidance, and workforce readiness.
+	•	Mention that for participants who seek additional growth, optional entrepreneurship skills are also taught.
+	2.	Step-by-Step Process:
+	•	Process Flow:
+	•	Describe each step of our methodology so that the reader understands the sequential nature of the program.
+	•	Ensure that each step clearly connects the holistic approach—from soft skills and career readiness to technical training.
+	•	Clarity:
+	•	Use bullet points or numbered lists to ensure the process is easily digestible.
+	3.	VIBE Coding Initiative Enhancements:
+	•	Comprehensive Training:
+	•	Emphasize that each VIBE coding cohort receives a full range of training.
+	•	Detail that the training is not limited to coding; it includes teamwork, collaboration, and simulation exercises that develop critical skills and critical thinking.
+	•	Experiential Learning:
+	•	Specify that the initiative encourages participants to work outside their comfort zones and diverse environments.
+	•	State that the training is designed to empower participants to project their future through continuous skill acquisition.
+	4.	Formatting and Tone:
+	•	Structure: Use clear section headings, bullet points, and short paragraphs to maintain clarity and alignment with our lean, actionable style.
+	•	Style: Maintain a professional, direct tone in line with ACHIEVEMOR’s Human-in-the-Loop framework.
+	•	Relevance: Ensure every addition directly reflects our integrated methodology approach and training philosophy.
+	5.	Review and Confirmation:
+	•	Confirm that the content aligns with ACHIEVEMOR guidelines.
+	•	Verify that all new additions are traceable and allow for human oversight, including referenced steps and training components.

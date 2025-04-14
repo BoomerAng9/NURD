@@ -1,0 +1,38 @@
+Instruction Set: Maintain Existing Design, Only Enhance
+	1.	No Deletions or Overwrites
+	•	Keep all existing design elements, buttons, and functionalities.
+	•	Only add or improve upon what’s already there. Do not remove or replace any core features.
+	2.	Consistent Interactions for All Buttons
+	•	Ensure every clickable element (e.g., “Comment,” “Invite,” “Connect”) leads to a functioning feature.
+	•	“Comment” buttons must allow users to post and view comments.
+	•	“Invite” options must let participants invite others into the platform.
+	3.	New Landing Page
+	•	Create a separate, dedicated landing page distinct from the “About” page.
+	•	Provide an admin-controlled message, images, and videos that can be updated via an admin panel.
+	4.	Admin Panel
+	•	Restrict admin panel access to authorized administrators only.
+	•	Admins can modify landing page content, upload images/videos, and manage general platform settings.
+	5.	Trainer Portal
+	•	Ensure trainers see a different interface once they log in.
+	•	Trainers can only access and view participants assigned to them—no visibility into the entire community.
+	•	Participants can see trainer profiles but cannot access private trainer info unless they’re assigned to that trainer.
+	6.	Participant Portal & Security
+	•	Participants have limited access, seeing only their own trainer’s info if assigned.
+	•	Prevent participants from viewing or contacting any other trainer beyond the ones they work with.
+	7.	Friend & Bridge Building
+	•	Allow participants to invite each other as friends or colleagues within the training center.
+	•	Each accepted invite builds a visual “bridge” tied to their profiles.
+	•	Track progress so that multiple bridges eventually form a “house,” reflecting community-building achievements.
+	8.	Profile Cards (NURD Cards)
+	•	Integrate the NURD card concept (similar to a trading or Pokémon-style card) for each user’s profile.
+	•	Maintain existing profile data fields, only enhancing the design and adding the “bridge/house” progress elements.
+	9.	Discord Integration
+	•	Include a clear redirect or embedded link to the community’s Discord server.
+	•	Ensure seamless single sign-on or direct handoff to Discord where possible.
+	10.	Futuristic Aesthetics & 3D Animations
+
+	•	Preserve the existing layout logic but apply a black matte background with contrasting, readable text colors.
+	•	No matching background-text combos—make each layer stand out (titles, placeholders, text).
+	•	Add light futuristic animations and possible 3D transitions to elevate the user experience without breaking performance.
+
+By following these guidelines, the platform remains fully functional while gaining a fresh, secure, and engaging design that embraces the NURD theme, community-building features, and next-level aesthetics.
