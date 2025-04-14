@@ -17,53 +17,79 @@ const Home: React.FC = () => {
       
       {/* Hero Section - Redesigned for instant engagement */}
       <section className="relative pt-20 overflow-hidden bg-gradient-to-b from-[#121645] to-[#6A2FF8]/90 text-white">
-        <div className="absolute inset-0 z-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center"></div>
+        <div className="absolute inset-0 z-0 opacity-10 bg-gradient-to-br from-[#121645] to-[#6A2FF8] bg-cover bg-center"></div>
         
         <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
-          <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              className="mb-8"
+              className="text-center lg:text-left order-2 lg:order-1"
             >
-              <img src={nurdLogoGreen} alt="NURD Logo" className="w-48 md:w-56 mx-auto" />
+              <div className="mb-6 inline-block">
+                <img src={nurdLogoGreen} alt="NURD Logo" className="w-48 md:w-56 mx-auto lg:mx-0" />
+              </div>
+              
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="font-heading font-extrabold text-4xl md:text-6xl mb-6 leading-tight"
+              >
+                Where Tech <span className="text-[#3DE053]">Meets</span> Creativity
+              </motion.h1>
+              
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="text-xl text-white/90 mb-10 max-w-2xl mx-auto lg:mx-0"
+              >
+                Join our transformative summer program designed to empower young minds through technology, creativity, and skill development.
+              </motion.p>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+              >
+                <Link href="/register">
+                  <div className="btn-nurd text-center text-lg px-10 py-4 cursor-pointer">
+                    Join the Summer Initiative
+                  </div>
+                </Link>
+                <Link href="/about">
+                  <div className="py-4 px-10 rounded-lg border-2 border-[#FF8A00] text-[#FF8A00] font-heading font-bold hover:bg-[#FF8A00] hover:text-white transition-all duration-300 text-lg cursor-pointer">
+                    Learn More
+                  </div>
+                </Link>
+              </motion.div>
             </motion.div>
             
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="font-heading font-extrabold text-5xl md:text-7xl mb-6 leading-tight"
-            >
-              Where Tech <span className="text-[#3DE053]">Meets</span> Creativity
-            </motion.h1>
-            
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="text-xl md:text-2xl text-white/90 mb-10 max-w-2xl"
-            >
-              Join our transformative summer program designed to empower young minds through technology, creativity, and skill development.
-            </motion.p>
-            
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="order-1 lg:order-2 relative"
             >
-              <Link href="/register">
-                <div className="btn-nurd text-center text-lg px-10 py-4 cursor-pointer">
-                  Join the Summer Initiative
+              <div className="relative z-10 max-w-md mx-auto">
+                <div className="bg-[#3DE053]/20 backdrop-blur-sm rounded-2xl p-3 rotate-3 shadow-xl">
+                  <img 
+                    src={kidComputerImage} 
+                    alt="Person with NURD laptop sticker" 
+                    className="rounded-xl shadow-lg w-full"
+                  />
                 </div>
-              </Link>
-              <Link href="/about">
-                <div className="py-4 px-10 rounded-lg border-2 border-[#FF8A00] text-[#FF8A00] font-heading font-bold hover:bg-[#FF8A00] hover:text-white transition-all duration-300 text-lg cursor-pointer">
-                  Learn More
+                
+                <div className="absolute -bottom-8 -right-8 bg-white p-4 rounded-lg shadow-lg max-w-xs rotate-2 z-20">
+                  <p className="italic text-gray-700 text-sm font-medium">
+                    "I'm cool like that! Learning to code with NURD changed my whole perspective."
+                  </p>
+                  <p className="text-[#6A2FF8] font-medium text-sm mt-2">— NURD Student</p>
                 </div>
-              </Link>
+              </div>
             </motion.div>
           </div>
         </div>
