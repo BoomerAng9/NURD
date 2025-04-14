@@ -25,7 +25,9 @@ import Navbar from '@/components/ui/navbar';
 import Footer from '@/components/sections/footer';
 
 // Import the NURD Card profile image
-import nurdCardProfileImage from '@assets/A40E73FE-AAEE-4C08-A6E8-9C8E4B863A88.png';
+// Temporarily removing image import to fix loading issues
+// We'll add a placeholder image instead
+// import nurdCardProfileImage from '../../assets/nurd-card-profile.png';
 
 export default function LandingPage() {
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -417,7 +419,7 @@ export default function LandingPage() {
             
             <div className="flex justify-center order-1 lg:order-2">
               <img 
-                src={nurdCardProfileImage} 
+                src="https://placehold.co/400x600/3EC6E0/FFFFFF?text=NURD+CARD" 
                 alt="NURD Profile Card" 
                 className="max-w-xs sm:max-w-sm md:max-w-md rounded-lg shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-500"
               />
