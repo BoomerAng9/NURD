@@ -53,22 +53,24 @@ const Navbar = () => {
               About
             </div>
           </Link>
-          <div 
-            onClick={() => window.location.href = '/#methodology'} 
-            className={`font-medium ${
-              scrolled ? 'text-[#121645] hover:text-[#6A2FF8]' : 'text-white hover:text-[#3DE053]'
-            } transition duration-300 cursor-pointer`}
-          >
-            Methodology
-          </div>
-          <div 
-            onClick={() => window.location.href = '/#experience'} 
-            className={`font-medium ${
-              scrolled ? 'text-[#121645] hover:text-[#6A2FF8]' : 'text-white hover:text-[#3EC6E0]'
-            } transition duration-300 cursor-pointer`}
-          >
-            Experience
-          </div>
+          <Link href="/#methodology">
+            <div 
+              className={`font-medium ${
+                scrolled ? 'text-[#121645] hover:text-[#6A2FF8]' : 'text-white hover:text-[#3DE053]'
+              } transition duration-300 cursor-pointer`}
+            >
+              Methodology
+            </div>
+          </Link>
+          <Link href="/#experience">
+            <div 
+              className={`font-medium ${
+                scrolled ? 'text-[#121645] hover:text-[#6A2FF8]' : 'text-white hover:text-[#3EC6E0]'
+              } transition duration-300 cursor-pointer`}
+            >
+              Experience
+            </div>
+          </Link>
           
           <Link href="/trainers">
             <div className={`font-medium ${
@@ -128,18 +130,16 @@ const Navbar = () => {
               About
             </div>
           </Link>
-          <div 
-            onClick={() => window.location.href = '/#methodology'} 
-            className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300 cursor-pointer"
-          >
-            Methodology
-          </div>
-          <div 
-            onClick={() => window.location.href = '/#experience'} 
-            className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300 cursor-pointer"
-          >
-            Experience
-          </div>
+          <Link href="/#methodology">
+            <div className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300 cursor-pointer">
+              Methodology
+            </div>
+          </Link>
+          <Link href="/#experience">
+            <div className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300 cursor-pointer">
+              Experience
+            </div>
+          </Link>
           <Link href="/trainers">
             <div className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300">
               Trainers

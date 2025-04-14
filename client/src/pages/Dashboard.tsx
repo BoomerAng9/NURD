@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
+import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
 import Navbar from '@/components/ui/navbar';
@@ -192,9 +193,11 @@ const Dashboard: React.FC = () => {
                     Explore our workshops, projects, and challenges to take your skills to the next level.
                   </p>
                 </div>
-                <button className="bg-white text-purple-700 hover:bg-gray-100 transition-colors py-2 px-6 rounded-lg font-bold">
-                  Explore Activities
-                </button>
+                <Link href="/learning">
+                  <div className="bg-white text-purple-700 hover:bg-gray-100 transition-colors py-2 px-6 rounded-lg font-bold cursor-pointer">
+                    Explore Activities
+                  </div>
+                </Link>
               </div>
             </div>
           </div>
