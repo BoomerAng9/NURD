@@ -1,4 +1,4 @@
-import { users, type User, type InsertUser } from "@shared/schema";
+import { users, type User, type InsertUser, type LandingContent } from "@shared/schema";
 import { 
   courses, 
   lessons, 
@@ -19,7 +19,8 @@ import {
   type InsertUserProgress,
   type InsertLessonProgress,
   type InsertAchievement,
-  type InsertUserAchievement
+  type InsertUserAchievement,
+  type InsertLandingContent
 } from "@shared/progress-schema";
 import { db } from "./db";
 import { eq, and, desc, sql, asc } from "drizzle-orm";
@@ -29,45 +30,45 @@ import { eq, and, desc, sql, asc } from "drizzle-orm";
 
 export interface IStorage {
   // Landing content methods
-  getLandingContent(): Promise<any>;
-  updateLandingContent(content: any): Promise<any>;
-  
+  getLandingContent(): Promise<LandingContent | undefined>;
+  updateLandingContent(content: InsertLandingContent): Promise<LandingContent>;
+
   // User methods
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUserXP(userId: number, xpToAdd: number): Promise<User>;
-  
+
   // Course methods
   getCourses(): Promise<Course[]>;
   getCourseById(id: number): Promise<Course | undefined>;
   createCourse(course: InsertCourse): Promise<Course>;
   getFeaturedCourses(limit?: number): Promise<Course[]>;
   getCoursesByCategory(category: string): Promise<Course[]>;
-  
+
   // Lesson methods
   getLessons(courseId: number): Promise<Lesson[]>;
   getLessonById(id: number): Promise<Lesson | undefined>;
   createLesson(lesson: InsertLesson): Promise<Lesson>;
-  
+
   // Progress methods
   getUserProgress(userId: number): Promise<UserProgress[]>;
   getUserProgressForCourse(userId: number, courseId: number): Promise<UserProgress | undefined>;
   createOrUpdateUserProgress(progress: InsertUserProgress): Promise<UserProgress>;
-  
+
   // Lesson progress methods
   getLessonProgress(userId: number, lessonId: number): Promise<LessonProgress | undefined>;
   createOrUpdateLessonProgress(progress: InsertLessonProgress): Promise<LessonProgress>;
-  
+
   // Achievement methods
   getAchievements(): Promise<Achievement[]>;
   getUserAchievements(userId: number): Promise<(UserAchievement & { achievement: Achievement })[]>;
   awardAchievement(userId: number, achievementId: number): Promise<UserAchievement>;
-  
+
   // Streak methods
   getUserStreak(userId: number): Promise<{ current: number, max: number, lastActivity: Date } | undefined>;
   updateUserStreak(userId: number): Promise<{ current: number, max: number }>;
-  
+
   // Activity methods
   logActivity(userId: number, activityType: string, detail?: string, xpEarned?: number, relatedId?: number, relatedType?: string): Promise<void>;
   getUserActivities(userId: number, limit?: number): Promise<any[]>;
@@ -76,17 +77,12 @@ export interface IStorage {
 // Database storage implementation using Drizzle ORM
 export class DatabaseStorage implements IStorage {
   // Landing content methods
-  async getLandingContent(): Promise<any> {
+  async getLandingContent(): Promise<LandingContent | undefined> {
     const [content] = await db.select().from(landingContent).orderBy(desc(landingContent.created_at)).limit(1);
-    return content || {
-      title: 'Welcome to NURD',
-      content: 'Where innovation meets education',
-      mediaUrl: null,
-      mediaType: null
-    };
+    return content;
   }
 
-  async updateLandingContent(content: any): Promise<any> {
+  async updateLandingContent(content: InsertLandingContent): Promise<LandingContent> {
     const [updatedContent] = await db
       .insert(landingContent)
       .values({
@@ -128,7 +124,7 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(users.id, userId))
       .returning();
-    
+
     return updatedUser;
   }
 
@@ -217,7 +213,7 @@ export class DatabaseStorage implements IStorage {
         })
         .where(eq(userProgress.id, existingProgress.id))
         .returning();
-      
+
       return updatedProgress;
     } else {
       // Create new progress
@@ -225,7 +221,7 @@ export class DatabaseStorage implements IStorage {
         .insert(userProgress)
         .values(progress)
         .returning();
-      
+
       return newProgress;
     }
   }
@@ -261,10 +257,10 @@ export class DatabaseStorage implements IStorage {
         })
         .where(eq(lessonProgress.id, existingProgress.id))
         .returning();
-      
+
       // Update course progress
       await this.updateCourseProgressOnLessonCompletion(progress.user_id, progress.lesson_id);
-      
+
       return updatedProgress;
     } else {
       // Create new progress
@@ -272,12 +268,12 @@ export class DatabaseStorage implements IStorage {
         .insert(lessonProgress)
         .values(progress)
         .returning();
-      
+
       // Update course progress if lesson is completed
       if (progress.is_completed) {
         await this.updateCourseProgressOnLessonCompletion(progress.user_id, progress.lesson_id);
       }
-      
+
       return newProgress;
     }
   }
@@ -306,14 +302,14 @@ export class DatabaseStorage implements IStorage {
       );
 
     const completedCount = completedLessons[0]?.count || 0;
-    
+
     // Calculate progress percentage
     const progressPercentage = Math.round((completedCount / course.total_lessons) * 100);
     const isCompleted = completedCount >= course.total_lessons;
-    
+
     // Get existing user progress for this course
     const existingProgress = await this.getUserProgressForCourse(userId, course.id);
-    
+
     if (existingProgress) {
       // Update progress
       await db
@@ -326,11 +322,11 @@ export class DatabaseStorage implements IStorage {
           completion_date: isCompleted && !existingProgress.is_completed ? new Date() : existingProgress.completion_date
         })
         .where(eq(userProgress.id, existingProgress.id));
-      
+
       // Award XP for course completion if just completed
       if (isCompleted && !existingProgress.is_completed) {
         await this.updateUserXP(userId, course.total_xp - existingProgress.earned_xp);
-        
+
         // Log activity
         await this.logActivity(
           userId,
@@ -340,7 +336,7 @@ export class DatabaseStorage implements IStorage {
           course.id,
           'course'
         );
-        
+
         // Check for completion achievements
         await this.checkAndAwardAchievements(userId);
       }
@@ -357,11 +353,11 @@ export class DatabaseStorage implements IStorage {
           completion_date: isCompleted ? new Date() : null,
           earned_xp: isCompleted ? course.total_xp : 0
         });
-      
+
       // Award XP for course completion
       if (isCompleted) {
         await this.updateUserXP(userId, course.total_xp);
-        
+
         // Log activity
         await this.logActivity(
           userId,
@@ -371,7 +367,7 @@ export class DatabaseStorage implements IStorage {
           course.id,
           'course'
         );
-        
+
         // Check for completion achievements
         await this.checkAndAwardAchievements(userId);
       }
@@ -398,7 +394,7 @@ export class DatabaseStorage implements IStorage {
       .innerJoin(achievements, eq(userAchievements.achievement_id, achievements.id))
       .where(eq(userAchievements.user_id, userId))
       .orderBy(desc(userAchievements.earned_at));
-    
+
     return userAchs;
   }
 
@@ -413,22 +409,22 @@ export class DatabaseStorage implements IStorage {
           eq(userAchievements.achievement_id, achievementId)
         )
       );
-    
+
     if (existingAchievement) {
       return existingAchievement;
     }
-    
+
     // Get achievement details
     const achievement = await db
       .select()
       .from(achievements)
       .where(eq(achievements.id, achievementId))
       .then(rows => rows[0]);
-    
+
     if (!achievement) {
       throw new Error(`Achievement not found with id: ${achievementId}`);
     }
-    
+
     // Award the achievement
     const [userAchievement] = await db
       .insert(userAchievements)
@@ -439,11 +435,11 @@ export class DatabaseStorage implements IStorage {
         is_viewed: false
       })
       .returning();
-    
+
     // Award XP for the achievement
     if (achievement.xp_reward > 0) {
       await this.updateUserXP(userId, achievement.xp_reward);
-      
+
       // Log activity
       await this.logActivity(
         userId,
@@ -454,7 +450,7 @@ export class DatabaseStorage implements IStorage {
         'achievement'
       );
     }
-    
+
     return userAchievement;
   }
 
@@ -462,16 +458,16 @@ export class DatabaseStorage implements IStorage {
   private async checkAndAwardAchievements(userId: number): Promise<void> {
     // Get all achievements
     const allAchievements = await this.getAchievements();
-    
+
     // Get user's courses progress
     const coursesProgress = await this.getUserProgress(userId);
     const completedCourses = coursesProgress.filter(p => p.is_completed).length;
-    
+
     // Check for course completion achievements
     const completionAchievements = allAchievements.filter(
       a => a.type === 'completion' && a.requirement === 'courses_completed'
     );
-    
+
     for (const achievement of completionAchievements) {
       if (completedCourses >= achievement.requirement_value) {
         // Award achievement
@@ -480,14 +476,14 @@ export class DatabaseStorage implements IStorage {
         });
       }
     }
-    
+
     // Check for streak achievements
     const streak = await this.getUserStreak(userId);
     if (streak) {
       const streakAchievements = allAchievements.filter(
         a => a.type === 'streak' && a.requirement === 'consecutive_days'
       );
-      
+
       for (const achievement of streakAchievements) {
         if (streak.current >= achievement.requirement_value) {
           // Award achievement
@@ -505,9 +501,9 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(streaks)
       .where(eq(streaks.user_id, userId));
-    
+
     if (!streak) return undefined;
-    
+
     return {
       current: streak.current_streak,
       max: streak.max_streak,
@@ -521,9 +517,9 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(streaks)
       .where(eq(streaks.user_id, userId));
-    
+
     const now = new Date();
-    
+
     if (!existingStreak) {
       // Create new streak
       const [newStreak] = await db
@@ -535,22 +531,22 @@ export class DatabaseStorage implements IStorage {
           last_activity_date: now
         })
         .returning();
-      
+
       return {
         current: 1,
         max: 1
       };
     }
-    
+
     // Check if we need to update streak
     const lastActivity = new Date(existingStreak.last_activity_date);
     const daysSinceLastActivity = Math.floor(
       (now.getTime() - lastActivity.getTime()) / (1000 * 60 * 60 * 24)
     );
-    
+
     let currentStreak = existingStreak.current_streak;
     let maxStreak = existingStreak.max_streak;
-    
+
     if (daysSinceLastActivity === 0) {
       // Already logged in today, no need to update streak
     } else if (daysSinceLastActivity === 1) {
@@ -561,7 +557,7 @@ export class DatabaseStorage implements IStorage {
       // Streak broken
       currentStreak = 1;
     }
-    
+
     // Update streak
     const [updatedStreak] = await db
       .update(streaks)
@@ -572,7 +568,7 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(streaks.user_id, userId))
       .returning();
-    
+
     return {
       current: updatedStreak.current_streak,
       max: updatedStreak.max_streak
@@ -599,7 +595,7 @@ export class DatabaseStorage implements IStorage {
         related_type: relatedType,
         created_at: new Date()
       });
-    
+
     // Update user streak if they've logged an activity
     await this.updateUserStreak(userId);
   }

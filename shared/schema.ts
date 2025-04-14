@@ -43,6 +43,14 @@ export const registrationSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+export const landingContent = pgTable('landing_content', {
+  id: serial('id').primaryKey(),
+  title: text('title').notNull(),
+  content: text('content').notNull()
+});
+
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type RegistrationForm = z.infer<typeof registrationSchema>;
+export type LandingContent = typeof landingContent.$inferSelect;
