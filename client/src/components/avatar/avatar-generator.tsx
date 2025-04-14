@@ -818,7 +818,7 @@ const AvatarGenerator: React.FC = () => {
           
           <TabsContent value="saving" className="p-6">
             <div className="flex flex-col items-center justify-center py-12">
-              <Loader2 className="h-16 w-16 animate-spin text-indigo-600 mb-6" />
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600 mb-6"></div>
               <h3 className="text-lg font-medium mb-2">Saving Your Avatar</h3>
               <p className="text-gray-600">
                 Please wait while we save your avatar to your profile...
