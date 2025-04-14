@@ -1,8 +1,6 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
-import { SupabaseProvider } from "./components/ui/supabase-provider";
-
 // Add font imports
 const fontLinks = document.createElement('link');
 fontLinks.rel = 'stylesheet';
@@ -15,7 +13,5 @@ title.textContent = 'NURD Summer Initiative';
 document.head.appendChild(title);
 
 createRoot(document.getElementById("root")!).render(
-  <SupabaseProvider>
-    <App />
-  </SupabaseProvider>
+  <App />
 );
