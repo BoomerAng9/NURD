@@ -2,6 +2,7 @@ import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
+import { SupabaseProvider } from "@/components/ui/supabase-provider";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
@@ -15,6 +16,7 @@ import ProfileSettings from "@/pages/ProfileSettings";
 import JoinOurTeam from "@/pages/Join-Our-Team";
 import Cohorts from "@/pages/Cohorts";
 import AuthPage from "@/pages/auth-page";
+import DiscordConnect from "@/pages/DiscordConnect";
 import { useEffect } from "react";
 import AuthGuard from "@/lib/auth-guard";
 
@@ -45,6 +47,7 @@ function Router() {
       <Route path="/learning" component={Learning} />
       <Route path="/cohorts" component={Cohorts} />
       <Route path="/profile/settings" component={ProfileSettings} />
+      <Route path="/discord/connect" component={DiscordConnect} />
       <Route path="/join-our-team">
         {() => (
           <AuthGuard allowedRoles={['admin', 'freelancer']}>
@@ -60,8 +63,10 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router />
-      <Toaster />
+      <SupabaseProvider>
+        <Router />
+        <Toaster />
+      </SupabaseProvider>
     </QueryClientProvider>
   );
 }
