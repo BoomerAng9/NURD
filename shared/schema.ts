@@ -1,6 +1,7 @@
-import { pgTable, text, serial, integer, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, timestamp, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { relations } from "drizzle-orm";
 
 // This is a simplified schema that contains only what's needed outside the progress tracking
 // For complete progress tracking schema, see progress-schema.ts
@@ -15,6 +16,10 @@ export const users = pgTable("users", {
   path_choice: text("path_choice"),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
+  avatar_url: text("avatar_url"),
+  avatar_svg: text("avatar_svg"),
+  level: integer("level").default(1),
+  xp: integer("xp").default(0),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -57,6 +62,70 @@ export type InsertLandingContent = typeof landingContent.$inferInsert;
 export type LandingContent = typeof landingContent.$inferSelect;
 
 
+// Friendship system tables
+export const friendships = pgTable('friendships', {
+  id: serial('id').primaryKey(),
+  user_id: integer('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  friend_id: integer('friend_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  status: text('status').notNull().default('pending'), // pending, accepted, rejected
+  created_at: timestamp('created_at').defaultNow(),
+  updated_at: timestamp('updated_at').defaultNow()
+});
+
+export const bridges = pgTable('bridges', {
+  id: serial('id').primaryKey(),
+  user_id: integer('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  total_bridges: integer('total_bridges').notNull().default(0),
+  houses_built: integer('houses_built').notNull().default(0),
+  level: integer('level').notNull().default(1),
+  updated_at: timestamp('updated_at').defaultNow()
+});
+
+// Define relationships
+export const userRelations = relations(users, ({ many }) => ({
+  sentFriendships: many(friendships, { relationName: 'userSentFriendships' }),
+  receivedFriendships: many(friendships, { relationName: 'userReceivedFriendships' }),
+  bridges: many(bridges)
+}));
+
+export const friendshipsRelations = relations(friendships, ({ one }) => ({
+  user: one(users, {
+    fields: [friendships.user_id],
+    references: [users.id],
+    relationName: 'userSentFriendships'
+  }),
+  friend: one(users, {
+    fields: [friendships.friend_id],
+    references: [users.id],
+    relationName: 'userReceivedFriendships'
+  })
+}));
+
+export const bridgesRelations = relations(bridges, ({ one }) => ({
+  user: one(users, {
+    fields: [bridges.user_id],
+    references: [users.id]
+  })
+}));
+
+// Insert Schemas
+export const insertFriendshipSchema = createInsertSchema(friendships).omit({
+  id: true,
+  created_at: true,
+  updated_at: true
+});
+
+export const insertBridgeSchema = createInsertSchema(bridges).omit({
+  id: true,
+  updated_at: true
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type RegistrationForm = z.infer<typeof registrationSchema>;
+
+export type InsertFriendship = z.infer<typeof insertFriendshipSchema>;
+export type Friendship = typeof friendships.$inferSelect;
+
+export type InsertBridge = z.infer<typeof insertBridgeSchema>;
+export type Bridge = typeof bridges.$inferSelect;
