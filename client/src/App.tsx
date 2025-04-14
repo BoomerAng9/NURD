@@ -18,7 +18,6 @@ import Cohorts from "@/pages/Cohorts";
 import AuthPage from "@/pages/auth-page";
 import DiscordConnect from "@/pages/DiscordConnect";
 import AvatarCreator from "@/pages/AvatarCreator";
-import ProgressTracking from "@/pages/ProgressTracking";
 import { useEffect } from "react";
 import AuthGuard from "@/lib/auth-guard";
 
@@ -51,7 +50,6 @@ function Router() {
       <Route path="/profile/settings" component={ProfileSettings} />
       <Route path="/discord/connect" component={DiscordConnect} />
       <Route path="/avatar/create" component={AvatarCreator} />
-      <Route path="/progress-tracking" component={ProgressTracking} />
       <Route path="/join-our-team">
         {() => (
           <AuthGuard allowedRoles={['admin', 'freelancer']}>

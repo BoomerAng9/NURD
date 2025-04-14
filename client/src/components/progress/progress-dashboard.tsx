@@ -1,473 +1,480 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Skeleton } from "@/components/ui/skeleton";
-import ProgressBar from "@/components/progress/progress-bar";
-import { getQueryFn } from "@/lib/queryClient";
-import { 
-  BarChart, 
-  PieChart, 
-  Sparkles, 
-  Award, 
-  BookOpen, 
-  CheckCircle, 
-  Clock, 
-  CalendarDays,
-  Zap,
-  Target,
-  Flame
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Loader2, Trophy, Star, Calendar, ArrowUpRight, CheckCircle, Award } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useToast } from "@/hooks/use-toast";
+import { getQueryFn, queryClient } from "../../lib/queryClient";
 
 interface ProgressDashboardProps {
   userId: number;
-  className?: string;
 }
 
-export default function ProgressDashboard({ 
-  userId,
-  className = ""
-}: ProgressDashboardProps) {
-  // Fetch user data (including progress stats)
+interface UserProgressData {
+  xpPoints: number;
+  level: number;
+  streak: { current: number; max: number } | null;
+  coursesInProgress: number;
+  coursesCompleted: number;
+  achievements: Achievement[];
+  recentActivities: Activity[];
+}
+
+interface Achievement {
+  id: number;
+  title: string;
+  description: string;
+  type: string;
+  image_url: string;
+  earned_at: string;
+  is_viewed: boolean;
+}
+
+interface Activity {
+  id: number;
+  activity_type: string;
+  activity_detail: string;
+  xp_earned: number;
+  created_at: string;
+  related_id?: number;
+  related_type?: string;
+}
+
+interface CourseProgress {
+  id: number;
+  course_id: number;
+  title: string;
+  progress_percentage: number;
+  completed_lessons: number;
+  total_lessons: number;
+  last_accessed: string;
+  is_completed: boolean;
+}
+
+export default function ProgressDashboard({ userId }: ProgressDashboardProps) {
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState("overview");
+
+  // Fetch user progress data
   const { 
-    data: userData, 
-    isLoading: isLoadingUser 
+    data: user, 
+    isLoading: isLoadingUser,
+    error: userError
   } = useQuery({
     queryKey: ["/api/user", userId],
     queryFn: getQueryFn(),
   });
 
-  // Fetch user progress data
+  // Fetch user progress on courses
   const { 
-    data: progressData, 
-    isLoading: isLoadingProgress 
+    data: coursesProgress, 
+    isLoading: isLoadingProgress,
+    error: progressError
   } = useQuery({
-    queryKey: ["/api/progress", userId],
+    queryKey: ["/api/users", userId, "progress"],
     queryFn: getQueryFn(),
   });
 
-  // Fetch achievements data
+  // Fetch user achievements
   const { 
-    data: achievementsData, 
-    isLoading: isLoadingAchievements 
+    data: achievements, 
+    isLoading: isLoadingAchievements,
+    error: achievementsError
   } = useQuery({
-    queryKey: ["/api/achievements", userId],
+    queryKey: ["/api/users", userId, "achievements"],
     queryFn: getQueryFn(),
   });
 
-  // Fetch recent activities
+  // Fetch user streak
   const { 
-    data: activitiesData, 
-    isLoading: isLoadingActivities 
+    data: streak, 
+    isLoading: isLoadingStreak,
+    error: streakError
   } = useQuery({
-    queryKey: ["/api/activities", userId],
+    queryKey: ["/api/users", userId, "streak"],
+    queryFn: getQueryFn({ on401: "returnNull" }),
+  });
+
+  // Fetch user activities
+  const { 
+    data: activities, 
+    isLoading: isLoadingActivities,
+    error: activitiesError
+  } = useQuery({
+    queryKey: ["/api/users", userId, "activities"],
     queryFn: getQueryFn(),
   });
 
-  // Get loading state
-  const isLoading = isLoadingUser || isLoadingProgress || isLoadingAchievements || isLoadingActivities;
-
-  // Calculate progress stats
-  const stats = React.useMemo(() => {
-    if (isLoading) {
-      return {
-        totalXP: 0,
-        level: 1,
-        levelProgress: 0,
-        completedCourses: 0,
-        completedLessons: 0,
-        achievements: 0,
-        streak: 0,
-        maxStreak: 0
-      };
-    }
-
-    return {
-      totalXP: userData?.xp_points || 0,
-      level: userData?.level || 1,
-      levelProgress: ((userData?.xp_points || 0) % 100) / 100,
-      completedCourses: progressData?.completed_courses || 0,
-      completedLessons: progressData?.completed_lessons || 0,
-      achievements: achievementsData?.earned_count || 0,
-      streak: userData?.streak?.current || 0,
-      maxStreak: userData?.streak?.max || 0
+  // Update user streak
+  useEffect(() => {
+    const updateStreak = async () => {
+      try {
+        // Only update the streak once per day
+        const lastUpdate = localStorage.getItem(`streak_updated_${userId}`);
+        const today = new Date().toDateString();
+        
+        if (lastUpdate !== today) {
+          const response = await fetch(`/api/users/${userId}/streak/update`, {
+            method: 'POST',
+          });
+          
+          if (response.ok) {
+            localStorage.setItem(`streak_updated_${userId}`, today);
+            queryClient.invalidateQueries({ queryKey: ["/api/users", userId, "streak"] });
+          }
+        }
+      } catch (error) {
+        console.error("Error updating streak:", error);
+      }
     };
-  }, [isLoading, userData, progressData, achievementsData]);
+    
+    updateStreak();
+  }, [userId]);
+
+  const isLoading = isLoadingUser || isLoadingProgress || isLoadingAchievements || isLoadingStreak || isLoadingActivities;
+  const error = userError || progressError || achievementsError || streakError || activitiesError;
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <span className="ml-2 text-lg">Loading progress data...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-4 text-red-500 bg-red-50 rounded-md">
+        <h3 className="font-bold">Error loading progress data</h3>
+        <p>{error instanceof Error ? error.message : "An unknown error occurred"}</p>
+      </div>
+    );
+  }
+
+  const completedCourses = Array.isArray(coursesProgress) 
+    ? coursesProgress.filter(course => course.is_completed).length 
+    : 0;
+
+  const inProgressCourses = Array.isArray(coursesProgress) 
+    ? coursesProgress.filter(course => !course.is_completed).length 
+    : 0;
+
+  const markAchievementViewed = async (achievementId: number) => {
+    // This would typically make an API call to mark the achievement as viewed
+    // For now, we'll just show a toast notification
+    toast({
+      title: "Achievement viewed",
+      description: "This achievement has been marked as viewed.",
+    });
+  };
+
+  const xpToNextLevel = user?.level ? user.level * 100 : 100;
+  const xpProgress = user?.xp_points ? (user.xp_points % xpToNextLevel) / xpToNextLevel * 100 : 0;
 
   return (
-    <Card className={cn("", className)}>
-      <CardHeader className="pb-2">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-          <div>
-            <CardTitle>Learning Progress</CardTitle>
-            <CardDescription>Track your NURD journey progress</CardDescription>
-          </div>
-          <Tabs defaultValue="overview" className="w-full md:w-auto mt-4 md:mt-0">
-            <TabsList className="grid grid-cols-3 w-full md:w-auto">
-              <TabsTrigger value="overview" className="text-xs sm:text-sm">
-                <BarChart className="h-3.5 w-3.5 mr-1.5" />
-                Overview
-              </TabsTrigger>
-              <TabsTrigger value="achievements" className="text-xs sm:text-sm">
-                <Award className="h-3.5 w-3.5 mr-1.5" />
-                Achievements
-              </TabsTrigger>
-              <TabsTrigger value="courses" className="text-xs sm:text-sm">
-                <BookOpen className="h-3.5 w-3.5 mr-1.5" />
-                Courses
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <TabsContent value="overview" className="mt-0 p-0">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {/* XP Points with Level Card */}
-            <div className="col-span-2 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg p-4 relative overflow-hidden">
-              {isLoading ? (
-                <div className="space-y-3">
-                  <Skeleton className="h-10 w-32" />
-                  <Skeleton className="h-6 w-24" />
-                  <Skeleton className="h-4 w-full mt-4" />
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-center gap-3 mb-1">
-                    <Sparkles className="h-5 w-5 text-purple-500" />
-                    <h3 className="font-semibold text-lg">Total XP</h3>
-                  </div>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold">{stats.totalXP}</span>
-                    <Badge variant="outline" className="font-semibold">
-                      Level {stats.level}
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    {100 - ((stats.totalXP % 100))} XP until Level {stats.level + 1}
-                  </p>
-                  
-                  {/* Level Progress Bar */}
-                  <ProgressBar 
-                    value={stats.totalXP % 100}
-                    max={100}
-                    size="lg"
-                    colorVariant="gradient"
-                    showPercentage={false}
-                  />
-                  
-                  {/* Decorative elements */}
-                  <div className="absolute -right-12 -bottom-8 opacity-10">
-                    <Sparkles className="h-40 w-40 text-purple-900" />
-                  </div>
-                </>
-              )}
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* XP and Level Card */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center">
+              <Star className="mr-2 h-5 w-5 text-yellow-500" />
+              Experience Points
+            </CardTitle>
+            <CardDescription>Track your learning progress</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-between mb-2">
+              <span className="text-sm text-muted-foreground">Level {user?.level || 1}</span>
+              <span className="text-sm font-medium">{user?.xp_points || 0} XP</span>
             </div>
-            
-            {/* Activity Streak Card */}
-            <div className="col-span-1 bg-amber-50 rounded-lg p-4 flex flex-col h-full">
-              {isLoading ? (
-                <div className="space-y-3 h-full">
-                  <Skeleton className="h-8 w-24" />
-                  <Skeleton className="h-12 w-16 mx-auto" />
-                  <Skeleton className="h-4 w-full mt-2" />
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Flame className="h-5 w-5 text-amber-500" />
-                    <h3 className="font-semibold">Current Streak</h3>
-                  </div>
-                  <div className="text-center flex-grow flex flex-col justify-center">
-                    <div className="text-4xl font-bold text-amber-500">{stats.streak}</div>
-                    <p className="text-xs text-muted-foreground">days in a row</p>
-                  </div>
-                  <div className="text-center text-xs text-muted-foreground mt-2">
-                    Best: {stats.maxStreak} days
-                  </div>
-                </>
-              )}
-            </div>
-            
-            {/* Achievements Card */}
-            <div className="col-span-1 bg-green-50 rounded-lg p-4 flex flex-col h-full">
-              {isLoading ? (
-                <div className="space-y-3 h-full">
-                  <Skeleton className="h-8 w-24" />
-                  <Skeleton className="h-12 w-16 mx-auto" />
-                  <Skeleton className="h-4 w-full mt-2" />
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Award className="h-5 w-5 text-green-500" />
-                    <h3 className="font-semibold">Achievements</h3>
-                  </div>
-                  <div className="text-center flex-grow flex flex-col justify-center">
-                    <div className="text-4xl font-bold text-green-500">{stats.achievements}</div>
-                    <p className="text-xs text-muted-foreground">unlocked</p>
-                  </div>
-                  <div className="text-center text-xs text-muted-foreground mt-2">
-                    {24 - stats.achievements} more to discover
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-          
-          {/* Course and Lesson Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div className="bg-blue-50 rounded-lg p-4">
-              {isLoading ? (
-                <div className="space-y-3">
-                  <Skeleton className="h-8 w-32" />
-                  <div className="flex justify-between mt-2">
-                    <Skeleton className="h-10 w-16" />
-                    <Skeleton className="h-10 w-16" />
-                  </div>
-                  <Skeleton className="h-4 w-full mt-2" />
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-center gap-2 mb-3">
-                    <BookOpen className="h-5 w-5 text-blue-500" />
-                    <h3 className="font-semibold">Course Progress</h3>
-                  </div>
-                  <div className="flex justify-between items-center mb-2">
-                    <div>
-                      <span className="text-2xl font-bold">{stats.completedCourses}</span>
-                      <span className="text-sm text-muted-foreground ml-1">completed</span>
-                    </div>
-                    <div>
-                      <span className="text-sm text-muted-foreground mr-1">in progress</span>
-                      <span className="text-2xl font-bold">2</span>
-                    </div>
-                  </div>
-                  <ProgressBar 
-                    value={stats.completedCourses}
-                    max={6}
-                    size="md"
-                    colorVariant="info"
-                    showValues
-                    label="Total Courses"
-                  />
-                </>
-              )}
-            </div>
-            
-            <div className="bg-indigo-50 rounded-lg p-4">
-              {isLoading ? (
-                <div className="space-y-3">
-                  <Skeleton className="h-8 w-32" />
-                  <div className="flex justify-between mt-2">
-                    <Skeleton className="h-10 w-16" />
-                    <Skeleton className="h-10 w-16" />
-                  </div>
-                  <Skeleton className="h-4 w-full mt-2" />
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-center gap-2 mb-3">
-                    <CheckCircle className="h-5 w-5 text-indigo-500" />
-                    <h3 className="font-semibold">Lesson Progress</h3>
-                  </div>
-                  <div className="flex justify-between items-center mb-2">
-                    <div>
-                      <span className="text-2xl font-bold">{stats.completedLessons}</span>
-                      <span className="text-sm text-muted-foreground ml-1">completed</span>
-                    </div>
-                    <div>
-                      <span className="text-sm text-muted-foreground mr-1">remaining</span>
-                      <span className="text-2xl font-bold">{30 - stats.completedLessons}</span>
-                    </div>
-                  </div>
-                  <ProgressBar 
-                    value={stats.completedLessons}
-                    max={30}
-                    size="md"
-                    colorVariant="default"
-                    showValues
-                    label="Total Lessons"
-                  />
-                </>
-              )}
-            </div>
-          </div>
-          
-          {/* Timeline or Skills */}
-          <div className="grid grid-cols-1 gap-4 mt-4">
-            <div className="bg-muted/30 rounded-lg p-4">
-              {isLoading ? (
-                <div className="space-y-3">
-                  <Skeleton className="h-8 w-32" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-5/6" />
-                  <Skeleton className="h-4 w-4/6" />
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-center gap-2 mb-3">
-                    <Target className="h-5 w-5 text-slate-500" />
-                    <h3 className="font-semibold">Skills Development</h3>
-                  </div>
-                  <div className="space-y-3">
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-sm">Coding Fundamentals</span>
-                        <span className="text-xs font-medium">65%</span>
-                      </div>
-                      <ProgressBar 
-                        value={65}
-                        max={100}
-                        size="sm"
-                        colorVariant="gradient"
-                        showPercentage={false}
-                      />
-                    </div>
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-sm">Design Thinking</span>
-                        <span className="text-xs font-medium">40%</span>
-                      </div>
-                      <ProgressBar 
-                        value={40}
-                        max={100}
-                        size="sm"
-                        colorVariant="info"
-                        showPercentage={false}
-                      />
-                    </div>
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-sm">Problem Solving</span>
-                        <span className="text-xs font-medium">75%</span>
-                      </div>
-                      <ProgressBar 
-                        value={75}
-                        max={100}
-                        size="sm"
-                        colorVariant="success"
-                        showPercentage={false}
-                      />
-                    </div>
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-sm">Project Management</span>
-                        <span className="text-xs font-medium">35%</span>
-                      </div>
-                      <ProgressBar 
-                        value={35}
-                        max={100}
-                        size="sm"
-                        showPercentage={false}
-                      />
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="achievements" className="mt-0 p-0">
-          {isLoading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
-              {Array(12).fill(0).map((_, i) => (
-                <Skeleton key={i} className="h-20 w-20 rounded-full mx-auto" />
-              ))}
-            </div>
-          ) : (
-            <div className="space-y-6">
-              <div className="bg-muted/30 rounded-lg p-4">
-                <h3 className="font-semibold mb-3">Recently Earned</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
-                  {/* Achievement placeholders until real data is available */}
-                  {achievementsData?.earned?.length > 0 ? (
-                    achievementsData.earned.slice(0, 6).map((achievement) => (
-                      <div key={achievement.id} className="flex flex-col items-center text-center">
-                        <div className="w-16 h-16 rounded-full bg-gradient-to-r from-amber-300 to-yellow-500 mb-2 flex items-center justify-center text-amber-800">
-                          <Award className="h-8 w-8" />
-                        </div>
-                        <span className="text-xs font-medium">{achievement.title}</span>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="col-span-full py-6 text-center">
-                      <p className="text-muted-foreground">Complete challenges to earn achievements!</p>
-                    </div>
-                  )}
-                </div>
+            <Progress value={xpProgress} className="h-2" />
+            <p className="mt-2 text-xs text-muted-foreground">
+              {Math.round(xpToNextLevel - (user?.xp_points || 0) % xpToNextLevel)} XP to Level {(user?.level || 1) + 1}
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Streak Card */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center">
+              <Calendar className="mr-2 h-5 w-5 text-blue-500" />
+              Activity Streak
+            </CardTitle>
+            <CardDescription>Keep learning every day</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-center items-center h-20">
+              <div className="text-center">
+                <p className="text-3xl font-bold">{streak?.current || 0}</p>
+                <p className="text-sm text-muted-foreground">days in a row</p>
               </div>
-              
-              <div className="bg-muted/30 rounded-lg p-4">
-                <h3 className="font-semibold mb-3">Locked Achievements</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
-                  {/* Locked achievement placeholders */}
-                  {Array(6).fill(0).map((_, i) => (
-                    <div key={i} className="flex flex-col items-center text-center">
-                      <div className="w-16 h-16 rounded-full bg-gray-200 mb-2 flex items-center justify-center text-gray-400 relative">
-                        <Award className="h-8 w-8" />
-                        <div className="absolute inset-0 rounded-full border-2 border-dashed border-gray-300"></div>
+              <div className="border-r border-gray-200 h-12 mx-6"></div>
+              <div className="text-center">
+                <p className="text-3xl font-bold">{streak?.max || 0}</p>
+                <p className="text-sm text-muted-foreground">longest streak</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Completion Card */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center">
+              <CheckCircle className="mr-2 h-5 w-5 text-green-500" />
+              Course Completion
+            </CardTitle>
+            <CardDescription>Your learning progress</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-center items-center h-20">
+              <div className="text-center">
+                <p className="text-3xl font-bold">{completedCourses}</p>
+                <p className="text-sm text-muted-foreground">completed</p>
+              </div>
+              <div className="border-r border-gray-200 h-12 mx-6"></div>
+              <div className="text-center">
+                <p className="text-3xl font-bold">{inProgressCourses}</p>
+                <p className="text-sm text-muted-foreground">in progress</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="achievements">Achievements</TabsTrigger>
+          <TabsTrigger value="history">Activity History</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview" className="space-y-4 mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Learning Progress</CardTitle>
+              <CardDescription>Your progress on active courses</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {Array.isArray(coursesProgress) && coursesProgress.length > 0 ? (
+                <div className="space-y-4">
+                  {coursesProgress
+                    .filter(course => !course.is_completed)
+                    .sort((a, b) => new Date(b.last_accessed).getTime() - new Date(a.last_accessed).getTime())
+                    .slice(0, 5)
+                    .map((course) => (
+                      <div key={course.id} className="space-y-1">
+                        <div className="flex justify-between items-center">
+                          <h4 className="font-medium">{course.title}</h4>
+                          <span className="text-sm text-muted-foreground">
+                            {course.completed_lessons} / {course.total_lessons} lessons
+                          </span>
+                        </div>
+                        <Progress value={course.progress_percentage} className="h-2" />
+                        <div className="flex justify-between text-xs text-muted-foreground">
+                          <span>
+                            Last activity: {new Date(course.last_accessed).toLocaleDateString()}
+                          </span>
+                          <span>{course.progress_percentage}% complete</span>
+                        </div>
                       </div>
-                      <span className="text-xs text-muted-foreground">???</span>
+                    ))}
+                </div>
+              ) : (
+                <p className="text-center py-8 text-muted-foreground">
+                  You haven't started any courses yet. Explore our courses to begin your learning journey!
+                </p>
+              )}
+            </CardContent>
+            <CardFooter>
+              <Button variant="outline" className="w-full">
+                View all courses
+                <ArrowUpRight className="ml-2 h-4 w-4" />
+              </Button>
+            </CardFooter>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Achievements</CardTitle>
+              <CardDescription>Your latest learning milestones</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {Array.isArray(achievements) && achievements.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {achievements
+                    .sort((a, b) => new Date(b.earned_at).getTime() - new Date(a.earned_at).getTime())
+                    .slice(0, 3)
+                    .map((achievement) => (
+                      <TooltipProvider key={achievement.id}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div 
+                              className={`relative p-4 border rounded-lg flex flex-col items-center justify-center bg-gradient-to-b from-muted/50 to-muted transition-all hover:shadow-md cursor-pointer ${
+                                !achievement.is_viewed ? "ring-2 ring-primary ring-offset-2" : ""
+                              }`}
+                              onClick={() => markAchievementViewed(achievement.id)}
+                            >
+                              {!achievement.is_viewed && (
+                                <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                                  !
+                                </div>
+                              )}
+                              {achievement.image_url ? (
+                                <img 
+                                  src={achievement.image_url} 
+                                  alt={achievement.title} 
+                                  className="h-16 w-16 object-contain mb-2" 
+                                />
+                              ) : (
+                                <Award className="h-16 w-16 text-primary mb-2" />
+                              )}
+                              <h4 className="font-medium text-center">{achievement.title}</h4>
+                              <p className="text-xs text-muted-foreground text-center mt-1">
+                                Earned {new Date(achievement.earned_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{achievement.description}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ))}
+                </div>
+              ) : (
+                <p className="text-center py-8 text-muted-foreground">
+                  You haven't earned any achievements yet. Complete courses and lessons to earn achievements!
+                </p>
+              )}
+            </CardContent>
+            <CardFooter>
+              <Button variant="outline" className="w-full" onClick={() => setActiveTab("achievements")}>
+                View all achievements
+                <ArrowUpRight className="ml-2 h-4 w-4" />
+              </Button>
+            </CardFooter>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="achievements" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Your Achievements</CardTitle>
+              <CardDescription>All badges and milestones you've earned</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {Array.isArray(achievements) && achievements.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {achievements
+                    .sort((a, b) => new Date(b.earned_at).getTime() - new Date(a.earned_at).getTime())
+                    .map((achievement) => (
+                      <TooltipProvider key={achievement.id}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div 
+                              className={`relative p-4 border rounded-lg flex flex-col items-center justify-center bg-gradient-to-b from-muted/50 to-muted transition-all hover:shadow-md cursor-pointer ${
+                                !achievement.is_viewed ? "ring-2 ring-primary ring-offset-2" : ""
+                              }`}
+                              onClick={() => markAchievementViewed(achievement.id)}
+                            >
+                              {!achievement.is_viewed && (
+                                <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                                  !
+                                </div>
+                              )}
+                              {achievement.image_url ? (
+                                <img 
+                                  src={achievement.image_url} 
+                                  alt={achievement.title} 
+                                  className="h-16 w-16 object-contain mb-2" 
+                                />
+                              ) : (
+                                <Award className="h-16 w-16 text-primary mb-2" />
+                              )}
+                              <h4 className="font-medium text-center">{achievement.title}</h4>
+                              <p className="text-xs text-center mt-1">{achievement.description}</p>
+                              <Badge variant="outline" className="mt-2">
+                                {achievement.type}
+                              </Badge>
+                              <p className="text-xs text-muted-foreground text-center mt-1">
+                                Earned {new Date(achievement.earned_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{achievement.description}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ))}
+                </div>
+              ) : (
+                <p className="text-center py-8 text-muted-foreground">
+                  You haven't earned any achievements yet. Complete courses and lessons to earn achievements!
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="history" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Activity History</CardTitle>
+              <CardDescription>Track your learning journey</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {Array.isArray(activities) && activities.length > 0 ? (
+                <div className="space-y-4">
+                  {activities.map((activity) => (
+                    <div key={activity.id} className="flex items-start gap-4 border-b pb-4 last:border-0">
+                      <div className="bg-muted rounded-full p-2">
+                        {activity.activity_type === 'course_completion' && (
+                          <Trophy className="h-5 w-5 text-yellow-500" />
+                        )}
+                        {activity.activity_type === 'lesson_completion' && (
+                          <CheckCircle className="h-5 w-5 text-green-500" />
+                        )}
+                        {activity.activity_type === 'achievement_earned' && (
+                          <Award className="h-5 w-5 text-purple-500" />
+                        )}
+                        {!['course_completion', 'lesson_completion', 'achievement_earned'].includes(activity.activity_type) && (
+                          <Star className="h-5 w-5 text-blue-500" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex justify-between">
+                          <h4 className="font-medium">
+                            {activity.activity_detail || activity.activity_type.replace('_', ' ')}
+                          </h4>
+                          {activity.xp_earned > 0 && (
+                            <Badge variant="secondary">+{activity.xp_earned} XP</Badge>
+                          )}
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          {new Date(activity.created_at).toLocaleString()}
+                        </p>
+                      </div>
                     </div>
                   ))}
                 </div>
-              </div>
-            </div>
-          )}
-        </TabsContent>
-        
-        <TabsContent value="courses" className="mt-0 p-0">
-          {isLoading ? (
-            <div className="space-y-4">
-              {Array(3).fill(0).map((_, i) => (
-                <div key={i} className="p-4 border rounded-lg">
-                  <Skeleton className="h-6 w-40 mb-2" />
-                  <Skeleton className="h-4 w-full mb-3" />
-                  <Skeleton className="h-3 w-full" />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {progressData?.courses?.length > 0 ? (
-                progressData.courses.map((course) => (
-                  <div key={course.id} className="p-4 bg-muted/30 rounded-lg">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 className="font-medium">{course.title}</h3>
-                        <p className="text-sm text-muted-foreground">{course.description}</p>
-                      </div>
-                      <Badge variant={course.completed ? "success" : "outline"}>
-                        {course.completed ? "Completed" : `${course.progress}%`}
-                      </Badge>
-                    </div>
-                    <ProgressBar 
-                      value={course.progress} 
-                      max={100}
-                      colorVariant={course.completed ? "success" : "default"}
-                    />
-                    <div className="text-xs text-muted-foreground mt-2">
-                      {course.completed_lessons} of {course.total_lessons} lessons completed
-                    </div>
-                  </div>
-                ))
               ) : (
-                <div className="text-center py-12">
-                  <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-                  <h3 className="font-medium text-lg mb-1">No courses started yet</h3>
-                  <p className="text-muted-foreground text-sm">
-                    Explore our learning modules to begin your NURD journey!
-                  </p>
-                </div>
+                <p className="text-center py-8 text-muted-foreground">
+                  No activity recorded yet. Start learning to see your activity here!
+                </p>
               )}
-            </div>
-          )}
+            </CardContent>
+          </Card>
         </TabsContent>
-      </CardContent>
-    </Card>
+      </Tabs>
+    </div>
   );
 }
