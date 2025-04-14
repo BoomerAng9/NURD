@@ -402,49 +402,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Create HTTP server
   const httpServer = createServer(app);
-  
-  // Create WebSocket server on the same HTTP server but on a different path
+
+  // Create WebSocket server
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
-  
+
   // WebSocket connection handler
   wss.on('connection', (ws, req) => {
     console.log('WebSocket client connected');
     const clientId = req.headers['sec-websocket-key'] as string;
     clients.set(clientId, ws);
-    
-    // Send welcome message
+
     ws.send(JSON.stringify({
       type: 'WELCOME',
       message: 'Connected to NURD real-time server'
     }));
-    
-    // Handle incoming messages
+
     ws.on('message', (message) => {
       try {
         const data = JSON.parse(message.toString());
         console.log('Received message:', data);
-        
-        // Handle different message types
+
         if (data.type === 'USER_ACTIVITY') {
-          // Broadcast user activity to other clients
           broadcastMessage({
             type: 'USER_ACTIVITY',
             data: data.data
           });
         }
-        
-        // You can add more message type handlers here
       } catch (error) {
         console.error('Error parsing message:', error);
       }
     });
-    
-    // Handle disconnection
+
     ws.on('close', () => {
       console.log('WebSocket client disconnected');
       clients.delete(clientId);
     });
   });
-  
+
   return httpServer;
 }
