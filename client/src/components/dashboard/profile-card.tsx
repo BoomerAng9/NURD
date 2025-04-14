@@ -70,10 +70,15 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
           </div>
         </div>
         
-        <div className="mt-6">
+        <div className="mt-6 space-y-2">
           <Link href="/profile/settings">
             <button className="w-full text-center py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
               Edit Profile
+            </button>
+          </Link>
+          <Link href="/avatar/create">
+            <button className="w-full text-center py-2 bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors text-white">
+              Create Avatar
             </button>
           </Link>
         </div>

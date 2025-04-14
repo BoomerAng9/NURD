@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertCircle, ArrowLeft, User, Palette } from 'lucide-react';
+import { AlertCircle, ArrowLeft, User, Palette, UserCircle2 } from 'lucide-react';
 
 type ProfileData = {
   displayName: string;
@@ -207,7 +207,7 @@ const ProfileSettings: React.FC = () => {
           </div>
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-8">
-            <TabsList className="grid grid-cols-2 w-full max-w-md mx-auto">
+            <TabsList className="grid grid-cols-3 w-full max-w-md mx-auto">
               <TabsTrigger value="profile" className="flex items-center gap-2">
                 <User className="h-4 w-4" />
                 <span>Profile</span>
@@ -215,6 +215,10 @@ const ProfileSettings: React.FC = () => {
               <TabsTrigger value="theme" className="flex items-center gap-2">
                 <Palette className="h-4 w-4" />
                 <span>Theme</span>
+              </TabsTrigger>
+              <TabsTrigger value="avatar" className="flex items-center gap-2">
+                <UserCircle2 className="h-4 w-4" />
+                <span>Avatar</span>
               </TabsTrigger>
             </TabsList>
             
@@ -232,6 +236,52 @@ const ProfileSettings: React.FC = () => {
                 initialTheme={themeSettings}
                 onSave={handleSaveThemeSettings}
               />
+            </TabsContent>
+            
+            <TabsContent value="avatar" className="space-y-6">
+              <div className="bg-white p-6 rounded-lg shadow-sm border">
+                <div className="space-y-6">
+                  <div className="text-center">
+                    <UserCircle2 className="h-24 w-24 mx-auto mb-4 text-indigo-500" />
+                    <h3 className="text-xl font-medium">Create Your Personalized Avatar</h3>
+                    <p className="text-gray-600 mt-2">
+                      Take a fun personality quiz and design a unique avatar that represents you!
+                    </p>
+                  </div>
+                  
+                  <div className="bg-indigo-50 p-4 rounded-lg">
+                    <h4 className="font-medium text-indigo-900 mb-2">Features:</h4>
+                    <ul className="space-y-2 text-indigo-800">
+                      <li className="flex items-center gap-2">
+                        <div className="h-1.5 w-1.5 rounded-full bg-indigo-600" />
+                        Personality-based avatar generation
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <div className="h-1.5 w-1.5 rounded-full bg-indigo-600" />
+                        Multiple customization options
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <div className="h-1.5 w-1.5 rounded-full bg-indigo-600" />
+                        Save your avatar to your profile
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <div className="h-1.5 w-1.5 rounded-full bg-indigo-600" />
+                        Download your avatar as an SVG file
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div className="flex justify-center">
+                    <button 
+                      onClick={() => setLocation('/avatar/create')}
+                      className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium flex items-center gap-2"
+                    >
+                      <UserCircle2 className="h-5 w-5" />
+                      Create Your Avatar
+                    </button>
+                  </div>
+                </div>
+              </div>
             </TabsContent>
           </Tabs>
         </div>
