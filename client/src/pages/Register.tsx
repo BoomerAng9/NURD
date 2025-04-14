@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation } from 'wouter';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/components/ui/supabase-provider';
+
 import Navbar from '@/components/ui/navbar';
 import Footer from '@/components/sections/footer';
 import NurdLogo from '@/components/ui/nurd-logo';
