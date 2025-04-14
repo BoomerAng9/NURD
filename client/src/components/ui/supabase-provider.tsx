@@ -1,56 +1,50 @@
-import { createClient } from '@supabase/supabase-js';
-import { createContext, useState, useEffect, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-// Supabase credentials
-const supabaseUrl = 'https://pjfgckbjijkxirhutbuq.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqZmdja2JqaWpreGlyaHV0YnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ1NjI5MTcsImV4cCI6MjA2MDEzODkxN30.WMQTXVbmsjuGkM081bqDI-RtK-2RuO5VrgAa6GOAszg';
+// This context will hold the Supabase client
+interface SupabaseContextType {
+  supabase: SupabaseClient;
+  isSupabaseLoaded: boolean;
+}
 
-// Create Supabase client
-export const supabase = createClient(supabaseUrl, supabaseKey);
+const SupabaseContext = createContext<SupabaseContextType | undefined>(undefined);
 
-// Create context
-type SupabaseContextType = {
-  supabase: typeof supabase;
-  user: any | null;
-};
+interface SupabaseProviderProps {
+  children: React.ReactNode;
+}
 
-const SupabaseContext = createContext<SupabaseContextType>({
-  supabase,
-  user: null,
-});
-
-export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<any | null>(null);
+export const SupabaseProvider: React.FC<SupabaseProviderProps> = ({ children }) => {
+  const [supabase, setSupabase] = useState<SupabaseClient | null>(null);
+  const [isSupabaseLoaded, setIsSupabaseLoaded] = useState(false);
 
   useEffect(() => {
-    // Check if user is already authenticated
-    const checkUser = async () => {
-      const { data } = await supabase.auth.getSession();
-      setUser(data?.session?.user || null);
-    };
+    // Initialize Supabase client
+    const supabaseUrl = 'https://pjfgckbjijkxirhutbuq.supabase.co';
+    const supabaseKey = process.env.SUPABASE_KEY || '';
     
-    checkUser();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user || null);
-      }
-    );
-
-    return () => {
-      subscription.unsubscribe();
-    };
+    if (!supabaseKey) {
+      console.warn('Supabase key is not set. File uploads will not work.');
+    }
+    
+    const client = createClient(supabaseUrl, supabaseKey);
+    setSupabase(client);
+    setIsSupabaseLoaded(true);
   }, []);
 
+  // Value of the context provider
+  const value = {
+    supabase: supabase as SupabaseClient,
+    isSupabaseLoaded,
+  };
+
   return (
-    <SupabaseContext.Provider value={{ supabase, user }}>
+    <SupabaseContext.Provider value={value}>
       {children}
     </SupabaseContext.Provider>
   );
 };
 
-// Custom hook to use the Supabase context
+// Hook to use the Supabase context
 export const useSupabase = () => {
   const context = useContext(SupabaseContext);
   if (context === undefined) {

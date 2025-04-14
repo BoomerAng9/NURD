@@ -1,4 +1,4 @@
-import { users, type User, type InsertUser, type LandingContent } from "@shared/schema";
+import { users, type User, type InsertUser, landingContent, type LandingContent, type InsertLandingContent } from "@shared/schema";
 import { 
   courses, 
   lessons, 
@@ -19,8 +19,7 @@ import {
   type InsertUserProgress,
   type InsertLessonProgress,
   type InsertAchievement,
-  type InsertUserAchievement,
-  type InsertLandingContent
+  type InsertUserAchievement
 } from "@shared/progress-schema";
 import { db } from "./db";
 import { eq, and, desc, sql, asc } from "drizzle-orm";
@@ -30,8 +29,9 @@ import { eq, and, desc, sql, asc } from "drizzle-orm";
 
 export interface IStorage {
   // Landing content methods
-  getLandingContent(): Promise<LandingContent | undefined>;
+  getLandingContent(): Promise<LandingContent[]>;
   updateLandingContent(content: InsertLandingContent): Promise<LandingContent>;
+  deleteLandingContent(id: number): Promise<void>;
 
   // User methods
   getUser(id: number): Promise<User | undefined>;
@@ -77,17 +77,30 @@ export interface IStorage {
 // Database storage implementation using Drizzle ORM
 export class DatabaseStorage implements IStorage {
   // Landing content methods
-  async getLandingContent(): Promise<LandingContent | undefined> {
-    const [content] = await db.select().from(landingContent).orderBy(desc(landingContent.created_at)).limit(1);
-    return content || {
-      id: 1,
-      title: 'Welcome to NURD',
-      content: 'Where innovation meets education',
-      mediaUrl: null,
-      mediaType: null,
-      created_at: new Date(),
-      updated_at: new Date()
-    };
+  async getLandingContent(): Promise<LandingContent[]> {
+    const content = await db
+      .select()
+      .from(landingContent)
+      .orderBy(asc(landingContent.displayOrder));
+      
+    if (content.length === 0) {
+      // Create a default entry if no content exists
+      const [defaultContent] = await db
+        .insert(landingContent)
+        .values({
+          title: 'Welcome to NURD',
+          content: 'Where innovation meets education',
+          mediaUrl: null,
+          mediaType: null,
+          displayOrder: 0,
+          created_at: new Date(),
+          updated_at: new Date()
+        })
+        .returning();
+      return [defaultContent];
+    }
+    
+    return content;
   }
 
   async updateLandingContent(content: Partial<InsertLandingContent>): Promise<LandingContent> {
@@ -99,6 +112,12 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return updatedContent;
+  }
+  
+  async deleteLandingContent(id: number): Promise<void> {
+    await db
+      .delete(landingContent)
+      .where(eq(landingContent.id, id));
   }
 
   // User methods
