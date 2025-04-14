@@ -17,6 +17,7 @@ import JoinOurTeam from "@/pages/Join-Our-Team";
 import Cohorts from "@/pages/Cohorts";
 import AuthPage from "@/pages/auth-page";
 import DiscordConnect from "@/pages/DiscordConnect";
+import AvatarCreator from "@/pages/AvatarCreator";
 import { useEffect } from "react";
 import AuthGuard from "@/lib/auth-guard";
 
@@ -48,6 +49,7 @@ function Router() {
       <Route path="/cohorts" component={Cohorts} />
       <Route path="/profile/settings" component={ProfileSettings} />
       <Route path="/discord/connect" component={DiscordConnect} />
+      <Route path="/avatar/create" component={AvatarCreator} />
       <Route path="/join-our-team">
         {() => (
           <AuthGuard allowedRoles={['admin', 'freelancer']}>
