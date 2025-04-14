@@ -14,6 +14,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useSupabase } from '@/components/ui/supabase-provider';
 import { User } from '@shared/schema';
 import ProgressDashboard from '@/components/progress/progress-dashboard';
+import { BridgeSystem } from '@/components/friends/bridge-system';
+import { NurdCard } from '@/components/profile/nurd-card';
+import { FuturisticContainer, FadeIn, ScaleIn, CyberButton } from '@/components/animations/futuristic-transitions';
 
 // Mock activities until we have a proper API endpoint
 const activities = [
@@ -125,9 +128,10 @@ const Dashboard: React.FC = () => {
                 <Tabs defaultValue="activities" className="w-full">
                   <div className="px-6 pt-6">
                     <h2 className="font-heading font-bold text-2xl text-gray-900 mb-4">My NURD Journey</h2>
-                    <TabsList className="grid grid-cols-4 mb-4">
+                    <TabsList className="grid grid-cols-5 mb-4">
                       <TabsTrigger value="activities">Activities</TabsTrigger>
                       <TabsTrigger value="progress">Progress</TabsTrigger>
+                      <TabsTrigger value="connections">Connections</TabsTrigger>
                       <TabsTrigger value="projects">Projects</TabsTrigger>
                       <TabsTrigger value="achievements">Achievements</TabsTrigger>
                     </TabsList>
@@ -192,6 +196,97 @@ const Dashboard: React.FC = () => {
                           )}
                         </div>
                       </div>
+                    )}
+                  </TabsContent>
+                  
+                  <TabsContent value="connections" className="p-6 pt-2">
+                    {isLoading ? (
+                      <div className="space-y-4">
+                        <Skeleton className="h-8 w-1/3 mb-2" />
+                        <Skeleton className="h-64 w-full rounded-lg" />
+                      </div>
+                    ) : (
+                      <FadeIn>
+                        <div>
+                          <p className="text-muted-foreground mb-6">
+                            Connect with other NURDs to build bridges and create a community of learners.
+                          </p>
+                          
+                          <BridgeSystem 
+                            friends={[
+                              {
+                                id: 1,
+                                name: "Alex Chen",
+                                status: "online",
+                                level: 7,
+                                connectDate: "2 weeks ago"
+                              },
+                              {
+                                id: 2,
+                                name: "Maya Johnson",
+                                status: "away",
+                                level: 5,
+                                connectDate: "3 days ago"
+                              }
+                            ]}
+                            pendingRequests={[
+                              {
+                                id: 3,
+                                name: "Jordan Smith",
+                                requestDate: "1 day ago"
+                              }
+                            ]}
+                            bridges={6}
+                            houses={1}
+                            onSendRequest={(username) => {
+                              toast({
+                                title: "Bridge request sent",
+                                description: `Your connection request has been sent to ${username}`,
+                              });
+                            }}
+                            onAcceptRequest={(requestId) => {
+                              toast({
+                                title: "Connection accepted",
+                                description: "You've added a new NURD to your network",
+                              });
+                            }}
+                            onDeclineRequest={(requestId) => {
+                              toast({
+                                title: "Request declined",
+                                description: "The connection request has been declined",
+                              });
+                            }}
+                            onRemoveFriend={(friendId) => {
+                              toast({
+                                variant: "destructive",
+                                title: "Connection removed",
+                                description: "The NURD has been removed from your connections"
+                              });
+                            }}
+                          />
+                          
+                          <div className="mt-8">
+                            <h3 className="font-heading font-bold text-xl text-gray-900 mb-4">Your NURD Profile Card</h3>
+                            <div className="flex justify-center">
+                              <div className="max-w-sm">
+                                <FuturisticContainer>
+                                  <NurdCard 
+                                    user={userData}
+                                    level={userData?.level || 7}
+                                    bridges={6}
+                                    houses={1}
+                                    techs={['TECH SAGE']}
+                                    coreTraits={['VITALITY']}
+                                    vibeAbilities={['CODE MASTERY']}
+                                    syncStatus="ACTIVE"
+                                    description="A young innovator with boundless energy, always seeking the next big idea."
+                                  />
+                                </FuturisticContainer>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </FadeIn>
                     )}
                   </TabsContent>
 

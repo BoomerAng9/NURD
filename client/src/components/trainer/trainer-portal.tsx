@@ -110,7 +110,10 @@ export function TrainerPortal({
       return;
     }
     
-    onCreateSession?.(sessionForm);
+    onCreateSession?.({
+      ...sessionForm,
+      type: sessionForm.type as 'virtual' | 'in-person' | 'hybrid'
+    });
     
     toast({
       title: "Session created",
