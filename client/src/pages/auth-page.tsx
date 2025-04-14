@@ -85,7 +85,7 @@ export default function AuthPage() {
                   </div>
                   <Button 
                     type="submit"
-                    className="w-full bg-[#6A2FF8] hover:bg-[#5825c5]" {/* Kept original button styling */}
+                    className="w-full bg-[#6A2FF8] hover:bg-[#5825c5]"
                     disabled={isLoading}
                   >
                     {isLoading ? 'Logging in...' : 'Login'}
