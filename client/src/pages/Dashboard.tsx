@@ -167,17 +167,98 @@ const Dashboard: React.FC = () => {
                   </TabsContent>
 
                   <TabsContent value="achievements" className="p-6">
-                    <div className="text-center py-10">
-                      <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                        </svg>
+                    {isLoading ? (
+                      <div className="space-y-4">
+                        <Skeleton className="h-20 w-full" />
+                        <div className="grid grid-cols-4 gap-4">
+                          <Skeleton className="h-16 w-16 rounded-full" />
+                          <Skeleton className="h-16 w-16 rounded-full" />
+                          <Skeleton className="h-16 w-16 rounded-full" />
+                          <Skeleton className="h-16 w-16 rounded-full" />
+                        </div>
                       </div>
-                      <h3 className="font-heading font-bold text-xl text-gray-900 mb-2">Coming Soon!</h3>
-                      <p className="text-gray-600 max-w-md mx-auto">
-                        Complete activities and projects to earn achievements and showcase your skills. Check back soon!
-                      </p>
-                    </div>
+                    ) : (
+                      <div className="space-y-6">
+                        {/* Progress Tracking Preview */}
+                        <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-4">
+                          <h3 className="font-heading font-bold text-lg text-purple-900 mb-2">Learning Progress</h3>
+                          
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                            <div className="bg-white rounded-lg p-3 shadow-sm">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-sm font-medium">Level</span>
+                                <span className="text-lg font-bold">{userData?.level || 1}</span>
+                              </div>
+                              <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
+                                <div 
+                                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-purple-400 to-indigo-500 rounded-full"
+                                  style={{ width: `${((userData?.xp_points || 0) % 100) / 100 * 100}%` }}
+                                ></div>
+                              </div>
+                              <div className="flex justify-between mt-1">
+                                <span className="text-xs text-gray-500">0 XP</span>
+                                <span className="text-xs text-gray-500">100 XP</span>
+                              </div>
+                            </div>
+                            
+                            <div className="bg-white rounded-lg p-3 shadow-sm">
+                              <div className="flex flex-col h-full justify-center items-center">
+                                <span className="text-sm text-gray-500">Current XP</span>
+                                <span className="text-2xl font-bold text-indigo-600">{userData?.xp_points || 0}</span>
+                              </div>
+                            </div>
+                            
+                            <div className="bg-white rounded-lg p-3 shadow-sm">
+                              <div className="flex flex-col h-full justify-center items-center">
+                                <span className="text-sm text-gray-500">Activity Streak</span>
+                                <div className="flex items-center mt-1">
+                                  <span className="text-2xl font-bold text-amber-500">0</span>
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1 text-amber-500" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                                  </svg>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <Link href="/progress-tracking">
+                            <div className="w-full bg-white hover:bg-gray-50 transition-colors text-center py-2 rounded-lg shadow-sm font-medium text-indigo-600 cursor-pointer">
+                              View Detailed Progress
+                            </div>
+                          </Link>
+                        </div>
+                        
+                        {/* Achievements */}
+                        <div>
+                          <div className="flex items-center justify-between mb-4">
+                            <h3 className="font-heading font-bold text-lg text-gray-900">Your Achievements</h3>
+                            <span className="text-sm text-gray-500">0 of 24 unlocked</span>
+                          </div>
+                          
+                          <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 sm:gap-4">
+                            {/* Achievement badges would normally be populated from API */}
+                            {Array(6).fill(0).map((_, i) => (
+                              <div key={i} className="relative group">
+                                <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gray-200 flex items-center justify-center group-hover:bg-gray-100 transition-colors">
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                  </svg>
+                                </div>
+                                <div className="absolute -top-2 -right-2 bg-black bg-opacity-60 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                  ?
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          
+                          <div className="text-center mt-6">
+                            <p className="text-gray-600 text-sm">
+                              Complete courses and challenges to earn achievements and showcase your skills!
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </TabsContent>
                 </Tabs>
               </div>
