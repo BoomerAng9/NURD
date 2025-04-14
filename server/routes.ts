@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from 'ws';
 import { storage } from "./storage";
@@ -10,6 +10,57 @@ import {
   insertUserProgressSchema
 } from "@shared/progress-schema";
 import { ZodError } from "zod";
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+
+// Configure multer for file uploads
+const uploadDir = path.join(process.cwd(), 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage_config = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, uploadDir);
+  },
+  filename: function(req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+  }
+});
+
+const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  // Accept documents, images, and videos
+  const acceptedTypes = [
+    // Documents
+    'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'text/plain',
+    
+    // Images
+    'image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml',
+    
+    // Videos
+    'video/mp4', 'video/webm', 'video/quicktime'
+  ];
+  
+  if (acceptedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file type'));
+  }
+};
+
+const upload = multer({ 
+  storage: storage_config,
+  fileFilter,
+  limits: {
+    fileSize: 50 * 1024 * 1024, // 50MB max file size
+  }
+});
 
 // Store connected WebSocket clients
 const clients = new Map<string, WebSocket>();
@@ -294,35 +345,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Landing Page Routes
-app.get('/api/landing-content', async (req, res) => {
-  try {
-    const content = await storage.getLandingContent();
-    return res.status(200).json(content);
-  } catch (error) {
-    console.error("Error fetching landing content:", error);
-    return res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-app.post('/api/landing-content', async (req, res) => {
-  try {
-    // Check if user is admin
-    const userId = req.session?.userId;
-    const user = await storage.getUserById(userId);
-    if (!user?.is_admin) {
-      return res.status(403).json({ message: "Unauthorized" });
-    }
-
-    const content = await storage.updateLandingContent(req.body);
-    return res.status(200).json(content);
-  } catch (error) {
-    console.error("Error updating landing content:", error);
-    return res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-// Achievement Routes
+  // Achievement Routes
   // Landing Page Content Routes
   app.get('/api/landing-content', async (req, res) => {
     try {

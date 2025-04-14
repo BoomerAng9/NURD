@@ -54,6 +54,12 @@ export const landingContent = pgTable('landing_content', {
   content: text('content').notNull(),
   mediaUrl: text('media_url'),
   mediaType: text('media_type'),
+  mediaThumbnail: text('media_thumbnail'),
+  documentTitle: text('document_title'),
+  documentDescription: text('document_description'),
+  actionUrl: text('action_url'),
+  actionText: text('action_text'),
+  displayOrder: integer('display_order').default(0),
   created_at: timestamp('created_at').defaultNow(),
   updated_at: timestamp('updated_at').defaultNow()
 });

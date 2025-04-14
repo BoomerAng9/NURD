@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { SupabaseProvider } from "@/components/ui/supabase-provider";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
+import Landing from "@/pages/Landing";
 import About from "@/pages/About";
 import Register from "@/pages/Register";
 import Dashboard from "@/pages/Dashboard";
