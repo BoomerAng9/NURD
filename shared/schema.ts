@@ -46,8 +46,15 @@ export const registrationSchema = z.object({
 export const landingContent = pgTable('landing_content', {
   id: serial('id').primaryKey(),
   title: text('title').notNull(),
-  content: text('content').notNull()
+  content: text('content').notNull(),
+  mediaUrl: text('media_url'),
+  mediaType: text('media_type'),
+  created_at: timestamp('created_at').defaultNow(),
+  updated_at: timestamp('updated_at').defaultNow()
 });
+
+export type InsertLandingContent = typeof landingContent.$inferInsert;
+export type LandingContent = typeof landingContent.$inferSelect;
 
 
 export type InsertUser = z.infer<typeof insertUserSchema>;

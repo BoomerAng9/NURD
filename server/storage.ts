@@ -79,10 +79,18 @@ export class DatabaseStorage implements IStorage {
   // Landing content methods
   async getLandingContent(): Promise<LandingContent | undefined> {
     const [content] = await db.select().from(landingContent).orderBy(desc(landingContent.created_at)).limit(1);
-    return content;
+    return content || {
+      id: 1,
+      title: 'Welcome to NURD',
+      content: 'Where innovation meets education',
+      mediaUrl: null,
+      mediaType: null,
+      created_at: new Date(),
+      updated_at: new Date()
+    };
   }
 
-  async updateLandingContent(content: InsertLandingContent): Promise<LandingContent> {
+  async updateLandingContent(content: Partial<InsertLandingContent>): Promise<LandingContent> {
     const [updatedContent] = await db
       .insert(landingContent)
       .values({
