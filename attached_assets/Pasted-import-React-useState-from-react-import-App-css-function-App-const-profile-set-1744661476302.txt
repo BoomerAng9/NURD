@@ -1,0 +1,264 @@
+import React, { useState } from 'react';
+import './App.css';
+
+function App() {
+  const [profile, setProfile] = useState({
+    avatarUrl: '',
+    name: '',
+    classType: '',
+    level: '',
+    coreTrait: '',
+    vibeAbility: '',
+    syncStatus: '',
+    bio: ''
+  });
+
+  // Handle text fields
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProfile((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Clear any field
+  const handleClearField = (fieldName) => {
+    setProfile((prev) => ({ ...prev, [fieldName]: '' }));
+  };
+
+  return (
+    <div className="container">
+      <h1>NURD Profile Creator</h1>
+
+      {/* ---- Form Section ---- */}
+      <div className="form-section">
+        <label>
+          Avatar Image URL:
+          <input
+            type="text"
+            name="avatarUrl"
+            value={profile.avatarUrl}
+            onChange={handleInputChange}
+            placeholder="https://example.com/your-avatar.png"
+          />
+        </label>
+        <label>
+          Name:
+          <input
+            type="text"
+            name="name"
+            value={profile.name}
+            onChange={handleInputChange}
+            placeholder="KidProCoder"
+          />
+        </label>
+        <label>
+          Class:
+          <input
+            type="text"
+            name="classType"
+            value={profile.classType}
+            onChange={handleInputChange}
+            placeholder="Tech Sage"
+          />
+        </label>
+        <label>
+          Level:
+          <input
+            type="text"
+            name="level"
+            value={profile.level}
+            onChange={handleInputChange}
+            placeholder="7"
+          />
+        </label>
+        <label>
+          Core Trait:
+          <input
+            type="text"
+            name="coreTrait"
+            value={profile.coreTrait}
+            onChange={handleInputChange}
+            placeholder="Vitality"
+          />
+        </label>
+        <label>
+          Vibe Ability:
+          <input
+            type="text"
+            name="vibeAbility"
+            value={profile.vibeAbility}
+            onChange={handleInputChange}
+            placeholder="Kinetic Fitness"
+          />
+        </label>
+        <label>
+          NURD Sync Status:
+          <input
+            type="text"
+            name="syncStatus"
+            value={profile.syncStatus}
+            onChange={handleInputChange}
+            placeholder="Active"
+          />
+        </label>
+        <label>
+          Bio:
+          <textarea
+            name="bio"
+            value={profile.bio}
+            onChange={handleInputChange}
+            placeholder="A young innovator with boundless energy..."
+          ></textarea>
+        </label>
+      </div>
+
+      {/* ---- Card Preview Section ---- */}
+      <div className="card-preview">
+        <div className="nurd-card">
+          <div className="card-header">
+            {/* Avatar: shown only if URL is provided */}
+            {profile.avatarUrl && (
+              <img
+                src={profile.avatarUrl}
+                alt="Avatar"
+                className="avatar"
+              />
+            )}
+            <h2>{profile.name || 'NAME'}</h2>
+          </div>
+          <div className="card-stats">
+            {/* Only render each field if it’s not empty */}
+            {profile.classType && <p><strong>Class:</strong> {profile.classType}</p>}
+            {profile.level && <p><strong>Level:</strong> {profile.level}</p>}
+            {profile.coreTrait && <p><strong>Core Trait:</strong> {profile.coreTrait}</p>}
+            {profile.vibeAbility && <p><strong>Vibe Ability:</strong> {profile.vibeAbility}</p>}
+            {profile.syncStatus && <p><strong>NURD Sync Status:</strong> {profile.syncStatus}</p>}
+          </div>
+          {/* Bio: shown only if not empty */}
+          {profile.bio && <p className="bio">{profile.bio}</p>}
+
+          <div className="card-buttons">
+            <button>Tap to Connect</button>
+            <button>Swipe to Draft</button>
+          </div>
+        </div>
+      </div>
+
+      {/* ---- Clear Fields Controls ---- */}
+      <div className="clear-fields">
+        <h3>Clear a Field</h3>
+        {Object.keys(profile).map((field) => (
+          <button key={field} onClick={() => handleClearField(field)}>
+            Clear {field}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default App;
+
+/* Basic styling for layout and card */
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #f5f5f5;
+  color: #333;
+}
+
+.container {
+  width: 90%;
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.form-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.form-section label {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+}
+
+.form-section input,
+.form-section textarea {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.card-preview {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.nurd-card {
+  background: #fff;
+  border: 3px solid #555;
+  border-radius: 10px;
+  width: 300px;
+  padding: 1rem;
+  text-align: center;
+  position: relative;
+  box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
+}
+
+.card-header {
+  margin-bottom: 1rem;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+}
+
+.card-stats p {
+  margin: 0.5rem 0;
+}
+
+.bio {
+  margin: 1rem 0;
+  font-style: italic;
+}
+
+.card-buttons button {
+  margin: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #ff6700;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.card-buttons button:hover {
+  background: #e65a00;
+}
+
+.clear-fields {
+  text-align: center;
+}
+
+.clear-fields button {
+  margin: 0.3rem;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}

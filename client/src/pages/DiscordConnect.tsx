@@ -4,6 +4,8 @@ import { useToast } from '@/hooks/use-toast';
 import Navbar from '@/components/ui/navbar';
 import Footer from '@/components/sections/footer';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Card,
   CardContent,
@@ -12,8 +14,23 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { useSupabase } from '@/components/ui/supabase-provider';
-import { Loader2, Check, X, AlertTriangle } from 'lucide-react';
+import { Loader2, Check, X, AlertTriangle, Bot, Settings, Terminal, Server } from 'lucide-react';
+import n8nApi, { AgentConfig } from '@/lib/n8n-integration';
 
 const DiscordConnect: React.FC = () => {
   const [location, setLocation] = useLocation();

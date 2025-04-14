@@ -19,6 +19,8 @@ import AuthPage from "@/pages/auth-page";
 import DiscordConnect from "@/pages/DiscordConnect";
 import AvatarCreator from "@/pages/AvatarCreator";
 import ProgressTracking from "@/pages/ProgressTracking";
+import LandingPage from "@/pages/LandingPage";
+import NurdProfilePage from "@/pages/NurdProfilePage";
 import { useEffect } from "react";
 import AuthGuard from "@/lib/auth-guard";
 
@@ -32,7 +34,8 @@ function Router() {
 
   return (
     <Switch>
-      <Route path="/" component={Home} />
+      <Route path="/" component={LandingPage} />
+      <Route path="/home" component={Home} />
       <Route path="/about" component={About} />
       <Route path="/register" component={Register} />
       <Route path="/auth" component={AuthPage} />
@@ -49,6 +52,7 @@ function Router() {
       <Route path="/learning" component={Learning} />
       <Route path="/cohorts" component={Cohorts} />
       <Route path="/profile/settings" component={ProfileSettings} />
+      <Route path="/profile/nurd-card" component={NurdProfilePage} />
       <Route path="/discord/connect" component={DiscordConnect} />
       <Route path="/avatar/create" component={AvatarCreator} />
       <Route path="/progress-tracking" component={ProgressTracking} />
