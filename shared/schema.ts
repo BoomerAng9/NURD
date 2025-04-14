@@ -1,6 +1,9 @@
-import { pgTable, text, serial, integer, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+
+// This is a simplified schema that contains only what's needed outside the progress tracking
+// For complete progress tracking schema, see progress-schema.ts
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
