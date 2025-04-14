@@ -21,6 +21,7 @@ import AvatarCreator from "@/pages/AvatarCreator";
 import ProgressTracking from "@/pages/ProgressTracking";
 import LandingPage from "@/pages/LandingPage";
 import NurdProfilePage from "@/pages/NurdProfilePage";
+import TestPage from "@/pages/TestPage";
 import { useEffect } from "react";
 import AuthGuard from "@/lib/auth-guard";
 
@@ -34,7 +35,8 @@ function Router() {
 
   return (
     <Switch>
-      <Route path="/" component={LandingPage} />
+      <Route path="/" component={TestPage} />
+      <Route path="/landing" component={LandingPage} />
       <Route path="/home" component={Home} />
       <Route path="/about" component={About} />
       <Route path="/register" component={Register} />
