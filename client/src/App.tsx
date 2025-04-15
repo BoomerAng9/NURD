@@ -39,8 +39,7 @@ import { LayoutDashboard, Send } from "lucide-react";
 // Lazy load code playground
 const CodePlayground = React.lazy(() => import("@/pages/code-playground"));
 
-// Import NURD skateboard image
-import nurdSkateboardImg from "./assets/nurd-skateboard.png";
+// Import NURD skateboard image is now loaded directly from public/attached_assets
 
 // Simple component for initial testing - updated with glass UI
 const TestComponent = () => {
@@ -53,8 +52,8 @@ const TestComponent = () => {
         
         <div className="mt-8 p-6 glass-card overflow-hidden">
           <img 
-            src={nurdSkateboardImg} 
-            alt="NURD Skateboarding" 
+            src="/attached_assets/Untitled design.png" 
+            alt="NURD Skateboarding in Pooler" 
             className="mx-auto max-h-[500px] rounded-lg shadow-lg"
           />
         </div>
