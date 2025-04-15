@@ -142,10 +142,10 @@ export const GlassNav: React.FC = () => {
               return (
                 <div key={item.path} className="relative">
                   <Link href={item.path}>
-                    <a
+                    <div
                       onClick={(e) => handleNavClick(item.path, e)}
                       className={cn(
-                        "relative overflow-hidden px-3 py-2 rounded-md text-sm font-medium transition-all duration-300",
+                        "relative overflow-hidden px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 cursor-pointer",
                         "bg-background/20 backdrop-blur-md border border-border/10",
                         "hover:bg-primary/10 hover:border-primary/30",
                         "transform hover:scale-105 hover:rotate-1",
@@ -174,7 +174,7 @@ export const GlassNav: React.FC = () => {
                       {splatter && (
                         <SplatterEffect startPosition={splatter.position} />
                       )}
-                    </a>
+                    </div>
                   </Link>
                 </div>
               );
@@ -183,10 +183,10 @@ export const GlassNav: React.FC = () => {
             {visibleAdminLinks.map((item) => (
               <div key={item.path} className="relative">
                 <Link href={item.path}>
-                  <a
+                  <div
                     onClick={(e) => handleNavClick(item.path, e)}
                     className={cn(
-                      "relative overflow-hidden px-3 py-2 rounded-md text-sm font-medium",
+                      "relative overflow-hidden px-3 py-2 rounded-md text-sm font-medium cursor-pointer",
                       "bg-red-500/10 backdrop-blur-md border border-red-500/20",
                       "hover:bg-red-500/20 hover:border-red-500/40",
                       "transform hover:scale-105 hover:rotate-1 transition-all duration-300",
@@ -199,22 +199,22 @@ export const GlassNav: React.FC = () => {
                       {item.icon}
                       {item.name}
                     </span>
-                  </a>
+                  </div>
                 </Link>
               </div>
             ))}
             
             {user ? (
               <Link href="/settings">
-                <a className="ml-2 p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors">
+                <div className="ml-2 p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors cursor-pointer">
                   <Settings className="h-5 w-5 text-primary" />
-                </a>
+                </div>
               </Link>
             ) : (
               <Link href="/auth">
-                <a className="ml-2 px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
+                <div className="ml-2 px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer">
                   Sign In
-                </a>
+                </div>
               </Link>
             )}
           </div>
@@ -245,10 +245,10 @@ export const GlassNav: React.FC = () => {
             
             return (
               <Link key={item.path} href={item.path}>
-                <a
+                <div
                   onClick={(e) => handleNavClick(item.path, e)}
                   className={cn(
-                    "block px-3 py-2 rounded-md text-base font-medium",
+                    "block px-3 py-2 rounded-md text-base font-medium cursor-pointer",
                     isActive
                       ? "text-primary bg-primary/10 border-l-2 border-primary"
                       : "text-foreground/70 hover:text-foreground hover:bg-background/50"
@@ -258,17 +258,17 @@ export const GlassNav: React.FC = () => {
                     {item.icon}
                     {item.name}
                   </span>
-                </a>
+                </div>
               </Link>
             );
           })}
           
           {visibleAdminLinks.map((item) => (
             <Link key={item.path} href={item.path}>
-              <a
+              <div
                 onClick={(e) => handleNavClick(item.path, e)}
                 className={cn(
-                  "block px-3 py-2 rounded-md text-base font-medium",
+                  "block px-3 py-2 rounded-md text-base font-medium cursor-pointer",
                   location === item.path
                     ? "text-red-500 bg-red-500/10 border-l-2 border-red-500"
                     : "text-foreground/70 hover:text-foreground hover:bg-background/50"
@@ -278,27 +278,27 @@ export const GlassNav: React.FC = () => {
                   {item.icon}
                   {item.name}
                 </span>
-              </a>
+              </div>
             </Link>
           ))}
           
           {user ? (
             <Link href="/settings">
-              <a className="block px-3 py-2 rounded-md text-base font-medium text-foreground/70 hover:text-foreground hover:bg-background/50">
+              <div className="block px-3 py-2 rounded-md text-base font-medium text-foreground/70 hover:text-foreground hover:bg-background/50 cursor-pointer">
                 <span className="flex items-center">
                   <Settings className="h-4 w-4 mr-2" />
                   Settings
                 </span>
-              </a>
+              </div>
             </Link>
           ) : (
             <Link href="/auth">
-              <a className="block px-3 py-2 rounded-md text-base font-medium bg-primary text-primary-foreground">
+              <div className="block px-3 py-2 rounded-md text-base font-medium bg-primary text-primary-foreground cursor-pointer">
                 <span className="flex items-center">
                   <ExternalLink className="h-4 w-4 mr-2" />
                   Sign In
                 </span>
-              </a>
+              </div>
             </Link>
           )}
         </div>
