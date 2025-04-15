@@ -29,7 +29,7 @@ export function ProtectedRoute({
         // Only check authentication if requireAuth is true
         if (requireAuth && !user) {
           // Redirect to auth page
-          setTimeout(() => setLocation('/auth'), 100);
+          setLocation('/auth');
           return (
             <div className="flex items-center justify-center min-h-screen">
               <p className="text-muted-foreground">Redirecting to login...</p>

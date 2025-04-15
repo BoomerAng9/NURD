@@ -94,13 +94,15 @@ const TestComponent = () => {
 function App() {
   const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState(true);
+  const { user, isLoading: authLoading } = useAuth();
 
-  // Simulate loading for smoother initial page transitions
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 800);
-  }, []);
+    if (!authLoading) {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 800);
+    }
+  }, [authLoading]);
   
   if (isLoading) {
     return (
