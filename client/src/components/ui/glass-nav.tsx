@@ -23,7 +23,7 @@ import {
   Code
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useSupabase } from '@/components/ui/supabase-provider';
+import { useAuth } from '@/hooks/use-auth';
 
 interface NavItem {
   name: string;
@@ -102,7 +102,7 @@ export const GlassNav: React.FC = () => {
   const [splatterEffects, setSplatterEffects] = useState<{id: number, path: string, position: {x: number, y: number}}[]>([]);
   const splatterCounter = React.useRef(0);
   const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const { user } = useSupabase();
+  const { user } = useAuth();
   
   const isAdmin = user?.role === 'admin';
   const isFreelancer = user?.role === 'freelancer';
