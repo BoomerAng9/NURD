@@ -84,8 +84,12 @@ export async function generateCourse(req: Request, res: Response) {
     
     Make sure your JSON follows this exact structure with these exact field names. The response should be ONLY the JSON object.`;
     
-    // Call Anthropic API
-    const response = await anthropic.messages.create({
+    // Call Anthropic API with timeout
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      setTimeout(() => reject(new Error('API request timed out after 25 seconds')), 25000);
+    });
+    
+    const apiPromise = anthropic.messages.create({
       model: ANTHROPIC_MODEL,
       max_tokens: 4000,
       temperature: 0.7,
@@ -94,6 +98,8 @@ export async function generateCourse(req: Request, res: Response) {
         { role: 'user', content: prompt }
       ],
     });
+    
+    const response = await Promise.race([apiPromise, timeoutPromise]) as Awaited<typeof apiPromise>;
     
     // Extract the content from the response
     const content = typeof response.content[0] === 'object' && 'text' in response.content[0] 

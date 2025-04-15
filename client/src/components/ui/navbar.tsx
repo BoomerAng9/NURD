@@ -79,13 +79,6 @@ const Navbar = () => {
             </>
           ) : (
             <div className="flex items-center gap-3">
-              <Link href="/auth">
-                <div className={`font-medium ${
-                  scrolled ? 'text-[#121645] hover:text-[#6A2FF8]' : 'text-white hover:text-[#3EC6E0]'
-                } transition duration-300 cursor-pointer`}>
-                  Login
-                </div>
-              </Link>
               <Link href="/join">
                 <div className="btn-nurd text-sm cursor-pointer">Apply to Teach</div>
               </Link>

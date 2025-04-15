@@ -111,28 +111,42 @@ export function AICourseCreator() {
         }
         
         // API request to the server
-        const response = await fetch('/api/ai/generate-course', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            type: data.type,
-            topic: data.topic,
-            additional: data.additional,
-            fileContent: fileContent,
-            targetAudience: data.targetAudience,
-            courseLength: data.courseLength,
-            includeQuizzes: data.includeQuizzes
-          }),
-        });
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
         
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to generate course');
+        try {
+          const response = await fetch('/api/ai/generate-course', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              type: data.type,
+              topic: data.topic,
+              additional: data.additional,
+              fileContent: fileContent,
+              targetAudience: data.targetAudience,
+              courseLength: data.courseLength,
+              includeQuizzes: data.includeQuizzes
+            }),
+            signal: controller.signal
+          });
+          
+          clearTimeout(timeoutId);
+          
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to generate course');
+          }
+          
+          return await response.json() as AICreateCourseResponse;
+        } catch (err) {
+          const error = err as Error;
+          if (error?.name === 'AbortError') {
+            throw new Error('Request timed out. The AI service may be busy. Please try again later.');
+          }
+          throw error;
         }
-        
-        return await response.json() as AICreateCourseResponse;
       } catch (error) {
         console.error('Error generating course:', error);
         throw error;
