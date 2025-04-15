@@ -212,7 +212,7 @@ const Landing: React.FC = () => {
             </div>
             <div className="lg:w-1/2 text-center lg:text-left mt-8 lg:mt-0">
               <FadeIn direction="right">
-                <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-indigo-500 to-blue-500 text-transparent bg-clip-text pb-2">
+                <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 text-transparent bg-clip-text pb-2 animate-gradient-x">
                   Empowering Youth Through Innovative Learning
                 </h2>
                 <p className="text-xl text-gray-700 mb-8">
@@ -226,6 +226,43 @@ const Landing: React.FC = () => {
                 >
                   <Link href="/programs">Explore Programs</Link>
                 </Button>
+              </FadeIn>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* NURD Laptop Image Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col-reverse lg:flex-row items-center justify-center gap-10 max-w-6xl mx-auto">
+            <div className="lg:w-1/2 text-center lg:text-left">
+              <FadeIn direction="left">
+                <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 text-transparent bg-clip-text animate-gradient-x">
+                  Cool Like That
+                </h2>
+                <p className="text-xl text-gray-700 mb-8">
+                  Join a community of creative young minds who are building the future with code. 
+                  Our NURD program gives you the tools and skills to turn your ideas into reality.
+                </p>
+                <Button 
+                  size="lg" 
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                  asChild
+                >
+                  <Link href="/join">Join Us Today</Link>
+                </Button>
+              </FadeIn>
+            </div>
+            <div className="lg:w-1/2">
+              <FadeIn direction="right">
+                <div className="rounded-lg overflow-hidden shadow-xl">
+                  <img 
+                    src="/nurd-laptop.png" 
+                    alt="NURD Laptop" 
+                    className="w-full h-auto"
+                  />
+                </div>
               </FadeIn>
             </div>
           </div>
