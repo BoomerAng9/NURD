@@ -53,9 +53,16 @@ const TestComponent = () => {
         </div>
         
         <div className="mt-6 flex flex-wrap justify-center gap-4">
-          <a href="/dashboard" className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2">
+          <a href="/auth" className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2">
             <LayoutDashboard className="h-5 w-5" />
-            <span>Dashboard</span>
+            <span>Login / Register</span>
+          </a>
+          <a href="/code-playground" className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-code">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+            <span>Code Playground</span>
           </a>
           <a href="/achievers" className="glass-button bg-primary/20 border-primary/30 transform hover:scale-105 transition-all flex items-center space-x-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-send">
@@ -115,7 +122,7 @@ function App() {
                 <ProtectedRoute path="/discord" component={DiscordConnect} />
                 <ProtectedRoute path="/avatar" component={AvatarCreator} />
                 <Route path="/home" component={Landing} />
-                <ProtectedRoute path="/achievers" component={ACHIEVERS} />
+                <Route path="/achievers" component={ACHIEVERS} />
                 <ProtectedRoute path="/progress" component={UserProgress} />
                 
                 {/* Coming Soon placeholder pages */}
