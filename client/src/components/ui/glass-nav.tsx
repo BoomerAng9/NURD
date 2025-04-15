@@ -160,6 +160,9 @@ export const GlassNav: React.FC = () => {
     if (isMobile && isOpen) {
       setTimeout(() => setIsOpen(false), 300);
     }
+    
+    // Log navigation for debugging
+    console.log(`Navigating to: ${path}`);
   };
 
   const toggleDropdown = (name: string, e: React.MouseEvent) => {
