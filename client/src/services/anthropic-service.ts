@@ -122,7 +122,9 @@ export async function generateCourse(params: GenerateCourseParams): Promise<Cour
     });
     
     // Extract and parse the JSON response
-    const content = response.content[0].text;
+    const content = typeof response.content[0] === 'object' && 'text' in response.content[0] 
+      ? response.content[0].text 
+      : '';
     try {
       // Find JSON in the response (in case the model adds any text around it)
       const jsonMatch = content.match(/\{[\s\S]*\}/);

@@ -896,6 +896,9 @@ Follow these guidelines:
   });
 
   // Create HTTP server
+  // AI Course Generation Endpoint
+  app.post('/api/ai/generate-course', generateCourse);
+
   const httpServer = createServer(app);
 
   // Create a simpler WebSocket server

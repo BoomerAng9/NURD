@@ -96,7 +96,9 @@ export async function generateCourse(req: Request, res: Response) {
     });
     
     // Extract the content from the response
-    const content = response.content[0].text;
+    const content = typeof response.content[0] === 'object' && 'text' in response.content[0] 
+      ? response.content[0].text 
+      : '';
     
     try {
       // Find JSON in the response (in case the model adds any text around it)
