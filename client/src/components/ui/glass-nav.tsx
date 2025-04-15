@@ -41,6 +41,7 @@ const navigation: NavItem[] = [
   { name: 'Gallery', path: '/gallery', icon: <GalleryVertical className="h-4 w-4 mr-2" /> },
   { name: 'Trainers', path: '/trainers', icon: <Users className="h-4 w-4 mr-2" /> },
   { name: 'ACHIEVERS', path: '/achievers', icon: <Award className="h-4 w-4 mr-2" /> },
+  { name: 'Skills Exchange', path: '/skill-marketplace', icon: <Users2 className="h-4 w-4 mr-2" /> },
   { name: 'AI Code Tools', path: '/ai-code-tools', icon: <FileText className="h-4 w-4 mr-2" /> },
   { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
   { name: 'Apply to Teach', path: '/apply', icon: <UserPlus className="h-4 w-4 mr-2" /> },
@@ -176,8 +177,14 @@ export const GlassNav: React.FC = () => {
                   className="h-8 w-auto"
                   onError={(e) => {
                     // Fallback if image fails to load
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.nextElementSibling.style.display = 'block';
+                    const target = e.currentTarget;
+                    if (target) {
+                      target.style.display = 'none';
+                      const sibling = target.nextElementSibling;
+                      if (sibling instanceof HTMLElement) {
+                        sibling.style.display = 'block';
+                      }
+                    }
                   }}
                 />
                 <span className="text-xl font-bold text-primary hidden">NURD</span>

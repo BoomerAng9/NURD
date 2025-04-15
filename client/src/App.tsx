@@ -27,6 +27,7 @@ import AvatarCreator from "@/pages/AvatarCreator";
 import ACHIEVERS from "@/pages/AchievementDemo";
 import UserProgress from "@/pages/UserProgress";
 import AICodeTools from "@/pages/AICodeTools";
+import SkillMarketplace from "@/pages/SkillMarketplace";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { LayoutDashboard, Send } from "lucide-react";
 
@@ -132,6 +133,7 @@ function App() {
                 <Route path="/achievers" component={ACHIEVERS} />
                 <Route path="/ai-code-tools" component={AICodeTools} />
                 <Route path="/progress" component={UserProgress} />
+                <Route path="/skill-marketplace" component={SkillMarketplace} />
                 
                 {/* Coming Soon placeholder pages */}
                 <Route path="/summer-initiative">
