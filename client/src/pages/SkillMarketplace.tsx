@@ -58,12 +58,18 @@ const SkillMarketplace: React.FC = () => {
   });
 
   // Fetch skill offerings
-  const { data: offerings = [], isLoading: offeringsLoading } = useQuery<SkillOffering[]>({
+  const { data: offerings = [], isLoading: offeringsLoading } = useQuery<(SkillOffering & { 
+    user: { username: string; avatar_url?: string };
+    category?: SkillCategory;
+  })[]>({
     queryKey: ['/api/skill-offerings'],
   });
 
   // Fetch skill requests
-  const { data: requests = [], isLoading: requestsLoading } = useQuery<SkillRequest[]>({
+  const { data: requests = [], isLoading: requestsLoading } = useQuery<(SkillRequest & {
+    user: { username: string; avatar_url?: string };
+    category?: SkillCategory;
+  })[]>({
     queryKey: ['/api/skill-requests'],
   });
 

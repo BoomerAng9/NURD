@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 import { motion } from 'framer-motion';
-import Navbar from '@/components/ui/navbar';
 import Footer from '@/components/sections/footer';
 import ProfileEditor from '@/components/profile/profile-editor';
 import ThemeCustomizer, { ThemeFormValues } from '@/components/profile/theme-customizer';
-import { useSupabase } from '@/components/ui/supabase-provider';
+import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertCircle, ArrowLeft, User, Palette, UserCircle2 } from 'lucide-react';
+import { AlertCircle, ArrowLeft, User, Palette, UserCircle2, Settings, Shield, Bell } from 'lucide-react';
 
 type ProfileData = {
   displayName: string;
@@ -39,22 +38,22 @@ type PrivacySettings = {
 };
 
 const ProfileSettings: React.FC = () => {
-  const { supabase, user } = useSupabase();
+  const { user } = useAuth();
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("profile");
   
-  // Sample profile data (in a real app, this would come from the database)
+  // Initialize profile data based on the current user if available
   const [profileData, setProfileData] = useState<ProfileData>({
-    displayName: 'Jamie Smith',
-    username: 'jamie_codes',
-    bio: 'Aspiring game developer and digital artist. I love creating and learning new things!',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
-    favoriteSubject: 'Game Design',
-    interests: ['Gaming', 'Drawing', 'Coding', 'Science', 'Music'],
-    schoolName: 'Lincoln Middle School',
+    displayName: user?.first_name || 'Your Name',
+    username: user?.username || 'username',
+    bio: 'Share a little about yourself and what you enjoy doing!',
+    avatarUrl: user?.avatar_url || '',
+    favoriteSubject: 'Choose your favorite',
+    interests: ['Coding', 'Learning', 'Creating'],
+    schoolName: 'Your School',
   });
   
   const [notificationSettings, setNotificationSettings] = useState<NotificationSettings>({
@@ -81,24 +80,39 @@ const ProfileSettings: React.FC = () => {
     hapticFeedback: true,
   });
   
+  // Load user data and settings
   useEffect(() => {
-    // Simulate loading profile data
-    const timer = setTimeout(() => {
-      setIsLoading(false);
+    const loadUserData = async () => {
+      setIsLoading(true);
       
-      // If no user is logged in, redirect to auth page
-      // This would be real authentication logic in a production app
-      if (!user) {
-        toast({
-          title: "Authentication required",
-          description: "Please login to access profile settings.",
-          variant: "destructive",
-        });
-        // setLocation('/auth');
+      try {
+        // If we have a user, we could fetch additional data here
+        if (user) {
+          // Update profile data with user information
+          setProfileData(prevData => ({
+            ...prevData,
+            displayName: user.first_name,
+            username: user.username,
+            avatarUrl: user.avatar_url || prevData.avatarUrl,
+          }));
+        } else {
+          // If not logged in, show a message and redirect to auth
+          toast({
+            title: "Authentication required",
+            description: "Please login to access profile settings.",
+            variant: "destructive",
+          });
+          setLocation('/auth');
+        }
+      } catch (err) {
+        console.error('Error loading user data:', err);
+        setError('Could not load your profile data. Please try again later.');
+      } finally {
+        setIsLoading(false);
       }
-    }, 1000);
+    };
     
-    return () => clearTimeout(timer);
+    loadUserData();
   }, [user, setLocation, toast]);
   
   const handleSaveSettings = (values: {
@@ -139,7 +153,6 @@ const ProfileSettings: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Navbar />
         <div className="container mx-auto px-4 py-12 pt-24 flex-grow">
           <div className="max-w-3xl mx-auto">
             <div className="flex items-center gap-2 mb-8">
@@ -167,7 +180,6 @@ const ProfileSettings: React.FC = () => {
   if (error) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Navbar />
         <div className="container mx-auto px-4 py-12 pt-24 flex-grow">
           <div className="max-w-3xl mx-auto">
             <Alert variant="destructive">
@@ -186,7 +198,6 @@ const ProfileSettings: React.FC = () => {
   
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
       
       <motion.div 
         initial={{ opacity: 0, y: 20 }}

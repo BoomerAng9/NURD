@@ -58,9 +58,9 @@ const navigation: NavItem[] = [
       { name: 'Gallery', path: '/gallery', icon: <GalleryVertical className="h-4 w-4 mr-2" /> },
       { name: 'Skills Exchange', path: '/skill-marketplace', icon: <Users2 className="h-4 w-4 mr-2" /> },
       { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
+      { name: 'AI Code Tools', path: '/ai-code-tools', icon: <FileText className="h-4 w-4 mr-2" /> },
     ]
   },
-  { name: 'AI Code Tools', path: '/ai-code-tools', icon: <FileText className="h-4 w-4 mr-2" /> },
 ];
 
 const adminLinks: NavItem[] = [
