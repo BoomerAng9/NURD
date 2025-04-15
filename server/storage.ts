@@ -55,7 +55,14 @@ export interface IStorage {
   // User methods
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  getUserByProvider(provider: string, providerId: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  createUserFromSocial(user: Partial<InsertUser> & { email: string }): Promise<User>;
+  linkSocialProvider(userId: number, provider: string, providerId: string): Promise<User>;
+  verifyEmail(token: string): Promise<boolean>;
+  requestPasswordReset(email: string): Promise<boolean>;
+  resetPassword(token: string, newPassword: string): Promise<boolean>;
   updateUserXP(userId: number, xpToAdd: number): Promise<User>;
 
   // Course methods
