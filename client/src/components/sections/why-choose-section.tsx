@@ -1,4 +1,5 @@
 import React from 'react';
+import nurdCoolImage from '../../assets/nurd-cool-like-that.png';
 
 const WhyChooseSection: React.FC = () => {
   return (
@@ -9,7 +10,7 @@ const WhyChooseSection: React.FC = () => {
             <div className="relative">
               <div className="bg-white p-4 rounded-xl shadow-lg">
                 <img 
-                  src="/nurd-cool-like-that.png" 
+                  src={nurdCoolImage} 
                   alt="NURD - I'm cool like that" 
                   className="w-full h-auto rounded-lg"
                 />
@@ -51,7 +52,7 @@ const WhyChooseSection: React.FC = () => {
           
           <div className="md:w-1/2">
             <span className="text-[#3B82F6] font-medium tracking-wider text-sm uppercase">Why Choose NURD?</span>
-            <h2 className="section-title mt-2">Empowering Youth Through Innovative Learning</h2>
+            <h2 className="section-title mt-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">Empowering Youth Through Innovative Learning</h2>
             <p className="text-lg text-gray-600 mb-8">
               A program where creativity, technology, and personal growth converge to prepare students for future academic and career opportunities.
             </p>
