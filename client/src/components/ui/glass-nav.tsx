@@ -373,11 +373,14 @@ export const GlassNav: React.FC = () => {
               );
             })}
             
-            <Link href="/settings">
-              <div className="ml-2 p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors cursor-pointer">
-                <Settings className="h-5 w-5 text-primary" />
-              </div>
-            </Link>
+            <div className="flex items-center space-x-2">
+              <ThemeToggle />
+              <Link href="/settings">
+                <div className="ml-2 p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors cursor-pointer">
+                  <Settings className="h-5 w-5 text-primary" />
+                </div>
+              </Link>
+            </div>
           </div>
           
           {/* Mobile menu button */}
@@ -538,6 +541,16 @@ export const GlassNav: React.FC = () => {
               </span>
             </div>
           </Link>
+          
+          {/* Theme Toggle for Mobile */}
+          <div className="mt-2 px-3 py-2 rounded-md">
+            <div className="flex items-center justify-between">
+              <span className="text-base font-medium text-foreground/70">
+                Theme
+              </span>
+              <ThemeToggle />
+            </div>
+          </div>
         </div>
       </div>
     </nav>
