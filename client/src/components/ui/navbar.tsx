@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import NurdLogo from './nurd-logo';
 import { NotificationCenter } from './notification-center';
-import { useSupabase } from './supabase-provider';
+import { useAuth } from '@/hooks/use-auth';
 import greenLogo from '@assets/2C98236B-53D8-48A4-9DB3-E47C7540F061.png';
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [location] = useLocation();
-  const { user } = useSupabase();
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,24 +51,6 @@ const Navbar = () => {
               scrolled ? 'text-[#121645] hover:text-[#6A2FF8]' : 'text-white hover:text-[#3DE053]'
             } transition duration-300 cursor-pointer`}>
               About
-            </div>
-          </Link>
-          <Link href="/#methodology">
-            <div 
-              className={`font-medium ${
-                scrolled ? 'text-[#121645] hover:text-[#6A2FF8]' : 'text-white hover:text-[#3DE053]'
-              } transition duration-300 cursor-pointer`}
-            >
-              Methodology
-            </div>
-          </Link>
-          <Link href="/#experience">
-            <div 
-              className={`font-medium ${
-                scrolled ? 'text-[#121645] hover:text-[#6A2FF8]' : 'text-white hover:text-[#3EC6E0]'
-              } transition duration-300 cursor-pointer`}
-            >
-              Experience
             </div>
           </Link>
           
@@ -128,16 +110,6 @@ const Navbar = () => {
           <Link href="/about">
             <div className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300 cursor-pointer">
               About
-            </div>
-          </Link>
-          <Link href="/#methodology">
-            <div className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300 cursor-pointer">
-              Methodology
-            </div>
-          </Link>
-          <Link href="/#experience">
-            <div className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300 cursor-pointer">
-              Experience
             </div>
           </Link>
           <Link href="/trainers">
