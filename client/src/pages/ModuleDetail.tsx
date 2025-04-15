@@ -17,8 +17,12 @@ import {
   FileText,
   ExternalLink,
   Video,
-  MousePointerClick
+  MousePointerClick,
+  Volume2
 } from 'lucide-react';
+import { LessonExporter } from '@/components/learning/tools/lesson-exporter';
+import { LessonTextToSpeech } from '@/components/learning/tools/lesson-text-to-speech';
+import { LessonQuiz } from '@/components/learning/tools/lesson-quiz';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';

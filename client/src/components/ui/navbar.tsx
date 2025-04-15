@@ -128,13 +128,8 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <Link href="/auth">
-                <div className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300">
-                  Login
-                </div>
-              </Link>
               <Link href="/join">
-                <div className="block btn-nurd text-center mt-6 cursor-pointer">Apply to Teach</div>
+                <div className="block btn-nurd text-center mt-4 cursor-pointer">Apply to Teach</div>
               </Link>
             </>
           )}

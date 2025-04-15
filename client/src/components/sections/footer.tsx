@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'wouter';
 import NurdLogo from '@/components/ui/nurd-logo';
+import { useAuth } from '@/hooks/use-auth';
 
 const Footer: React.FC = () => {
+  const { user } = useAuth();
+  
   return (
     <footer className="bg-gray-900 text-white py-12">
       <div className="container mx-auto px-4">
@@ -90,10 +93,20 @@ const Footer: React.FC = () => {
         
         <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
           <p>&copy; {new Date().getFullYear()} NURD by: ACHIEVEMOR, Inc. All rights reserved.</p>
-          <div className="mt-2 space-x-4">
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-white transition-colors">Cookie Policy</a>
+          
+          <div className="mt-4 flex flex-wrap justify-center items-center gap-4">
+            {!user && (
+              <Link href="/auth">
+                <div className="text-[#FF8A00] hover:text-white font-medium transition-colors py-1 px-4 border border-[#FF8A00] rounded-full">
+                  Login / Register
+                </div>
+              </Link>
+            )}
+            <div className="space-x-4">
+              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+              <a href="#" className="hover:text-white transition-colors">Cookie Policy</a>
+            </div>
           </div>
         </div>
       </div>
