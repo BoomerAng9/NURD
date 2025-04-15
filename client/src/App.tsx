@@ -222,10 +222,10 @@ const AppContent = () => {
               
               <span>Made in Pooler, GA</span>
               
-              {/* Osprey SVG */}
+              {/* ACHIEVEMOR Logo */}
               <img 
-                src="/assets/osprey.svg" 
-                alt="Osprey" 
+                src="/assets/achievemor-logo.png" 
+                alt="ACHIEVEMOR Logo" 
                 className="h-8 w-auto ml-3"
               />
             </p>
