@@ -26,22 +26,24 @@ import UserProgress from "@/pages/UserProgress";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect, useState } from "react";
 
+// Import NURD skateboard image
+import nurdSkateboardImg from "./assets/nurd-skateboard.png";
+
 // Simple component for initial testing - updated with glass UI
 const TestComponent = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <div className="glass-container max-w-3xl mx-auto text-center">
         <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
-          NURD Summer Initiative
+          NURD by: ACHIEVEMOR
         </h1>
-        <p className="mt-4 text-xl text-foreground/80">
-          Welcome to the new glass-tile UI design
-        </p>
         
-        <div className="mt-8 p-6 glass-card">
-          <p className="text-foreground/90">
-            If you can see this page with the new glass effects, the UI enhancement is working!
-          </p>
+        <div className="mt-8 p-6 glass-card overflow-hidden">
+          <img 
+            src={nurdSkateboardImg} 
+            alt="NURD Skateboarding" 
+            className="mx-auto max-h-[500px] rounded-lg shadow-lg"
+          />
         </div>
         
         <div className="mt-6 flex flex-wrap justify-center gap-4">
@@ -114,7 +116,7 @@ function App() {
           
           {!isMobile && (
             <footer className="py-4 px-6 text-center text-sm text-foreground/60">
-              <p>© {new Date().getFullYear()} NURD Summer Initiative. All rights reserved.</p>
+              <p>© {new Date().getFullYear()} NURD by: ACHIEVEMOR. All rights reserved.</p>
             </footer>
           )}
         </div>
