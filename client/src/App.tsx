@@ -35,7 +35,7 @@ const TestComponent = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <div className="glass-container max-w-3xl mx-auto text-center">
-        <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
+        <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
           NURD by: ACHIEVEMOR
         </h1>
         
@@ -125,7 +125,7 @@ function App() {
           </main>
           
           {!isMobile && (
-            <footer className="py-4 px-6 text-center text-sm text-foreground/60">
+            <footer className="py-4 px-6 text-center text-sm text-gray-700">
               <p>© {new Date().getFullYear()} NURD by: ACHIEVEMOR. All rights reserved.</p>
             </footer>
           )}
