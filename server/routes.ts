@@ -516,7 +516,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Categories
   app.get('/api/skill-categories', async (req, res) => {
     try {
-      const categories = await storage.getSkillCategories();
+      const categories = await getSkillCategories();
       return res.status(200).json(categories);
     } catch (error) {
       console.error("Error fetching skill categories:", error);
@@ -527,7 +527,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/skill-categories', async (req, res) => {
     try {
       const categoryData = insertSkillCategorySchema.parse(req.body);
-      const newCategory = await storage.createSkillCategory(categoryData);
+      const newCategory = await createSkillCategory(categoryData);
       return res.status(201).json(newCategory);
     } catch (error) {
       if (error instanceof ZodError) {
@@ -548,7 +548,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
       const activeOnly = req.query.activeOnly === 'true';
       
-      const offerings = await storage.getSkillOfferings(categoryId, userId, activeOnly);
+      const offerings = await getSkillOfferings(categoryId, userId, activeOnly);
       return res.status(200).json(offerings);
     } catch (error) {
       console.error("Error fetching skill offerings:", error);
@@ -559,7 +559,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/skill-offerings/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const offering = await storage.getSkillOfferingById(id);
+      const offering = await getSkillOfferingById(id);
       
       if (!offering) {
         return res.status(404).json({ message: "Skill offering not found" });
@@ -575,7 +575,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/skill-offerings', async (req, res) => {
     try {
       const offeringData = insertSkillOfferingSchema.parse(req.body);
-      const newOffering = await storage.createSkillOffering(offeringData);
+      const newOffering = await createSkillOffering(offeringData);
       
       // Broadcast new skill offering
       broadcastMessage({
@@ -604,7 +604,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.patch('/api/skill-offerings/:id/toggle-status', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const offering = await storage.toggleSkillOfferingStatus(id);
+      const offering = await toggleSkillOfferingStatus(id);
       
       if (!offering) {
         return res.status(404).json({ message: "Skill offering not found" });
