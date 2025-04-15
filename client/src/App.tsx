@@ -52,22 +52,21 @@ const TestComponent = () => {
           NURD by: ACHIEVEMOR
         </h1>
         
-        <div className="mt-8 p-6 glass-card overflow-hidden relative">
-          {/* Background image with blur effect */}
-          <div 
-            className="absolute inset-0 z-0 opacity-50" 
-            style={{
-              backgroundImage: `url(${backgroundImg})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              filter: 'blur(4px)'
-            }}
-          ></div>
-          {/* Foreground skateboard image */}
+        {/* Main background image */}
+        <div className="mt-8 p-6 glass-card overflow-hidden">
+          <img 
+            src={backgroundImg} 
+            alt="NURD Background" 
+            className="w-full rounded-lg shadow-lg"
+          />
+        </div>
+        
+        {/* Standalone skateboard card */}
+        <div className="mt-4 p-6 glass-card overflow-hidden max-w-md mx-auto transform -translate-y-16">
           <img 
             src={nurdSkateboardImg} 
             alt="NURD Skateboarding" 
-            className="mx-auto max-h-[500px] rounded-lg shadow-lg relative z-10"
+            className="mx-auto max-h-[400px] rounded-lg shadow-lg"
           />
         </div>
         
