@@ -9,6 +9,12 @@ import {
   insertLessonProgressSchema,
   insertUserProgressSchema
 } from "@shared/progress-schema";
+import {
+  insertSkillCategorySchema,
+  insertSkillOfferingSchema,
+  insertSkillRequestSchema,
+  insertSkillExchangeSchema
+} from "@shared/schema";
 import { ZodError } from "zod";
 import multer from 'multer';
 import path from 'path';
@@ -485,6 +491,291 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(200).json(updatedStreak);
     } catch (error) {
       console.error("Error updating streak:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Skill Marketplace Routes
+  // Categories
+  app.get('/api/skill-categories', async (req, res) => {
+    try {
+      const categories = await storage.getSkillCategories();
+      return res.status(200).json(categories);
+    } catch (error) {
+      console.error("Error fetching skill categories:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post('/api/skill-categories', async (req, res) => {
+    try {
+      const categoryData = insertSkillCategorySchema.parse(req.body);
+      const newCategory = await storage.createSkillCategory(categoryData);
+      return res.status(201).json(newCategory);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ 
+          message: "Validation error", 
+          errors: error.errors 
+        });
+      }
+      console.error("Error creating skill category:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Skill Offerings
+  app.get('/api/skill-offerings', async (req, res) => {
+    try {
+      const categoryId = req.query.categoryId ? parseInt(req.query.categoryId as string) : undefined;
+      const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
+      const activeOnly = req.query.activeOnly === 'true';
+      
+      const offerings = await storage.getSkillOfferings(categoryId, userId, activeOnly);
+      return res.status(200).json(offerings);
+    } catch (error) {
+      console.error("Error fetching skill offerings:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get('/api/skill-offerings/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const offering = await storage.getSkillOfferingById(id);
+      
+      if (!offering) {
+        return res.status(404).json({ message: "Skill offering not found" });
+      }
+      
+      return res.status(200).json(offering);
+    } catch (error) {
+      console.error("Error fetching skill offering:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post('/api/skill-offerings', async (req, res) => {
+    try {
+      const offeringData = insertSkillOfferingSchema.parse(req.body);
+      const newOffering = await storage.createSkillOffering(offeringData);
+      
+      // Broadcast new skill offering
+      broadcastMessage({
+        type: 'NEW_SKILL_OFFERING',
+        data: {
+          id: newOffering.id,
+          title: newOffering.title,
+          userId: newOffering.user_id,
+          categoryId: newOffering.category_id
+        }
+      });
+      
+      return res.status(201).json(newOffering);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ 
+          message: "Validation error", 
+          errors: error.errors 
+        });
+      }
+      console.error("Error creating skill offering:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.patch('/api/skill-offerings/:id/toggle-status', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const offering = await storage.toggleSkillOfferingStatus(id);
+      
+      if (!offering) {
+        return res.status(404).json({ message: "Skill offering not found" });
+      }
+      
+      // Broadcast status change
+      broadcastMessage({
+        type: 'SKILL_OFFERING_STATUS_CHANGE',
+        data: {
+          id: offering.id,
+          isActive: offering.is_active
+        }
+      });
+      
+      return res.status(200).json(offering);
+    } catch (error) {
+      console.error("Error toggling skill offering status:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Skill Requests
+  app.get('/api/skill-requests', async (req, res) => {
+    try {
+      const categoryId = req.query.categoryId ? parseInt(req.query.categoryId as string) : undefined;
+      const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
+      const activeOnly = req.query.activeOnly === 'true';
+      
+      const requests = await storage.getSkillRequests(categoryId, userId, activeOnly);
+      return res.status(200).json(requests);
+    } catch (error) {
+      console.error("Error fetching skill requests:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get('/api/skill-requests/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const request = await storage.getSkillRequestById(id);
+      
+      if (!request) {
+        return res.status(404).json({ message: "Skill request not found" });
+      }
+      
+      return res.status(200).json(request);
+    } catch (error) {
+      console.error("Error fetching skill request:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post('/api/skill-requests', async (req, res) => {
+    try {
+      const requestData = insertSkillRequestSchema.parse(req.body);
+      const newRequest = await storage.createSkillRequest(requestData);
+      
+      // Broadcast new skill request
+      broadcastMessage({
+        type: 'NEW_SKILL_REQUEST',
+        data: {
+          id: newRequest.id,
+          title: newRequest.title,
+          userId: newRequest.user_id,
+          categoryId: newRequest.category_id
+        }
+      });
+      
+      return res.status(201).json(newRequest);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ 
+          message: "Validation error", 
+          errors: error.errors 
+        });
+      }
+      console.error("Error creating skill request:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.patch('/api/skill-requests/:id/toggle-status', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const request = await storage.toggleSkillRequestStatus(id);
+      
+      if (!request) {
+        return res.status(404).json({ message: "Skill request not found" });
+      }
+      
+      // Broadcast status change
+      broadcastMessage({
+        type: 'SKILL_REQUEST_STATUS_CHANGE',
+        data: {
+          id: request.id,
+          isActive: request.is_active
+        }
+      });
+      
+      return res.status(200).json(request);
+    } catch (error) {
+      console.error("Error toggling skill request status:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Skill Exchanges
+  app.get('/api/skill-exchanges', async (req, res) => {
+    try {
+      const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
+      const status = req.query.status as string | undefined;
+      
+      const exchanges = await storage.getSkillExchanges(userId, status);
+      return res.status(200).json(exchanges);
+    } catch (error) {
+      console.error("Error fetching skill exchanges:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get('/api/skill-exchanges/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const exchange = await storage.getSkillExchangeById(id);
+      
+      if (!exchange) {
+        return res.status(404).json({ message: "Skill exchange not found" });
+      }
+      
+      return res.status(200).json(exchange);
+    } catch (error) {
+      console.error("Error fetching skill exchange:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post('/api/skill-exchanges', async (req, res) => {
+    try {
+      const exchangeData = insertSkillExchangeSchema.parse(req.body);
+      const newExchange = await storage.createSkillExchange(exchangeData);
+      
+      // Broadcast new skill exchange
+      broadcastMessage({
+        type: 'NEW_SKILL_EXCHANGE',
+        data: {
+          id: newExchange.id,
+          offererId: newExchange.offerer_id,
+          requesterId: newExchange.requester_id,
+          status: newExchange.status
+        }
+      });
+      
+      return res.status(201).json(newExchange);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ 
+          message: "Validation error", 
+          errors: error.errors 
+        });
+      }
+      console.error("Error creating skill exchange:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.patch('/api/skill-exchanges/:id/status', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status } = req.body;
+      
+      const exchange = await storage.updateSkillExchangeStatus(id, status);
+      
+      if (!exchange) {
+        return res.status(404).json({ message: "Skill exchange not found" });
+      }
+      
+      // Broadcast exchange status change
+      broadcastMessage({
+        type: 'SKILL_EXCHANGE_STATUS_CHANGE',
+        data: {
+          id: exchange.id,
+          status: exchange.status
+        }
+      });
+      
+      return res.status(200).json(exchange);
+    } catch (error) {
+      console.error("Error updating skill exchange status:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });

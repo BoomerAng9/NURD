@@ -1,4 +1,23 @@
-import { users, type User, type InsertUser, landingContent, type LandingContent, type InsertLandingContent } from "@shared/schema";
+import { 
+  users, 
+  type User, 
+  type InsertUser, 
+  landingContent, 
+  type LandingContent, 
+  type InsertLandingContent,
+  skill_categories,
+  skill_offerings,
+  skill_requests,
+  skill_exchanges,
+  type SkillCategory,
+  type SkillOffering,
+  type SkillRequest,
+  type SkillExchange,
+  type InsertSkillCategory,
+  type InsertSkillOffering,
+  type InsertSkillRequest,
+  type InsertSkillExchange
+} from "@shared/schema";
 import { 
   courses, 
   lessons, 
