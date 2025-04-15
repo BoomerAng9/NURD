@@ -345,7 +345,7 @@ export const AchievementCelebration: React.FC = () => {
             `}
             style={{ transformStyle: "preserve-3d" }}
           >
-            <div className="relative bg-background/80 backdrop-filter backdrop-blur-lg p-4 sm:p-6 rounded-lg flex flex-col items-center overflow-hidden transition-all duration-300 ease-out">
+            <div className="relative bg-background/40 backdrop-filter backdrop-blur-lg p-4 sm:p-6 rounded-lg flex flex-col items-center overflow-hidden transition-all duration-300 ease-out border border-white/10">
               {/* Shine effect overlay */}
               <div className="shine-effect absolute inset-0 w-full h-full pointer-events-none" />
               
@@ -359,7 +359,7 @@ export const AchievementCelebration: React.FC = () => {
               
               <Badge 
                 variant="outline" 
-                className="mb-2 bg-primary/10 shadow-inner backdrop-blur-sm z-10"
+                className="mb-2 bg-primary/10 shadow-inner backdrop-blur-sm z-10 border border-white/20"
               >
                 Achievement Unlocked!
               </Badge>
@@ -368,7 +368,7 @@ export const AchievementCelebration: React.FC = () => {
                 variants={iconVariants}
                 initial="hidden"
                 animate="visible"
-                className="my-3 p-3 bg-background/30 backdrop-blur-sm rounded-full shadow-lg z-10"
+                className="my-3 p-3 bg-background/30 backdrop-blur-md rounded-full shadow-lg z-10 border border-white/20"
               >
                 {getAchievementIcon()}
               </motion.div>
@@ -377,7 +377,7 @@ export const AchievementCelebration: React.FC = () => {
                 variants={textVariants}
                 initial="hidden"
                 animate="visible"
-                className="text-lg sm:text-xl font-bold text-center mb-1 sm:mb-2 text-white drop-shadow-md z-10"
+                className="text-lg sm:text-xl font-bold text-center mb-1 sm:mb-2 text-foreground drop-shadow-md z-10"
               >
                 {currentAchievement.title}
               </motion.h3>
@@ -386,7 +386,7 @@ export const AchievementCelebration: React.FC = () => {
                 variants={textVariants}
                 initial="hidden"
                 animate="visible"
-                className="text-gray-100 text-sm sm:text-base text-center mb-3 sm:mb-4 max-w-xs z-10"
+                className="text-foreground/80 text-sm sm:text-base text-center mb-3 sm:mb-4 max-w-xs z-10"
               >
                 {currentAchievement.description}
               </motion.p>
@@ -395,7 +395,7 @@ export const AchievementCelebration: React.FC = () => {
                 variants={xpVariants}
                 initial="hidden"
                 animate="visible"
-                className="text-amber-300 font-bold text-xl px-4 py-1 bg-black/20 rounded-full backdrop-blur-sm z-10"
+                className="text-amber-300 font-bold text-xl px-4 py-1 bg-black/20 rounded-full backdrop-blur-md z-10 border border-amber-500/30"
               >
                 +{currentAchievement.xp_reward} XP
               </motion.div>
