@@ -1,19 +1,23 @@
-import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
-import { useAuth } from "@/hooks/use-auth";
+import React, { useState } from "react";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
-import nurdHeroImage from "@assets/IMG_0119.jpeg";
+import nurdHeroImage from "@assets/IMG_0115.jpeg";
 
+// Define schemas for form validation
 const loginSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
   password: z.string().min(6, "Password must be at least 6 characters"),
@@ -22,14 +26,10 @@ const loginSchema = z.object({
 const registerSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
   first_name: z.string().min(1, "First name is required"),
-  age: z.coerce.number().min(8, "Age must be at least 8").max(18, "Age must be at most 18"),
+  age: z.number().min(8, "Minimum age is 8").max(18, "Maximum age is 18"),
   grade_level: z.string().min(1, "Grade level is required"),
-  user_type: z.enum(["student", "parent"], { 
-    required_error: "Please select student or parent" 
-  }),
-  gender: z.enum(["male", "female", "other", "prefer_not_to_say"], { 
-    required_error: "Please select a gender" 
-  }),
+  user_type: z.enum(["student", "parent"]),
+  gender: z.enum(["male", "female", "other", "prefer_not_to_say"]),
   path_choice: z.string().optional(),
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string(),
@@ -43,16 +43,8 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function AuthPage() {
   const [activeTab, setActiveTab] = useState<string>("login");
-  const [, navigate] = useLocation();
-  const { user, loginMutation, registerMutation } = useAuth();
   const { toast } = useToast();
-
-  // Redirect if user is already logged in
-  useEffect(() => {
-    if (user) {
-      navigate("/dashboard");
-    }
-  }, [user, navigate]);
+  const { loginMutation, registerMutation } = useAuth();
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -98,12 +90,22 @@ export default function AuthPage() {
 
           <Card className="w-full backdrop-blur-xl bg-white/10 border-gray-700/30">
             <CardHeader>
-              <Tabs defaultValue="login" value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="login">Login</TabsTrigger>
-                  <TabsTrigger value="register">Register</TabsTrigger>
-                </TabsList>
-              </Tabs>
+              <div className="grid grid-cols-2 gap-2">
+                <Button 
+                  variant={activeTab === "login" ? "default" : "outline"} 
+                  onClick={() => setActiveTab("login")}
+                  className="w-full"
+                >
+                  Login
+                </Button>
+                <Button 
+                  variant={activeTab === "register" ? "default" : "outline"} 
+                  onClick={() => setActiveTab("register")}
+                  className="w-full"
+                >
+                  Register
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               {activeTab === "login" ? (
@@ -335,7 +337,7 @@ export default function AuthPage() {
                     </Button>
                   </form>
                 </Form>
-              </TabsContent>
+              )}
             </CardContent>
             <CardFooter className="flex flex-col space-y-4 pb-6">
               <div className="w-full border-t border-gray-700 my-2"></div>

@@ -109,7 +109,7 @@ function App() {
               <Switch>
                 <Route path="/" component={TestComponent} />
                 <Route path="/about" component={About} />
-                <Route path="/auth" component={AuthPage} />
+                <Route path="/auth" component={React.lazy(() => import("./pages/auth-page-new"))} />
                 <Route path="/register" component={Register} />
                 <ProtectedRoute path="/dashboard" component={Dashboard} />
                 <ProtectedRoute path="/trainers" component={Trainers} />
