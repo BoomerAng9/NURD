@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
+import SocialLoginButtons from "@/components/auth/social-login-buttons";
 import nurdHeroImage from "@assets/IMG_0115.jpeg";
 
 // Define schemas for form validation
