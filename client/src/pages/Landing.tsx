@@ -6,12 +6,10 @@ import Navbar from '@/components/ui/navbar';
 import Footer from '@/components/sections/footer';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { useSupabase } from '@/components/ui/supabase-provider';
 import { LandingContent } from '@shared/schema';
 import { FadeIn, ScaleIn } from '@/components/animations/futuristic-transitions';
 
 const Landing: React.FC = () => {
-  const { supabase } = useSupabase();
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [currentVideo, setCurrentVideo] = useState('');
 

@@ -256,8 +256,8 @@ const Dashboard: React.FC = () => {
                               <div className="max-w-sm">
                                 <FuturisticContainer>
                                   <NurdCard 
-                                    user={userData}
-                                    level={userData?.level || 7}
+                                    user={user}
+                                    level={user?.level || 7}
                                     bridges={6}
                                     houses={1}
                                     techs={['TECH SAGE']}
