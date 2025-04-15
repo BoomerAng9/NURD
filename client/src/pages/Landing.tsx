@@ -69,14 +69,11 @@ const Landing: React.FC = () => {
             </FadeIn>
             
             <ScaleIn className="hidden lg:block">
-              <div className="relative h-[400px] rounded-2xl overflow-hidden shadow-xl border-4 border-white/10">
+              <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-xl border-4 border-white/10">
                 <img 
-                  src="/hero-image.jpg" 
-                  alt="NURD Summer Initiative" 
+                  src="/nurd-student-image.jpeg" 
+                  alt="NURD Student" 
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = "https://images.unsplash.com/photo-1515879128292-8db3c2b2220c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1050&q=80";
-                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/70 to-transparent"></div>
               </div>
@@ -201,12 +198,13 @@ const Landing: React.FC = () => {
           <div className="flex flex-col lg:flex-row items-center justify-center gap-8 max-w-6xl mx-auto">
             <div className="lg:w-1/2">
               <FadeIn direction="left">
-                <div className="relative rounded-full overflow-hidden border-8 border-indigo-600 shadow-xl max-w-md mx-auto">
+                <div className="relative overflow-hidden rounded-xl border-8 border-indigo-600 shadow-xl max-w-md mx-auto">
                   <img 
-                    src="/nurd-student.png" 
+                    src="/nurd-student-image.jpeg" 
                     alt="NURD Student" 
                     className="w-full h-auto"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/30 to-transparent"></div>
                 </div>
               </FadeIn>
             </div>
@@ -256,12 +254,13 @@ const Landing: React.FC = () => {
             </div>
             <div className="lg:w-1/2">
               <FadeIn direction="right">
-                <div className="rounded-lg overflow-hidden shadow-xl">
+                <div className="rounded-lg overflow-hidden shadow-xl relative">
                   <img 
-                    src="/nurd-laptop.png" 
+                    src="/nurd-laptop-cool.jpeg" 
                     alt="NURD Laptop" 
-                    className="w-full h-auto"
+                    className="w-full h-auto rounded-lg"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/20 to-transparent rounded-lg"></div>
                 </div>
               </FadeIn>
             </div>
