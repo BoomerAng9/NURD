@@ -25,7 +25,7 @@ export function AdminProtectedRoute({
         }
 
         // Only admin users can access admin routes
-        if (!user || user.role !== 'admin') {
+        if (!user || user.user_type !== 'admin') {
           // Redirect to homepage for non-admin users
           setTimeout(() => setLocation('/'), 100);
           return (

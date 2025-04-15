@@ -126,7 +126,7 @@ function App() {
                 <Route path="/dashboard" component={Dashboard} />
                 <Route path="/trainers" component={Trainers} />
                 <Route path="/gallery" component={Gallery} />
-                <Route path="/admin" component={AdminDashboard} />
+                <AdminProtectedRoute path="/admin" component={AdminDashboard} />
                 <Route path="/learning" component={Learning} />
                 <Route path="/learning/create" component={AICourseCreator} />
                 <Route path="/learning/:id" component={ModuleDetail} />
