@@ -26,6 +26,7 @@ import DiscordConnect from "@/pages/DiscordConnect";
 import AvatarCreator from "@/pages/AvatarCreator";
 import ACHIEVERS from "@/pages/AchievementDemo";
 import UserProgress from "@/pages/UserProgress";
+import AICodeTools from "@/pages/AICodeTools";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { LayoutDashboard, Send } from "lucide-react";
 
@@ -63,6 +64,13 @@ const TestComponent = () => {
               <polyline points="8 6 2 12 8 18"></polyline>
             </svg>
             <span>Code Playground</span>
+          </a>
+          <a href="/ai-code-tools" className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-purple-700/30 to-pink-700/30 border-purple-500/30">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path>
+              <path d="M7 7h.01"></path>
+            </svg>
+            <span>AI Code Tools</span>
           </a>
           <a href="/achievers" className="glass-button bg-primary/20 border-primary/30 transform hover:scale-105 transition-all flex items-center space-x-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-send">
@@ -123,6 +131,7 @@ function App() {
                 <ProtectedRoute path="/avatar" component={AvatarCreator} />
                 <Route path="/home" component={Landing} />
                 <Route path="/achievers" component={ACHIEVERS} />
+                <Route path="/ai-code-tools" component={AICodeTools} />
                 <ProtectedRoute path="/progress" component={UserProgress} />
                 
                 {/* Coming Soon placeholder pages */}
