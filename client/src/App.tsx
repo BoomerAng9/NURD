@@ -116,7 +116,7 @@ function App() {
                 <Route path="/admin" component={AdminDashboard} />
                 <Route path="/learning" component={Learning} />
                 <Route path="/settings" component={ProfileSettings} />
-                <Route path="/join-our-team" component={JoinOurTeam} />
+                <Route path="/join" component={JoinOurTeam} />
                 <Route path="/cohorts" component={Cohorts} />
                 <Route path="/discord" component={DiscordConnect} />
                 <Route path="/avatar" component={AvatarCreator} />

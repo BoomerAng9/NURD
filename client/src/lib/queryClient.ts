@@ -28,16 +28,16 @@ type FetcherOptions = {
 };
 
 export function getQueryFn(options: FetcherOptions = {}) {
-  return async ({ queryKey }: { queryKey: readonly unknown[] }) => {
+  return async ({ queryKey }: { queryKey: string[] }) => {
     try {
-      const url = Array.isArray(queryKey) ? String(queryKey[0]) : String(queryKey);
+      const url = Array.isArray(queryKey) ? queryKey[0] : queryKey;
       const response = await fetch(url, {
         credentials: "include",
       });
 
       if (!response.ok) {
         if (response.status === 401 && options.on401 === "returnNull") {
-          return null;
+          return undefined;
         }
         throw new Error(`API error: ${response.status}`);
       }
