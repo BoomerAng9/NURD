@@ -2,6 +2,7 @@ import express, { type Express, type Request } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from 'ws';
 import { storage } from "./storage";
+import { setupAuth } from "./auth";
 import { 
   getSkillCategories, 
   getSkillCategoryById, 
@@ -102,6 +103,9 @@ function broadcastMessage(message: any) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Setup authentication
+  setupAuth(app);
+  
   // Health check endpoint
   app.get('/api/health', (req, res) => {
     return res.status(200).json({
