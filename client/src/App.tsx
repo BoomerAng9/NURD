@@ -1,3 +1,4 @@
+import React, { useEffect, useState, Suspense } from "react";
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -5,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { SupabaseProvider } from "@/components/ui/supabase-provider";
 import { PageTransition } from "@/components/animations/page-transition";
 import { GlassNav } from "@/components/ui/glass-nav";
+import { ComingSoon } from "@/components/ui/coming-soon";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Landing from "@/pages/Landing";
@@ -24,8 +26,10 @@ import AvatarCreator from "@/pages/AvatarCreator";
 import ACHIEVERS from "@/pages/AchievementDemo";
 import UserProgress from "@/pages/UserProgress";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useEffect, useState } from "react";
 import { LayoutDashboard, Send } from "lucide-react";
+
+// Lazy load code playground
+const CodePlayground = React.lazy(() => import("@/pages/code-playground"));
 
 // Import NURD skateboard image
 import nurdSkateboardImg from "./assets/nurd-skateboard.png";
@@ -120,19 +124,41 @@ function App() {
                 <Route path="/achievers" component={ACHIEVERS} />
                 <Route path="/progress" component={UserProgress} />
                 
-                {/* New Coming Soon Pages */}
-                <Route path="/summer-initiative" component={() => import("@/pages/summer-initiative").then(mod => <mod.default />)} />
-                <Route path="/weekend-workshops" component={() => import("@/pages/weekend-workshops").then(mod => <mod.default />)} />
-                <Route path="/school-programs" component={() => import("@/pages/school-programs").then(mod => <mod.default />)} />
-                <Route path="/online-learning" component={() => import("@/pages/online-learning").then(mod => <mod.default />)} />
-                <Route path="/resources" component={() => import("@/pages/resources").then(mod => <mod.default />)} />
-                <Route path="/parent-guide" component={() => import("@/pages/parent-guide").then(mod => <mod.default />)} />
-                <Route path="/student-resources" component={() => import("@/pages/student-resources").then(mod => <mod.default />)} />
-                <Route path="/scholarships" component={() => import("@/pages/scholarships").then(mod => <mod.default />)} />
-                <Route path="/faq" component={() => import("@/pages/faq").then(mod => <mod.default />)} />
+                {/* Coming Soon placeholder pages */}
+                <Route path="/summer-initiative">
+                  <ComingSoon title="Summer Initiative" description="Our summer program is coming soon! Check back for details on our exciting summer initiative for 2025." />
+                </Route>
+                <Route path="/weekend-workshops">
+                  <ComingSoon title="Weekend Workshops" description="Hands-on weekend workshops focused on tech and creativity coming soon!" />
+                </Route>
+                <Route path="/school-programs">
+                  <ComingSoon title="School Programs" description="NURD School Programs will be available soon. Learn how we're bringing tech education to schools." />
+                </Route>
+                <Route path="/online-learning">
+                  <ComingSoon title="Online Learning" description="Self-paced online learning experiences are being developed. Stay tuned!" />
+                </Route>
+                <Route path="/resources">
+                  <ComingSoon title="Resources" description="A comprehensive collection of learning resources for students and educators coming soon." />
+                </Route>
+                <Route path="/parent-guide">
+                  <ComingSoon title="Parent Guide" description="Information for parents on how to support their child's learning journey in tech." />
+                </Route>
+                <Route path="/student-resources">
+                  <ComingSoon title="Student Resources" description="Student-focused resources and learning materials coming soon." />
+                </Route>
+                <Route path="/scholarships">
+                  <ComingSoon title="Scholarships" description="Information about our scholarship programs and how to apply will be available soon." />
+                </Route>
+                <Route path="/faq">
+                  <ComingSoon title="Frequently Asked Questions" description="Answers to common questions about NURD programs and opportunities." />
+                </Route>
                 
                 {/* Interactive Code Playground */}
-                <Route path="/code-playground" component={() => import("@/pages/code-playground").then(mod => <mod.default />)} />
+                <Route path="/code-playground">
+                  <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+                    <CodePlayground />
+                  </Suspense>
+                </Route>
                 
                 <Route component={NotFound} />
               </Switch>

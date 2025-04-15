@@ -125,8 +125,8 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
               try {
                 // Very simple evaluation - in a real app, use proper sandboxing!
                 return `${eval(content)}`;
-              } catch (e) {
-                return `Error: ${e.message}`;
+              } catch (error: any) {
+                return `Error: ${error.message}`;
               }
             })
             .join('\\n');
@@ -151,7 +151,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
         setOutput(simulatedOutput);
         // Simulate AI generating suggestions based on the code
         simulateAIHelp();
-      } catch (error) {
+      } catch (error: any) {
         setOutput(`Error: ${error.message}`);
       } finally {
         setIsRunning(false);
