@@ -251,7 +251,7 @@ export function AdminLandingEditor({
 
   const handleDeleteContent = (id: number) => {
     if (confirm('Are you sure you want to delete this content? This action cannot be undone.')) {
-      deleteMutation.mutate(id);
+      onDeleteContent(id);
     }
   };
 
@@ -274,8 +274,9 @@ export function AdminLandingEditor({
       mediaUrl,
     };
 
-    // Submit the data
-    contentMutation.mutate(contentData);
+    // Submit the data using the passed function
+    onSaveContent(contentData);
+    handleCloseDialog();
   };
 
   if (!isAdmin) {
