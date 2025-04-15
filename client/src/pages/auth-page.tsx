@@ -1,102 +1,312 @@
-import React, { useState } from 'react';
-import { useLocation } from 'wouter';
-import { useToast } from '@/hooks/use-toast';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
-import { apiRequest } from '@/lib/queryClient';
-import Navbar from '@/components/ui/navbar';
-import Footer from '@/components/sections/footer';
+import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useToast } from "@/hooks/use-toast";
+import nurdHeroImage from "@assets/IMG_0119.jpeg";
+
+const loginSchema = z.object({
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+const registerSchema = z.object({
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  first_name: z.string().min(1, "First name is required"),
+  age: z.coerce.number().min(8, "Age must be at least 8").max(18, "Age must be at most 18"),
+  grade_level: z.string().min(1, "Grade level is required"),
+  user_type: z.enum(["student", "parent"], { 
+    required_error: "Please select student or parent" 
+  }),
+  gender: z.enum(["male", "female", "other", "prefer_not_to_say"], { 
+    required_error: "Please select a gender" 
+  }),
+  path_choice: z.string().optional(),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string(),
+}).refine(data => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function AuthPage() {
-  const [, setLocation] = useLocation();
+  const [activeTab, setActiveTab] = useState<string>("login");
+  const [, navigate] = useLocation();
+  const { user, loginMutation, registerMutation } = useAuth();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-  const [credentials, setCredentials] = useState({
-    username: '',
-    password: ''
+
+  // Redirect if user is already logged in
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
+
+  const loginForm = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const registerForm = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
-    try {
-      const response = await apiRequest('POST', '/api/login', credentials);
+  const onLoginSubmit = (data: LoginFormValues) => {
+    loginMutation.mutate(data);
+  };
 
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
-
-      toast({
-        title: "Login Successful",
-        description: "Welcome back!",
-      });
-
-      setLocation('/dashboard');
-    } catch (error) {
-      toast({
-        title: "Login Failed",
-        description: error instanceof Error ? error.message : "An unknown error occurred",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
+  const onRegisterSubmit = (data: RegisterFormValues) => {
+    const { confirmPassword, ...registerData } = data;
+    registerMutation.mutate(registerData);
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <div className="flex-grow flex items-center justify-center px-4 py-20">
-        <div className="max-w-6xl w-full mx-auto grid grid-cols-1"> {/* Removed md:grid-cols-2 */}
-          <div className="flex flex-col justify-center">
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold tracking-tight">Welcome to NURD</h1>
-              <p className="text-muted-foreground mt-2">
-                Sign in to your account 
-              </p>
+    <div className="flex min-h-screen bg-gradient-to-b from-[#121645] to-[#0A0A1B]">
+      {/* Left column - Auth Forms */}
+      <div className="w-full lg:w-1/2 p-8 flex items-center justify-center">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-white">Welcome to NURD</h1>
+            <p className="mt-2 text-gray-400">Join the community of Naturally Unstoppable Resourceful Dreamers</p>
+          </div>
+
+          <Card className="w-full backdrop-blur-xl bg-white/10 border-gray-700/30">
+            <CardHeader>
+              <Tabs defaultValue="login" value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="login">Login</TabsTrigger>
+                  <TabsTrigger value="register">Register</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </CardHeader>
+            <CardContent>
+              <TabsContent value="login" className="mt-0">
+                <Form {...loginForm}>
+                  <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
+                    <FormField
+                      control={loginForm.control}
+                      name="username"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-200">Username</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Enter your username" 
+                              className="bg-white/5 border-gray-700 focus:border-primary text-white" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={loginForm.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-200">Password</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="password" 
+                              placeholder="Enter your password" 
+                              className="bg-white/5 border-gray-700 focus:border-primary text-white" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button 
+                      type="submit" 
+                      className="w-full btn-nurd"
+                      disabled={loginMutation.isPending}
+                    >
+                      {loginMutation.isPending ? "Logging in..." : "Login"}
+                    </Button>
+                  </form>
+                </Form>
+              </TabsContent>
+
+              <TabsContent value="register" className="mt-0">
+                <Form {...registerForm}>
+                  <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
+                    <FormField
+                      control={registerForm.control}
+                      name="username"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-200">Username</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Choose a username" 
+                              className="bg-white/5 border-gray-700 focus:border-primary text-white" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={registerForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-200">Email</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Enter your email" 
+                              className="bg-white/5 border-gray-700 focus:border-primary text-white" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={registerForm.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-200">Password</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="password" 
+                              placeholder="Create a password" 
+                              className="bg-white/5 border-gray-700 focus:border-primary text-white" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={registerForm.control}
+                      name="confirmPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-200">Confirm Password</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="password" 
+                              placeholder="Confirm your password" 
+                              className="bg-white/5 border-gray-700 focus:border-primary text-white" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button 
+                      type="submit" 
+                      className="w-full btn-nurd"
+                      disabled={registerMutation.isPending}
+                    >
+                      {registerMutation.isPending ? "Creating account..." : "Create Account"}
+                    </Button>
+                  </form>
+                </Form>
+              </TabsContent>
+            </CardContent>
+            <CardFooter className="flex flex-col space-y-4 pb-6">
+              <div className="w-full border-t border-gray-700 my-2"></div>
+              <div className="text-sm text-gray-400 text-center">
+                {activeTab === "login" ? (
+                  <p>
+                    Don't have an account?{" "}
+                    <button
+                      onClick={() => setActiveTab("register")}
+                      className="text-primary hover:underline focus:outline-none"
+                    >
+                      Register here
+                    </button>
+                  </p>
+                ) : (
+                  <p>
+                    Already have an account?{" "}
+                    <button
+                      onClick={() => setActiveTab("login")}
+                      className="text-primary hover:underline focus:outline-none"
+                    >
+                      Log in
+                    </button>
+                  </p>
+                )}
+              </div>
+            </CardFooter>
+          </Card>
+        </div>
+      </div>
+
+      {/* Right column - Hero Image */}
+      <div className="hidden lg:block lg:w-1/2 relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#121645]/90 to-transparent z-10"></div>
+        <img
+          src={nurdHeroImage}
+          alt="NURD Initiative"
+          className="h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 flex flex-col justify-center p-12 z-20">
+          <h2 className="text-4xl font-bold text-white mb-6">
+            Become a <span className="text-[#3DE053]">NURD</span>
+          </h2>
+          <p className="text-lg text-gray-200 max-w-md mb-8">
+            Join our community of creators, innovators, and problem-solvers. The NURD Summer Initiative offers hands-on learning experiences in technology, creativity, and collaboration.
+          </p>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-3">
+              <div className="h-8 w-8 rounded-full bg-[#3DE053]/20 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#3DE053]" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <span className="text-white">Hands-on learning experiences</span>
             </div>
-            <Card className="w-full max-w-md p-6">
-              <h1 className="text-2xl font-bold mb-6">Login to NURD</h1>
-              <form onSubmit={handleSubmit}>
-                <div className="space-y-4">
-                  <div>
-                    <Input
-                      type="text"
-                      placeholder="Username"
-                      value={credentials.username}
-                      onChange={(e) => setCredentials(prev => ({
-                        ...prev,
-                        username: e.target.value
-                      }))}
-                    />
-                  </div>
-                  <div>
-                    <Input
-                      type="password"
-                      placeholder="Password"  
-                      value={credentials.password}
-                      onChange={(e) => setCredentials(prev => ({
-                        ...prev,
-                        password: e.target.value
-                      }))}
-                    />
-                  </div>
-                  <Button 
-                    type="submit"
-                    className="w-full bg-[#6A2FF8] hover:bg-[#5825c5]"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Logging in...' : 'Login'}
-                  </Button>
-                </div>
-              </form>
-            </Card>
+            <div className="flex items-center space-x-3">
+              <div className="h-8 w-8 rounded-full bg-[#3EC6E0]/20 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#3EC6E0]" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <span className="text-white">Creative coding and project-based learning</span>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="h-8 w-8 rounded-full bg-[#FF8A00]/20 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#FF8A00]" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <span className="text-white">Community building and collaboration</span>
+            </div>
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }
