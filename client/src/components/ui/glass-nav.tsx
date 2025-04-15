@@ -22,7 +22,8 @@ import {
   Users2,
   Code,
   Layers,
-  Star
+  Star,
+  Heart
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
@@ -47,6 +48,7 @@ const navigation: NavItem[] = [
       { name: 'Courses', path: '/learning', icon: <Layers className="h-4 w-4 mr-2" /> },
       { name: 'Trainers', path: '/trainers', icon: <Users className="h-4 w-4 mr-2" /> },
       { name: 'Apply to Teach', path: '/apply', icon: <UserPlus className="h-4 w-4 mr-2" /> },
+      { name: 'Create Course', path: '/create-course', icon: <FileText className="h-4 w-4 mr-2" /> },
     ]
   },
   { 
@@ -57,6 +59,7 @@ const navigation: NavItem[] = [
       { name: 'Main', path: '/achievers', icon: <Star className="h-4 w-4 mr-2" /> },
       { name: 'Gallery', path: '/gallery', icon: <GalleryVertical className="h-4 w-4 mr-2" /> },
       { name: 'Skills Exchange', path: '/skill-marketplace', icon: <Users2 className="h-4 w-4 mr-2" /> },
+      { name: 'Reinvestment', path: '/reinvestment', icon: <Heart className="h-4 w-4 mr-2" /> },
       { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
       { name: 'AI Code Tools', path: '/ai-code-tools', icon: <FileText className="h-4 w-4 mr-2" /> },
     ]

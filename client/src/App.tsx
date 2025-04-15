@@ -30,6 +30,8 @@ import AICodeTools from "@/pages/AICodeTools";
 import SkillMarketplace from "@/pages/SkillMarketplace";
 import ModuleDetail from "@/pages/ModuleDetail";
 import AICourseCreator from "@/pages/AICourseCreator";
+import Reinvestment from "@/pages/reinvestment";
+import CreateCourse from "@/pages/create-course";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { LayoutDashboard, Send } from "lucide-react";
 
@@ -138,6 +140,8 @@ function App() {
                 <Route path="/ai-code-tools" component={AICodeTools} />
                 <Route path="/progress" component={UserProgress} />
                 <Route path="/skill-marketplace" component={SkillMarketplace} />
+                <Route path="/reinvestment" component={Reinvestment} />
+                <Route path="/create-course" component={CreateCourse} />
                 
                 {/* Coming Soon placeholder pages */}
                 <Route path="/summer-initiative">
