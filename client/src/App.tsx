@@ -1,6 +1,7 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { Switch, Route } from "wouter";
 import { ProtectedRoute } from "@/lib/protected-route";
+import { AdminProtectedRoute } from "@/lib/admin-protected-route";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";

@@ -108,7 +108,8 @@ export const GlassNav: React.FC = () => {
   const [splatterEffects, setSplatterEffects] = useState<{id: number, path: string, position: {x: number, y: number}}[]>([]);
   const splatterCounter = React.useRef(0);
   const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  // Removed authentication checks to make all navigation accessible
+  const { user } = useAuth();
+  // Only restrict admin pages, all other pages are publicly accessible
 
   // Handle clicks outside dropdown to close it
   useEffect(() => {
@@ -181,7 +182,8 @@ export const GlassNav: React.FC = () => {
   // Show all navigation items without filtering
   const filteredNavigation = navigation;
 
-  const visibleAdminLinks = adminLinks;
+  // Only show admin links if user is logged in and has admin user_type
+  const visibleAdminLinks = user && user.user_type === 'admin' ? adminLinks : [];
   
   return (
     <nav className="sticky top-0 z-40 w-full backdrop-blur-md bg-background/70 border-b border-border/40">
