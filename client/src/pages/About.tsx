@@ -23,8 +23,8 @@ const About: React.FC = () => {
         <section className="py-16 bg-gradient-to-br from-[#121645] to-[#121645]/90 text-white">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl font-bold mb-6">About NURD</h1>
-              <p className="text-xl opacity-90 leading-relaxed">
+              <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-purple-600">About NURD</h1>
+              <p className="text-xl leading-relaxed bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-primary-foreground to-purple-400">
                 A revolutionary approach to teaching technology, creativity, and life skills to the next generation.
               </p>
             </div>

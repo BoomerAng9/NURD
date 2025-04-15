@@ -122,6 +122,7 @@ function App() {
                 <Route path="/gallery" component={Gallery} />
                 <Route path="/admin" component={AdminDashboard} />
                 <Route path="/learning" component={Learning} />
+                <Route path="/learn" component={Learning} />
                 <Route path="/settings" component={ProfileSettings} />
                 <Route path="/join" component={JoinOurTeam} />
                 <Route path="/cohorts" component={Cohorts} />
