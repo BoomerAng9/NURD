@@ -20,7 +20,9 @@ import {
   ChevronDown,
   Globe,
   Users2,
-  Code
+  Code,
+  Layers,
+  Star
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
@@ -34,17 +36,31 @@ interface NavItem {
   isDropdown?: boolean;
 }
 
-// Main navigation structure - no dropdowns for reliability
+// Main navigation structure with dropdowns for better organization
 const navigation: NavItem[] = [
   { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="h-4 w-4 mr-2" /> },
-  { name: 'Learn', path: '/learning', icon: <BookOpen className="h-4 w-4 mr-2" /> },
-  { name: 'Gallery', path: '/gallery', icon: <GalleryVertical className="h-4 w-4 mr-2" /> },
-  { name: 'Trainers', path: '/trainers', icon: <Users className="h-4 w-4 mr-2" /> },
-  { name: 'ACHIEVERS', path: '/achievers', icon: <Award className="h-4 w-4 mr-2" /> },
-  { name: 'Skills Exchange', path: '/skill-marketplace', icon: <Users2 className="h-4 w-4 mr-2" /> },
+  { 
+    name: 'Learning', 
+    icon: <BookOpen className="h-4 w-4 mr-2" />,
+    isDropdown: true,
+    children: [
+      { name: 'Courses', path: '/learning', icon: <Layers className="h-4 w-4 mr-2" /> },
+      { name: 'Trainers', path: '/trainers', icon: <Users className="h-4 w-4 mr-2" /> },
+      { name: 'Apply to Teach', path: '/apply', icon: <UserPlus className="h-4 w-4 mr-2" /> },
+    ]
+  },
+  { 
+    name: 'ACHIEVERS', 
+    icon: <Award className="h-4 w-4 mr-2" />,
+    isDropdown: true,
+    children: [
+      { name: 'Main', path: '/achievers', icon: <Star className="h-4 w-4 mr-2" /> },
+      { name: 'Gallery', path: '/gallery', icon: <GalleryVertical className="h-4 w-4 mr-2" /> },
+      { name: 'Skills Exchange', path: '/skill-marketplace', icon: <Users2 className="h-4 w-4 mr-2" /> },
+      { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
+    ]
+  },
   { name: 'AI Code Tools', path: '/ai-code-tools', icon: <FileText className="h-4 w-4 mr-2" /> },
-  { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
-  { name: 'Apply to Teach', path: '/apply', icon: <UserPlus className="h-4 w-4 mr-2" /> },
 ];
 
 const adminLinks: NavItem[] = [
@@ -386,8 +402,69 @@ export const GlassNav: React.FC = () => {
             </div>
           </Link>
           
-          {/* Simple flat mobile menu - no dropdowns */}
+          {/* Mobile menu with dropdowns */}
           {filteredNavigation.map((item, index) => {
+            // For dropdown items
+            if (item.isDropdown) {
+              const isOpen = openDropdowns[item.name] || false;
+              const isParentActive = item.children?.some(child => location === child.path);
+              
+              return (
+                <div key={`mobile-dropdown-${index}`} className="mb-2">
+                  <div
+                    onClick={(e) => toggleDropdown(item.name, e)}
+                    className={cn(
+                      "flex justify-between items-center px-3 py-2 rounded-md text-base font-medium cursor-pointer",
+                      isParentActive 
+                        ? "text-primary bg-primary/10 border-l-2 border-primary"
+                        : "text-foreground/70 hover:text-foreground hover:bg-background/50"
+                    )}
+                  >
+                    <span className="flex items-center">
+                      {item.icon}
+                      {item.name}
+                    </span>
+                    <ChevronDown className={cn(
+                      "h-4 w-4 transition-transform duration-200",
+                      isOpen ? "rotate-180" : ""
+                    )} />
+                  </div>
+                  
+                  {/* Mobile dropdown items */}
+                  {isOpen && item.children && (
+                    <div className="mt-1 ml-4 space-y-1 border-l border-border/30 pl-2">
+                      {item.children.map((child, childIndex) => {
+                        const isChildActive = location === child.path;
+                        
+                        return (
+                          <Link key={`mobile-child-${childIndex}`} href={ensurePath(child.path)}>
+                            <div
+                              onClick={(e) => {
+                                handleNavClick(ensurePath(child.path), e);
+                                setIsOpen(false); // Close mobile menu after clicking
+                              }}
+                              className={cn(
+                                "block px-3 py-2 rounded-md text-sm font-medium cursor-pointer",
+                                isChildActive
+                                  ? "text-primary bg-primary/10"
+                                  : "text-foreground/70 hover:text-foreground hover:bg-background/50"
+                              )}
+                            >
+                              <span className="flex items-center">
+                                {child.icon}
+                                {child.name}
+                              </span>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+            
+            // For regular items
             if (!item.path) return null;
             const isActive = location === item.path;
             
