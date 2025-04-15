@@ -63,11 +63,12 @@ const TestComponent = () => {
           
           {/* Centered skateboard image with solid background */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="bg-white p-1 rounded-lg">
+            <div className="bg-white rounded-lg" style={{ padding: '4px' }}>
               <img 
                 src={nurdSkateboardImg} 
                 alt="NURD Skateboarding" 
-                className="max-h-[300px]"
+                className="w-auto h-auto max-h-[280px] max-w-[280px]"
+                style={{ display: 'block' }}
               />
             </div>
           </div>
