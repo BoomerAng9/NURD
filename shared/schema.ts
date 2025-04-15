@@ -16,10 +16,24 @@ export const users = pgTable("users", {
   path_choice: text("path_choice"),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
+  email: text("email").unique(),
   avatar_url: text("avatar_url"),
   avatar_svg: text("avatar_svg"),
   level: integer("level").default(1),
   xp: integer("xp").default(0),
+  is_admin: boolean("is_admin").default(false),
+  google_id: text("google_id").unique(),
+  facebook_id: text("facebook_id").unique(),
+  github_id: text("github_id").unique(),
+  microsoft_id: text("microsoft_id").unique(),
+  apple_id: text("apple_id").unique(),
+  email_verified: boolean("email_verified").default(false),
+  verification_token: text("verification_token"),
+  reset_password_token: text("reset_password_token"),
+  reset_password_expires: timestamp("reset_password_expires"),
+  last_login: timestamp("last_login"),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -31,6 +45,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
   path_choice: true,
   username: true,
   password: true,
+  email: true,
 });
 
 export const registrationSchema = z.object({
@@ -45,7 +60,16 @@ export const registrationSchema = z.object({
   }),
   path_choice: z.string().optional(),
   username: z.string().min(3, "Username must be at least 3 characters"),
+  email: z.string().email("Invalid email address").optional(),
   password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+export const ssoLoginSchema = z.object({
+  provider: z.enum(["google", "facebook", "github", "microsoft", "apple"], {
+    required_error: "Please select a valid login provider"
+  }),
+  token: z.string(),
+  redirectUrl: z.string().optional(),
 });
 
 export const landingContent = pgTable('landing_content', {
@@ -238,6 +262,7 @@ export const insertBridgeSchema = createInsertSchema(bridges).omit({
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type RegistrationForm = z.infer<typeof registrationSchema>;
+export type SSOLoginForm = z.infer<typeof ssoLoginSchema>;
 
 export type InsertFriendship = z.infer<typeof insertFriendshipSchema>;
 export type Friendship = typeof friendships.$inferSelect;

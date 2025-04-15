@@ -215,29 +215,20 @@ const AppContent = () => {
             </div>
             <p className="text-gray-500 flex items-center justify-center">
               {/* Palmetto Palm Tree SVG */}
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 2v20" strokeLinecap="round" />
-                <path d="M12 8c4 0 8-2 8-5" strokeLinecap="round" />
-                <path d="M12 8c-4 0-8-2-8-5" strokeLinecap="round" />
-                <path d="M12 8c3 0 6 1.5 6 4" strokeLinecap="round" />
-                <path d="M12 8c-3 0-6 1.5-6 4" strokeLinecap="round" />
-                <path d="M12 8c2 0 4 2.5 4 6" strokeLinecap="round" />
-                <path d="M12 8c-2 0-4 2.5-4 6" strokeLinecap="round" />
-              </svg>
+              <img 
+                src="/assets/palmetto_palm.svg" 
+                alt="Palmetto Palm" 
+                className="h-8 w-auto mr-3"
+              />
               
-              Made in Pooler, GA
+              <span>Made in Pooler, GA</span>
               
               {/* Osprey SVG */}
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M12 4c-.5-2-2.5-3-4.5-2.5.5 1.5 2 2.5 4.5 2.5z" strokeLinecap="round" />
-                <path d="M12 4c.5-2 2.5-3 4.5-2.5-.5 1.5-2 2.5-4.5 2.5z" strokeLinecap="round" />
-                <path d="M15 6.5c3-1 6 1 6.5 3C19 9 15.5 7.5 15 6.5z" strokeLinecap="round" />
-                <path d="M9 6.5c-3-1-6 1-6.5 3C5 9 8.5 7.5 9 6.5z" strokeLinecap="round" />
-                <path d="M12 4v4" strokeLinecap="round" />
-                <path d="M9 8l3 4 3-4" strokeLinecap="round" />
-                <path d="M8 14l4 5 4-5" strokeLinecap="round" />
-                <path d="M8 14h8" strokeLinecap="round" />
-              </svg>
+              <img 
+                src="/assets/osprey.svg" 
+                alt="Osprey" 
+                className="h-8 w-auto ml-3"
+              />
             </p>
           </div>
         </footer>
