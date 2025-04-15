@@ -41,6 +41,7 @@ const CodePlayground = React.lazy(() => import("@/pages/code-playground"));
 
 // Import NURD skateboard image
 import nurdSkateboardImg from "./assets/nurd-skateboard.png";
+import backgroundImg from "./assets/IMG_9573.jpeg";
 
 // Simple component for initial testing - updated with glass UI
 const TestComponent = () => {
@@ -51,11 +52,22 @@ const TestComponent = () => {
           NURD by: ACHIEVEMOR
         </h1>
         
-        <div className="mt-8 p-6 glass-card overflow-hidden">
+        <div className="mt-8 p-6 glass-card overflow-hidden relative">
+          {/* Background image with blur effect */}
+          <div 
+            className="absolute inset-0 z-0 opacity-50" 
+            style={{
+              backgroundImage: `url(${backgroundImg})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              filter: 'blur(4px)'
+            }}
+          ></div>
+          {/* Foreground skateboard image */}
           <img 
             src={nurdSkateboardImg} 
             alt="NURD Skateboarding" 
-            className="mx-auto max-h-[500px] rounded-lg shadow-lg"
+            className="mx-auto max-h-[500px] rounded-lg shadow-lg relative z-10"
           />
         </div>
         
