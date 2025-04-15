@@ -4,7 +4,7 @@ import Navbar from '@/components/ui/navbar';
 import Footer from '@/components/sections/footer';
 import ModulesGrid from '@/components/learning/modules-grid';
 import { LearningModule } from '@/components/learning/module-card';
-import { BookOpen, Code, Lightbulb, Award, ArrowRight } from 'lucide-react';
+import { BookOpen, Code, Lightbulb, Award, ArrowRight, Sparkles, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
 
@@ -105,6 +105,15 @@ const Learning: React.FC = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-2xl font-bold">Learning Modules</h2>
+              <Link href="/learning/create">
+                <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white">
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  Create AI Course
+                </Button>
+              </Link>
+            </div>
             <ModulesGrid featured={featuredModule} />
           </motion.div>
         </div>
