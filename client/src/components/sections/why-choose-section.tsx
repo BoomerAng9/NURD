@@ -7,17 +7,25 @@ const WhyChooseSection: React.FC = () => {
         <div className="flex flex-col md:flex-row gap-12 items-center">
           <div className="md:w-1/2">
             <div className="relative">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white p-4 rounded-xl shadow-lg">
                 <img 
-                  src="https://images.unsplash.com/photo-1509966756634-9c23dd6e6815?auto=format&fit=crop&w=600&q=80" 
-                  alt="Student working on creative project" 
-                  className="rounded-lg shadow-lg"
+                  src="/nurd-cool-like-that.png" 
+                  alt="NURD - I'm cool like that" 
+                  className="w-full h-auto rounded-lg"
                 />
-                <img 
-                  src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=600&q=80" 
-                  alt="Students collaborating" 
-                  className="rounded-lg shadow-lg mt-8"
-                />
+
+                <div className="mt-6 grid grid-cols-2 gap-4">
+                  <img 
+                    src="https://images.unsplash.com/photo-1509966756634-9c23dd6e6815?auto=format&fit=crop&w=600&q=80" 
+                    alt="Student working on creative project" 
+                    className="rounded-lg shadow-lg"
+                  />
+                  <img 
+                    src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=600&q=80" 
+                    alt="Students collaborating" 
+                    className="rounded-lg shadow-lg"
+                  />
+                </div>
               </div>
               
               {/* Testimonial bubble */}
