@@ -830,8 +830,13 @@ Follow these guidelines:
         ],
       });
 
+      // Extract text from the response content - handling both ContentBlock and string types
+      const content = response.content[0];
+      // Use type assertion to safely handle the response
+      const codeText = typeof content === 'object' && content.type === 'text' ? (content as any).text : '';
+      
       return res.status(200).json({
-        code: response.content[0].text,
+        code: codeText,
         language: language || 'text'
       });
     } catch (error: any) {
@@ -872,8 +877,13 @@ Follow these guidelines:
         ],
       });
 
+      // Extract text from the response content - handling both ContentBlock and string types
+      const content = response.content[0];
+      // Use type assertion to safely handle the response
+      const suggestionText = typeof content === 'object' && content.type === 'text' ? (content as any).text : '';
+      
       return res.status(200).json({
-        suggestion: response.content[0].text,
+        suggestion: suggestionText,
       });
     } catch (error: any) {
       console.error("Error generating code suggestion:", error);
