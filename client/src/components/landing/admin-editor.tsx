@@ -99,52 +99,7 @@ export function AdminLandingEditor({
     },
   });
 
-  // Mutation for adding/updating content
-  const contentMutation = useMutation({
-    mutationFn: async (data: LandingContentForm & { id?: number, mediaUrl?: string }) => {
-      const response = await apiRequest('POST', '/api/landing-content', data);
-      return response.json();
-    },
-    onSuccess: () => {
-      toast({
-        title: editingContent ? 'Content updated' : 'Content added',
-        description: editingContent 
-          ? 'The landing page content has been updated successfully' 
-          : 'New content has been added to the landing page',
-      });
-      queryClient.invalidateQueries({ queryKey: ['/api/landing-content'] });
-      handleCloseDialog();
-    },
-    onError: (error) => {
-      toast({
-        title: 'Error',
-        description: `Failed to save content: ${error.message}`,
-        variant: 'destructive',
-      });
-    },
-  });
-
-  // Mutation for deleting content
-  const deleteMutation = useMutation({
-    mutationFn: async (id: number) => {
-      const response = await apiRequest('DELETE', `/api/landing-content/${id}`);
-      return response.json();
-    },
-    onSuccess: () => {
-      toast({
-        title: 'Content deleted',
-        description: 'The landing page content has been removed',
-      });
-      queryClient.invalidateQueries({ queryKey: ['/api/landing-content'] });
-    },
-    onError: (error) => {
-      toast({
-        title: 'Error',
-        description: `Failed to delete content: ${error.message}`,
-        variant: 'destructive',
-      });
-    },
-  });
+  // Using passed functions for adding/updating/deleting content instead of local mutations
 
   // Handle file uploads for documents/images/videos
   const handleFileUpload = async (file: File) => {
@@ -616,15 +571,14 @@ export function AdminLandingEditor({
                   type="button"
                   variant="outline"
                   onClick={handleCloseDialog}
-                  disabled={contentMutation.isPending}
                 >
                   Cancel
                 </Button>
                 <Button 
                   type="submit" 
-                  disabled={contentMutation.isPending || uploading}
+                  disabled={uploading}
                 >
-                  {contentMutation.isPending && (
+                  {uploading && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
                   {editingContent ? 'Update' : 'Add'} Content
