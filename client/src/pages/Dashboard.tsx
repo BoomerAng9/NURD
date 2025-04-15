@@ -58,23 +58,16 @@ const Dashboard: React.FC = () => {
   const { user, isLoading: authLoading } = useAuth();
   const userSafe = user || undefined; // Convert null to undefined to satisfy TypeScript
 
-  // Redirect to auth page if no user found
+  // Display a reminder toast but don't redirect
   useEffect(() => {
     if (!authLoading && !user) {
       toast({
-        title: "Authentication Error",
-        description: "Please log in to access your dashboard",
-        variant: "destructive"
+        title: "Login Suggestion",
+        description: "For a personalized experience, consider logging in",
+        variant: "default"
       });
-      
-      // Give the toast time to display before redirecting
-      const timer = setTimeout(() => {
-        setLocation('/auth');
-      }, 2000);
-      
-      return () => clearTimeout(timer);
     }
-  }, [user, authLoading, setLocation, toast]);
+  }, [user, authLoading, toast]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
