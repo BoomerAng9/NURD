@@ -59,7 +59,19 @@ const landingContentSchema = z.object({
 
 type LandingContentForm = z.infer<typeof landingContentSchema>;
 
-export function AdminLandingEditor() {
+interface AdminLandingEditorProps {
+  landingContent: LandingContent[];
+  onSaveContent: (content: any) => void;
+  onDeleteContent: (id: number) => void;
+  onReorderContent: (ids: number[]) => void;
+}
+
+export function AdminLandingEditor({
+  landingContent = [],
+  onSaveContent,
+  onDeleteContent,
+  onReorderContent
+}: AdminLandingEditorProps) {
   const isAdmin = useIsAdmin();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingContent, setEditingContent] = useState<LandingContent | null>(null);
@@ -68,11 +80,9 @@ export function AdminLandingEditor() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
-
-  // Fetch landing content
-  const { data: landingContent, isLoading } = useQuery<LandingContent[]>({
-    queryKey: ['/api/landing-content'],
-  });
+  
+  // Use the provided landingContent instead of fetching it
+  const isLoading = false;
 
   // Form setup
   const form = useForm<LandingContentForm>({
