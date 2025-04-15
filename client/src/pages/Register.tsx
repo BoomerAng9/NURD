@@ -1,27 +1,126 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useLocation } from 'wouter';
 import { useToast } from '@/hooks/use-toast';
+import { motion } from 'framer-motion';
+import { Upload, FileCheck, AlertCircle } from 'lucide-react';
 
 import Navbar from '@/components/ui/navbar';
 import Footer from '@/components/sections/footer';
 import NurdLogo from '@/components/ui/nurd-logo';
+import { Button } from '@/components/ui/button';
 import { apiRequest } from '@/lib/queryClient';
+import { GlassNav } from '@/components/ui/glass-nav';
+import { useSupabase } from '@/components/ui/supabase-provider';
+import { createClient } from '@supabase/supabase-js';
 
 const Register: React.FC = () => {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { supabase } = useSupabase();
   const [isLoading, setIsLoading] = useState(false);
+  const [isTrainerForm, setIsTrainerForm] = useState(true);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [credentials, setCredentials] = useState<{ name: string; url: string }[]>([]);
+  
   const [formData, setFormData] = useState({
     first_name: '',
+    last_name: '',
+    email: '',
+    phone: '',
+    skills: '',
+    experience: '',
+    user_type: 'trainer',
     age: '',
     grade_level: '',
-    user_type: '',
     gender: '',
     path_choice: '',
     username: '',
     password: '',
     confirm_password: ''
   });
+  
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUploadError(null);
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    
+    const newFiles: File[] = [];
+    
+    // Validate each file
+    Array.from(files).forEach(file => {
+      // Check file type - only allow PDFs, images, and common document types
+      const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 
+                          'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      
+      if (!validTypes.includes(file.type)) {
+        setUploadError('Invalid file type. Please upload PDF, image, or document files only.');
+        return;
+      }
+      
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setUploadError('File too large. Maximum file size is 5MB.');
+        return;
+      }
+      
+      newFiles.push(file);
+    });
+    
+    if (newFiles.length > 0) {
+      setUploadedFiles(prev => [...prev, ...newFiles]);
+    }
+  };
+  
+  const uploadToStorage = async (file: File): Promise<string | null> => {
+    try {
+      const fileName = `${Date.now()}-${file.name}`;
+      const filePath = `trainer_credentials/${fileName}`;
+      
+      const { error, data } = await supabase.storage
+        .from('credentials')
+        .upload(filePath, file);
+        
+      if (error) {
+        throw error;
+      }
+      
+      const { data: urlData } = supabase.storage
+        .from('credentials')
+        .getPublicUrl(filePath);
+        
+      return urlData.publicUrl;
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      return null;
+    }
+  };
+  
+  const uploadAllFiles = async (): Promise<{ name: string; url: string }[]> => {
+    if (uploadedFiles.length === 0) return [];
+    
+    const results: { name: string; url: string }[] = [];
+    
+    for (const file of uploadedFiles) {
+      const url = await uploadToStorage(file);
+      if (url) {
+        results.push({ name: file.name, url });
+      }
+    }
+    
+    return results;
+  };
+  
+  const removeFile = (index: number) => {
+    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+  };
+  
+  const triggerFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

@@ -19,7 +19,8 @@ import {
   PanelLeftClose,
   ChevronDown,
   Globe,
-  Users2
+  Users2,
+  Code
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSupabase } from '@/components/ui/supabase-provider';
@@ -56,6 +57,8 @@ const navigation: NavItem[] = [
       { name: 'ACHIEVERS', path: '/achievers', icon: <Award className="h-4 w-4 mr-2" /> },
     ]
   },
+  { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
+  { name: 'Apply to Teach', path: '/register', icon: <UserPlus className="h-4 w-4 mr-2" /> },
 ];
 
 const adminLinks: NavItem[] = [
