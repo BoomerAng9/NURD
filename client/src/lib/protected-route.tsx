@@ -5,9 +5,11 @@ import { Loader2 } from "lucide-react";
 export function ProtectedRoute({
   path,
   component: Component,
+  requireAuth = false,
 }: {
   path: string;
   component: React.ComponentType;
+  requireAuth?: boolean;
 }) {
   const { user, isLoading } = useAuth();
   const [, setLocation] = useLocation();
@@ -24,7 +26,8 @@ export function ProtectedRoute({
           );
         }
 
-        if (!user) {
+        // Only check authentication if requireAuth is true
+        if (requireAuth && !user) {
           // Redirect to auth page
           setTimeout(() => setLocation('/auth'), 100);
           return (
