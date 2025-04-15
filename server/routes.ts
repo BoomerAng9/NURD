@@ -2,6 +2,23 @@ import express, { type Express, type Request } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from 'ws';
 import { storage } from "./storage";
+import { 
+  getSkillCategories, 
+  getSkillCategoryById, 
+  createSkillCategory,
+  getSkillOfferings,
+  getSkillOfferingById,
+  createSkillOffering,
+  toggleSkillOfferingStatus,
+  getSkillRequests,
+  getSkillRequestById,
+  createSkillRequest,
+  toggleSkillRequestStatus,
+  getSkillExchanges,
+  getSkillExchangeById,
+  createSkillExchange,
+  updateSkillExchangeStatus
+} from "./skill_storage";
 import { insertUserSchema } from "@shared/schema";
 import { 
   insertCourseSchema, 

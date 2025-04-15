@@ -41,7 +41,7 @@ import {
   type InsertUserAchievement
 } from "@shared/progress-schema";
 import { db } from "./db";
-import { eq, and, desc, sql, asc } from "drizzle-orm";
+import { eq, and, desc, sql, asc, or } from "drizzle-orm";
 
 // modify the interface with any CRUD methods
 // you might need
