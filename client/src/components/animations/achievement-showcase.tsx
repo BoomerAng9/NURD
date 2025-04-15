@@ -74,10 +74,10 @@ export const AchievementShowcase = () => {
   };
 
   return (
-    <div className="container mx-auto py-10">
-      <h2 className="text-2xl font-bold mb-6">Achievement Showcase</h2>
+    <div className="container mx-auto py-6 px-4 sm:px-6 sm:py-10">
+      <h2 className="text-2xl font-bold mb-4 sm:mb-6">Achievement Showcase</h2>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-10">
         {mockAchievements.map((achievement) => (
           <AchievementCard 
             key={achievement.id}
@@ -87,8 +87,8 @@ export const AchievementShowcase = () => {
         ))}
       </div>
       
-      <div className="mt-12">
-        <h3 className="text-xl font-semibold mb-4">Create Custom Achievement</h3>
+      <div className="mt-8 sm:mt-12">
+        <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Create Custom Achievement</h3>
         <CustomAchievementForm onTrigger={simulateAchievement} />
       </div>
       
@@ -137,22 +137,25 @@ const AchievementCard = ({
   };
 
   return (
-    <Card className="overflow-hidden h-full flex flex-col hover:shadow-md transition-shadow duration-300">
+    <Card className="overflow-hidden h-full flex flex-col hover:shadow-md transition-shadow duration-300 relative">
+      {/* Glass-like card effect with a subtle gradient border */}
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-primary/20 opacity-50 rounded-lg pointer-events-none" />
+      
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
-          <CardTitle className="text-lg">{achievement.title}</CardTitle>
-          <div className={`p-1.5 rounded-full ${getTypeColor()}`}>
+          <CardTitle className="text-base sm:text-lg">{achievement.title}</CardTitle>
+          <div className={`p-1.5 rounded-full ${getTypeColor()} shadow-sm`}>
             {getIcon()}
           </div>
         </div>
-        <CardDescription>
+        <CardDescription className="text-sm sm:text-base line-clamp-2">
           {achievement.description}
         </CardDescription>
       </CardHeader>
       
       <CardContent className="pb-2 pt-0 flex-grow">
         <div className="flex items-center gap-1.5 text-sm font-medium mt-2">
-          <span className="text-amber-500">+{achievement.xp_reward} XP</span>
+          <span className="text-amber-500 font-bold">+{achievement.xp_reward} XP</span>
         </div>
       </CardContent>
       
@@ -160,9 +163,11 @@ const AchievementCard = ({
         <Button 
           onClick={onTrigger} 
           variant="secondary" 
-          className="w-full"
+          className="w-full text-sm sm:text-base relative overflow-hidden group"
         >
-          Trigger Achievement Animation
+          <span className="relative z-10">Trigger Achievement Animation</span>
+          {/* Button shine effect on hover */}
+          <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
         </Button>
       </CardFooter>
     </Card>

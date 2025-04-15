@@ -332,7 +332,7 @@ export const AchievementCelebration: React.FC = () => {
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50"
+          className="fixed top-10 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 w-[90vw] max-w-md"
         >
           <div 
             ref={cardRef}
@@ -341,11 +341,11 @@ export const AchievementCelebration: React.FC = () => {
               p-[2px] rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.5)] 
               transition-transform duration-300 ease-out
               hover:shadow-[0_15px_40px_rgba(0,0,0,0.7)]
-              cursor-pointer
+              cursor-pointer w-full
             `}
             style={{ transformStyle: "preserve-3d" }}
           >
-            <div className="relative bg-background/80 backdrop-filter backdrop-blur-lg p-6 rounded-lg flex flex-col items-center overflow-hidden transition-all duration-300 ease-out">
+            <div className="relative bg-background/80 backdrop-filter backdrop-blur-lg p-4 sm:p-6 rounded-lg flex flex-col items-center overflow-hidden transition-all duration-300 ease-out">
               {/* Shine effect overlay */}
               <div className="shine-effect absolute inset-0 w-full h-full pointer-events-none" />
               
@@ -368,7 +368,7 @@ export const AchievementCelebration: React.FC = () => {
                 variants={iconVariants}
                 initial="hidden"
                 animate="visible"
-                className="my-4 p-3 bg-background/30 backdrop-blur-sm rounded-full shadow-lg z-10"
+                className="my-3 p-3 bg-background/30 backdrop-blur-sm rounded-full shadow-lg z-10"
               >
                 {getAchievementIcon()}
               </motion.div>
@@ -377,7 +377,7 @@ export const AchievementCelebration: React.FC = () => {
                 variants={textVariants}
                 initial="hidden"
                 animate="visible"
-                className="text-xl font-bold text-center mb-2 text-white drop-shadow-md z-10"
+                className="text-lg sm:text-xl font-bold text-center mb-1 sm:mb-2 text-white drop-shadow-md z-10"
               >
                 {currentAchievement.title}
               </motion.h3>
@@ -386,7 +386,7 @@ export const AchievementCelebration: React.FC = () => {
                 variants={textVariants}
                 initial="hidden"
                 animate="visible"
-                className="text-gray-100 text-center mb-4 max-w-xs z-10"
+                className="text-gray-100 text-sm sm:text-base text-center mb-3 sm:mb-4 max-w-xs z-10"
               >
                 {currentAchievement.description}
               </motion.p>
