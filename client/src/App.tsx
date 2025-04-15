@@ -61,13 +61,13 @@ const TestComponent = () => {
             className="w-full rounded-lg shadow-lg"
           />
           
-          {/* Centered skateboard image with no transparency */}
+          {/* Centered skateboard image with solid background */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="bg-white bg-opacity-90 p-2 rounded-lg shadow-xl" style={{ backdropFilter: 'blur(5px)' }}>
+            <div className="bg-white p-1 rounded-lg">
               <img 
                 src={nurdSkateboardImg} 
                 alt="NURD Skateboarding" 
-                className="max-h-[340px] z-10 rounded-md"
+                className="max-h-[300px]"
               />
             </div>
           </div>
