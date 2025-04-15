@@ -91,6 +91,29 @@ export interface IStorage {
   // Activity methods
   logActivity(userId: number, activityType: string, detail?: string, xpEarned?: number, relatedId?: number, relatedType?: string): Promise<void>;
   getUserActivities(userId: number, limit?: number): Promise<any[]>;
+
+  // Skill marketplace methods - Categories
+  getSkillCategories(): Promise<SkillCategory[]>;
+  getSkillCategoryById(id: number): Promise<SkillCategory | undefined>;
+  createSkillCategory(category: InsertSkillCategory): Promise<SkillCategory>;
+
+  // Skill marketplace methods - Offerings
+  getSkillOfferings(categoryId?: number, userId?: number, activeOnly?: boolean): Promise<SkillOffering[]>;
+  getSkillOfferingById(id: number): Promise<SkillOffering | undefined>;
+  createSkillOffering(offering: InsertSkillOffering): Promise<SkillOffering>;
+  toggleSkillOfferingStatus(id: number): Promise<SkillOffering | undefined>;
+
+  // Skill marketplace methods - Requests
+  getSkillRequests(categoryId?: number, userId?: number, activeOnly?: boolean): Promise<SkillRequest[]>;
+  getSkillRequestById(id: number): Promise<SkillRequest | undefined>;
+  createSkillRequest(request: InsertSkillRequest): Promise<SkillRequest>;
+  toggleSkillRequestStatus(id: number): Promise<SkillRequest | undefined>;
+
+  // Skill marketplace methods - Exchanges
+  getSkillExchanges(userId?: number, status?: string): Promise<SkillExchange[]>;
+  getSkillExchangeById(id: number): Promise<SkillExchange | undefined>;
+  createSkillExchange(exchange: InsertSkillExchange): Promise<SkillExchange>;
+  updateSkillExchangeStatus(id: number, status: string): Promise<SkillExchange | undefined>;
 }
 
 // Database storage implementation using Drizzle ORM
@@ -653,6 +676,284 @@ export class DatabaseStorage implements IStorage {
       .where(eq(activityLogs.user_id, userId))
       .orderBy(desc(activityLogs.created_at))
       .limit(limit);
+  }
+
+  // Skill marketplace methods - Categories
+  async getSkillCategories(): Promise<SkillCategory[]> {
+    return db.select().from(skill_categories).orderBy(asc(skill_categories.name));
+  }
+
+  async getSkillCategoryById(id: number): Promise<SkillCategory | undefined> {
+    const [category] = await db.select().from(skill_categories).where(eq(skill_categories.id, id));
+    return category || undefined;
+  }
+
+  async createSkillCategory(category: InsertSkillCategory): Promise<SkillCategory> {
+    const [newCategory] = await db.insert(skill_categories).values(category).returning();
+    return newCategory;
+  }
+
+  // Skill marketplace methods - Offerings
+  async getSkillOfferings(categoryId?: number, userId?: number, activeOnly: boolean = false): Promise<SkillOffering[]> {
+    let query = db.select().from(skill_offerings);
+    
+    // Apply filters
+    if (categoryId) {
+      query = query.where(eq(skill_offerings.category_id, categoryId));
+    }
+    
+    if (userId) {
+      query = query.where(eq(skill_offerings.user_id, userId));
+    }
+    
+    if (activeOnly) {
+      query = query.where(eq(skill_offerings.is_active, true));
+    }
+    
+    // Order by most recent first
+    return query.orderBy(desc(skill_offerings.created_at));
+  }
+
+  async getSkillOfferingById(id: number): Promise<SkillOffering | undefined> {
+    const [offering] = await db.select().from(skill_offerings).where(eq(skill_offerings.id, id));
+    return offering || undefined;
+  }
+
+  async createSkillOffering(offering: InsertSkillOffering): Promise<SkillOffering> {
+    const [newOffering] = await db.insert(skill_offerings).values(offering).returning();
+    
+    // Log activity
+    if (newOffering) {
+      await this.logActivity(
+        newOffering.user_id,
+        'skill_offering_created',
+        `Created skill offering: ${newOffering.title}`,
+        10, // Award 10 XP for creating a skill offering
+        newOffering.id,
+        'skill_offering'
+      );
+    }
+    
+    return newOffering;
+  }
+
+  async toggleSkillOfferingStatus(id: number): Promise<SkillOffering | undefined> {
+    // Get current offering
+    const offering = await this.getSkillOfferingById(id);
+    if (!offering) return undefined;
+    
+    // Toggle status
+    const [updatedOffering] = await db
+      .update(skill_offerings)
+      .set({
+        is_active: !offering.is_active,
+        updated_at: new Date()
+      })
+      .where(eq(skill_offerings.id, id))
+      .returning();
+    
+    return updatedOffering;
+  }
+
+  // Skill marketplace methods - Requests
+  async getSkillRequests(categoryId?: number, userId?: number, activeOnly: boolean = false): Promise<SkillRequest[]> {
+    let query = db.select().from(skill_requests);
+    
+    // Apply filters
+    if (categoryId) {
+      query = query.where(eq(skill_requests.category_id, categoryId));
+    }
+    
+    if (userId) {
+      query = query.where(eq(skill_requests.user_id, userId));
+    }
+    
+    if (activeOnly) {
+      query = query.where(eq(skill_requests.is_active, true));
+    }
+    
+    // Order by most recent first
+    return query.orderBy(desc(skill_requests.created_at));
+  }
+
+  async getSkillRequestById(id: number): Promise<SkillRequest | undefined> {
+    const [request] = await db.select().from(skill_requests).where(eq(skill_requests.id, id));
+    return request || undefined;
+  }
+
+  async createSkillRequest(request: InsertSkillRequest): Promise<SkillRequest> {
+    const [newRequest] = await db.insert(skill_requests).values(request).returning();
+    
+    // Log activity
+    if (newRequest) {
+      await this.logActivity(
+        newRequest.user_id,
+        'skill_request_created',
+        `Created skill request: ${newRequest.title}`,
+        5, // Award 5 XP for creating a skill request
+        newRequest.id,
+        'skill_request'
+      );
+    }
+    
+    return newRequest;
+  }
+
+  async toggleSkillRequestStatus(id: number): Promise<SkillRequest | undefined> {
+    // Get current request
+    const request = await this.getSkillRequestById(id);
+    if (!request) return undefined;
+    
+    // Toggle status
+    const [updatedRequest] = await db
+      .update(skill_requests)
+      .set({
+        is_active: !request.is_active,
+        updated_at: new Date()
+      })
+      .where(eq(skill_requests.id, id))
+      .returning();
+    
+    return updatedRequest;
+  }
+
+  // Skill marketplace methods - Exchanges
+  async getSkillExchanges(userId?: number, status?: string): Promise<SkillExchange[]> {
+    let query = db.select().from(skill_exchanges);
+    
+    // Apply filters
+    if (userId) {
+      query = query.where(
+        or(
+          eq(skill_exchanges.offerer_id, userId),
+          eq(skill_exchanges.requester_id, userId)
+        )
+      );
+    }
+    
+    if (status) {
+      query = query.where(eq(skill_exchanges.status, status));
+    }
+    
+    // Order by most recent first
+    return query.orderBy(desc(skill_exchanges.created_at));
+  }
+
+  async getSkillExchangeById(id: number): Promise<SkillExchange | undefined> {
+    const [exchange] = await db.select().from(skill_exchanges).where(eq(skill_exchanges.id, id));
+    return exchange || undefined;
+  }
+
+  async createSkillExchange(exchange: InsertSkillExchange): Promise<SkillExchange> {
+    const [newExchange] = await db.insert(skill_exchanges).values(exchange).returning();
+    
+    // Log activity for both parties
+    if (newExchange) {
+      // For the offerer
+      await this.logActivity(
+        newExchange.offerer_id,
+        'skill_exchange_initiated',
+        `Initiated a skill exchange as teacher`,
+        0, // No XP awarded for initiating
+        newExchange.id,
+        'skill_exchange'
+      );
+      
+      // For the requester
+      await this.logActivity(
+        newExchange.requester_id,
+        'skill_exchange_received',
+        `Received a skill exchange offer as student`,
+        0, // No XP awarded for receiving
+        newExchange.id,
+        'skill_exchange'
+      );
+    }
+    
+    return newExchange;
+  }
+
+  async updateSkillExchangeStatus(id: number, status: string): Promise<SkillExchange | undefined> {
+    // Get current exchange
+    const exchange = await this.getSkillExchangeById(id);
+    if (!exchange) return undefined;
+    
+    const now = new Date();
+    const updateData: any = {
+      status,
+      updated_at: now
+    };
+    
+    // If completing exchange, set completed_at date
+    if (status === 'completed' && !exchange.completed_at) {
+      updateData.completed_at = now;
+    }
+    
+    // Update exchange status
+    const [updatedExchange] = await db
+      .update(skill_exchanges)
+      .set(updateData)
+      .where(eq(skill_exchanges.id, id))
+      .returning();
+    
+    // Handle status-specific actions
+    if (updatedExchange) {
+      // For completed exchanges
+      if (status === 'completed' && exchange.status !== 'completed') {
+        // Award XP to both parties for completed exchange
+        await this.updateUserXP(updatedExchange.offerer_id, 15); // 15 XP for teaching
+        await this.updateUserXP(updatedExchange.requester_id, 10); // 10 XP for learning
+        
+        // Log completion activities
+        await this.logActivity(
+          updatedExchange.offerer_id,
+          'skill_exchange_completed',
+          `Completed a skill exchange as teacher`,
+          15,
+          updatedExchange.id,
+          'skill_exchange'
+        );
+        
+        await this.logActivity(
+          updatedExchange.requester_id,
+          'skill_exchange_completed',
+          `Completed a skill exchange as student`,
+          10,
+          updatedExchange.id,
+          'skill_exchange'
+        );
+        
+        // Check for achievements
+        await this.checkAndAwardAchievements(updatedExchange.offerer_id);
+        await this.checkAndAwardAchievements(updatedExchange.requester_id);
+      }
+      
+      // For cancelled or rejected exchanges
+      if (status === 'cancelled' || status === 'rejected') {
+        const action = status === 'cancelled' ? 'cancelled' : 'rejected';
+        
+        // Log cancellation/rejection activities
+        await this.logActivity(
+          updatedExchange.offerer_id,
+          `skill_exchange_${action}`,
+          `Skill exchange ${action}`,
+          0,
+          updatedExchange.id,
+          'skill_exchange'
+        );
+        
+        await this.logActivity(
+          updatedExchange.requester_id,
+          `skill_exchange_${action}`,
+          `Skill exchange ${action}`,
+          0,
+          updatedExchange.id,
+          'skill_exchange'
+        );
+      }
+    }
+    
+    return updatedExchange;
   }
 }
 
