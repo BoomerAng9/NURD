@@ -119,6 +119,21 @@ function App() {
                 <Route path="/home" component={Landing} />
                 <Route path="/achievers" component={ACHIEVERS} />
                 <Route path="/progress" component={UserProgress} />
+                
+                {/* New Coming Soon Pages */}
+                <Route path="/summer-initiative" component={() => import("@/pages/summer-initiative").then(mod => <mod.default />)} />
+                <Route path="/weekend-workshops" component={() => import("@/pages/weekend-workshops").then(mod => <mod.default />)} />
+                <Route path="/school-programs" component={() => import("@/pages/school-programs").then(mod => <mod.default />)} />
+                <Route path="/online-learning" component={() => import("@/pages/online-learning").then(mod => <mod.default />)} />
+                <Route path="/resources" component={() => import("@/pages/resources").then(mod => <mod.default />)} />
+                <Route path="/parent-guide" component={() => import("@/pages/parent-guide").then(mod => <mod.default />)} />
+                <Route path="/student-resources" component={() => import("@/pages/student-resources").then(mod => <mod.default />)} />
+                <Route path="/scholarships" component={() => import("@/pages/scholarships").then(mod => <mod.default />)} />
+                <Route path="/faq" component={() => import("@/pages/faq").then(mod => <mod.default />)} />
+                
+                {/* Interactive Code Playground */}
+                <Route path="/code-playground" component={() => import("@/pages/code-playground").then(mod => <mod.default />)} />
+                
                 <Route component={NotFound} />
               </Switch>
             </PageTransition>
