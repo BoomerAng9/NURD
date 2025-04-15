@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'wouter';
-import Navbar from '@/components/ui/navbar';
-import Footer from '@/components/sections/footer';
+
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -88,8 +88,7 @@ const JoinOurTeam: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
+    <div className="min-h-screen flex flex-col pt-16">
       
       {/* Hero Section */}
       <section className="pt-28 pb-16 relative bg-gradient-to-br from-[#121645] to-[#2C2F7C] text-white">
@@ -483,7 +482,7 @@ const JoinOurTeam: React.FC = () => {
         </section>
       </main>
       
-      <Footer />
+
     </div>
   );
 };

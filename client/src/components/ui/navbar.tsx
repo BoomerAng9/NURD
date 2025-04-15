@@ -86,8 +86,8 @@ const Navbar = () => {
                   Login
                 </div>
               </Link>
-              <Link href="/register">
-                <Link href="/join"><div className="btn-nurd text-sm cursor-pointer">Apply to Teach</div></Link>
+              <Link href="/join">
+                <div className="btn-nurd text-sm cursor-pointer">Apply to Teach</div>
               </Link>
             </div>
           )}
@@ -140,8 +140,8 @@ const Navbar = () => {
                   Login
                 </div>
               </Link>
-              <Link href="/register">
-                <div className="block btn-nurd text-center mt-6 cursor-pointer">Join the Summer Initiative</div>
+              <Link href="/join">
+                <div className="block btn-nurd text-center mt-6 cursor-pointer">Apply to Teach</div>
               </Link>
             </>
           )}
