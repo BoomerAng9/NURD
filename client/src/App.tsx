@@ -111,19 +111,19 @@ function App() {
                 <Route path="/about" component={About} />
                 <Route path="/auth" component={AuthPage} />
                 <Route path="/register" component={Register} />
-                <Route path="/dashboard" component={Dashboard} />
-                <Route path="/trainers" component={Trainers} />
-                <Route path="/gallery" component={Gallery} />
-                <Route path="/admin" component={AdminDashboard} />
-                <Route path="/learning" component={Learning} />
-                <Route path="/settings" component={ProfileSettings} />
-                <Route path="/join" component={JoinOurTeam} />
-                <Route path="/cohorts" component={Cohorts} />
-                <Route path="/discord" component={DiscordConnect} />
-                <Route path="/avatar" component={AvatarCreator} />
+                <ProtectedRoute path="/dashboard" component={Dashboard} />
+                <ProtectedRoute path="/trainers" component={Trainers} />
+                <ProtectedRoute path="/gallery" component={Gallery} />
+                <ProtectedRoute path="/admin" component={AdminDashboard} />
+                <ProtectedRoute path="/learning" component={Learning} />
+                <ProtectedRoute path="/settings" component={ProfileSettings} />
+                <ProtectedRoute path="/join" component={JoinOurTeam} />
+                <ProtectedRoute path="/cohorts" component={Cohorts} />
+                <ProtectedRoute path="/discord" component={DiscordConnect} />
+                <ProtectedRoute path="/avatar" component={AvatarCreator} />
                 <Route path="/home" component={Landing} />
-                <Route path="/achievers" component={ACHIEVERS} />
-                <Route path="/progress" component={UserProgress} />
+                <ProtectedRoute path="/achievers" component={ACHIEVERS} />
+                <ProtectedRoute path="/progress" component={UserProgress} />
                 
                 {/* Coming Soon placeholder pages */}
                 <Route path="/summer-initiative">

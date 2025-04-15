@@ -66,7 +66,12 @@ export default function AuthPage() {
     resolver: zodResolver(registerSchema),
     defaultValues: {
       username: "",
-      email: "",
+      first_name: "",
+      age: 12,
+      grade_level: "",
+      user_type: "student",
+      gender: "prefer_not_to_say",
+      path_choice: "",
       password: "",
       confirmPassword: "",
     },
@@ -172,13 +177,113 @@ export default function AuthPage() {
                     />
                     <FormField
                       control={registerForm.control}
-                      name="email"
+                      name="first_name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-200">Email</FormLabel>
+                          <FormLabel className="text-gray-200">First Name</FormLabel>
                           <FormControl>
                             <Input 
-                              placeholder="Enter your email" 
+                              placeholder="Enter your first name" 
+                              className="bg-white/5 border-gray-700 focus:border-primary text-white" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={registerForm.control}
+                        name="age"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-gray-200">Age</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number"
+                                min={8}
+                                max={18}
+                                placeholder="Your age" 
+                                className="bg-white/5 border-gray-700 focus:border-primary text-white" 
+                                {...field}
+                                onChange={(e) => field.onChange(parseInt(e.target.value) || 12)}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={registerForm.control}
+                        name="grade_level"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-gray-200">Grade Level</FormLabel>
+                            <FormControl>
+                              <Input 
+                                placeholder="Your grade" 
+                                className="bg-white/5 border-gray-700 focus:border-primary text-white" 
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={registerForm.control}
+                        name="user_type"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-gray-200">User Type</FormLabel>
+                            <select
+                              className="flex h-10 w-full rounded-md border border-gray-700 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                              {...field}
+                            >
+                              <option value="student" className="bg-gray-800">Student</option>
+                              <option value="parent" className="bg-gray-800">Parent</option>
+                            </select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={registerForm.control}
+                        name="gender"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-gray-200">Gender</FormLabel>
+                            <select
+                              className="flex h-10 w-full rounded-md border border-gray-700 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                              {...field}
+                            >
+                              <option value="male" className="bg-gray-800">Male</option>
+                              <option value="female" className="bg-gray-800">Female</option>
+                              <option value="other" className="bg-gray-800">Other</option>
+                              <option value="prefer_not_to_say" className="bg-gray-800">Prefer not to say</option>
+                            </select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <FormField
+                      control={registerForm.control}
+                      name="path_choice"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-200">Preferred Learning Path (Optional)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="e.g. Coding, Art, Design, etc." 
                               className="bg-white/5 border-gray-700 focus:border-primary text-white" 
                               {...field} 
                             />
