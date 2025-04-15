@@ -91,7 +91,8 @@ const TestComponent = () => {
   );
 };
 
-function App() {
+// Content component wrapped by AuthProvider
+const AppContent = () => {
   const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState(true);
   const { user, isLoading: authLoading } = useAuth();
@@ -115,110 +116,117 @@ function App() {
   }
 
   return (
+    <div className="min-h-screen flex flex-col">
+      <GlassNav />
+      
+      <main className="flex-grow">
+        <PageTransition>
+          <Switch>
+            <Route path="/" component={TestComponent} />
+            <Route path="/about" component={About} />
+            <Route path="/dashboard" component={Dashboard} />
+            <Route path="/trainers" component={Trainers} />
+            <Route path="/gallery" component={Gallery} />
+            <AdminProtectedRoute path="/admin" component={AdminDashboard} />
+            <Route path="/learning" component={Learning} />
+            <Route path="/learning/create" component={AICourseCreator} />
+            <Route path="/learning/:id" component={ModuleDetail} />
+            <Route path="/learn" component={Learning} />
+            <Route path="/settings" component={ProfileSettings} />
+            <Route path="/join" component={JoinOurTeam} />
+            <Route path="/cohorts" component={Cohorts} />
+            <Route path="/discord" component={DiscordConnect} />
+            <Route path="/avatar" component={AvatarCreator} />
+            <Route path="/home" component={Landing} />
+            <Route path="/auth" component={AuthPage} />
+            <Route path="/achievers" component={ACHIEVERS} />
+            <Route path="/ai-code-tools" component={AICodeTools} />
+            <Route path="/progress" component={UserProgress} />
+            <Route path="/skill-marketplace" component={SkillMarketplace} />
+            <Route path="/reinvestment" component={Reinvestment} />
+            <Route path="/create-course" component={CreateCourse} />
+            
+            {/* Coming Soon placeholder pages */}
+            <Route path="/summer-initiative">
+              <ComingSoon title="Summer Initiative" description="Our summer program is coming soon! Check back for details on our exciting summer initiative for 2025." />
+            </Route>
+            <Route path="/weekend-workshops">
+              <ComingSoon title="Weekend Workshops" description="Hands-on weekend workshops focused on tech and creativity coming soon!" />
+            </Route>
+            <Route path="/school-programs">
+              <ComingSoon title="School Programs" description="NURD School Programs will be available soon. Learn how we're bringing tech education to schools." />
+            </Route>
+            <Route path="/online-learning">
+              <ComingSoon title="Online Learning" description="Self-paced online learning experiences are being developed. Stay tuned!" />
+            </Route>
+            <Route path="/resources">
+              <ComingSoon title="Resources" description="A comprehensive collection of learning resources for students and educators coming soon." />
+            </Route>
+            <Route path="/parent-guide">
+              <ComingSoon title="Parent Guide" description="Information for parents on how to support their child's learning journey in tech." />
+            </Route>
+            <Route path="/student-resources">
+              <ComingSoon title="Student Resources" description="Student-focused resources and learning materials coming soon." />
+            </Route>
+            <Route path="/scholarships">
+              <ComingSoon title="Scholarships" description="Information about our scholarship programs and how to apply will be available soon." />
+            </Route>
+            <Route path="/faq">
+              <ComingSoon title="Frequently Asked Questions" description="Answers to common questions about NURD programs and opportunities." />
+            </Route>
+            
+            {/* Interactive Code Playground */}
+            <Route path="/code-playground">
+              <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+                <CodePlayground />
+              </Suspense>
+            </Route>
+            
+            <Route component={NotFound} />
+          </Switch>
+        </PageTransition>
+      </main>
+      
+      {!isMobile && (
+        <footer className="py-4 px-6 text-center text-sm">
+          <div className="flex flex-col items-center justify-center space-y-2">
+            <p className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 font-medium">
+              NURD = Naturally Unstoppable Resourceful Dreamers
+            </p>
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs">
+              <span className="flex items-center">
+                <span className="h-2 w-2 rounded-full bg-gradient-to-r from-primary to-blue-600 mr-2"></span>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 font-medium">
+                  Creativity First
+                </span>
+              </span>
+              <span className="flex items-center">
+                <span className="h-2 w-2 rounded-full bg-gradient-to-r from-primary to-blue-600 mr-2"></span>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 font-medium">
+                  AI Collaboration
+                </span>
+              </span>
+              <span className="flex items-center">
+                <span className="h-2 w-2 rounded-full bg-gradient-to-r from-primary to-blue-600 mr-2"></span>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 font-medium">
+                  Community Building
+                </span>
+              </span>
+            </div>
+            <p className="text-gray-500">© {new Date().getFullYear()} NURD by: ACHIEVEMOR. All rights reserved.</p>
+          </div>
+        </footer>
+      )}
+    </div>
+  );
+};
+
+// Main App component that provides auth context
+function App() {
+  return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <div className="min-h-screen flex flex-col">
-          <GlassNav />
-          
-          <main className="flex-grow">
-            <PageTransition>
-              <Switch>
-                <Route path="/" component={TestComponent} />
-                <Route path="/about" component={About} />
-                <Route path="/dashboard" component={Dashboard} />
-                <Route path="/trainers" component={Trainers} />
-                <Route path="/gallery" component={Gallery} />
-                <AdminProtectedRoute path="/admin" component={AdminDashboard} />
-                <Route path="/learning" component={Learning} />
-                <Route path="/learning/create" component={AICourseCreator} />
-                <Route path="/learning/:id" component={ModuleDetail} />
-                <Route path="/learn" component={Learning} />
-                <Route path="/settings" component={ProfileSettings} />
-                <Route path="/join" component={JoinOurTeam} />
-                <Route path="/cohorts" component={Cohorts} />
-                <Route path="/discord" component={DiscordConnect} />
-                <Route path="/avatar" component={AvatarCreator} />
-                <Route path="/home" component={Landing} />
-                <Route path="/auth" component={AuthPage} />
-                <Route path="/achievers" component={ACHIEVERS} />
-                <Route path="/ai-code-tools" component={AICodeTools} />
-                <Route path="/progress" component={UserProgress} />
-                <Route path="/skill-marketplace" component={SkillMarketplace} />
-                <Route path="/reinvestment" component={Reinvestment} />
-                <Route path="/create-course" component={CreateCourse} />
-                
-                {/* Coming Soon placeholder pages */}
-                <Route path="/summer-initiative">
-                  <ComingSoon title="Summer Initiative" description="Our summer program is coming soon! Check back for details on our exciting summer initiative for 2025." />
-                </Route>
-                <Route path="/weekend-workshops">
-                  <ComingSoon title="Weekend Workshops" description="Hands-on weekend workshops focused on tech and creativity coming soon!" />
-                </Route>
-                <Route path="/school-programs">
-                  <ComingSoon title="School Programs" description="NURD School Programs will be available soon. Learn how we're bringing tech education to schools." />
-                </Route>
-                <Route path="/online-learning">
-                  <ComingSoon title="Online Learning" description="Self-paced online learning experiences are being developed. Stay tuned!" />
-                </Route>
-                <Route path="/resources">
-                  <ComingSoon title="Resources" description="A comprehensive collection of learning resources for students and educators coming soon." />
-                </Route>
-                <Route path="/parent-guide">
-                  <ComingSoon title="Parent Guide" description="Information for parents on how to support their child's learning journey in tech." />
-                </Route>
-                <Route path="/student-resources">
-                  <ComingSoon title="Student Resources" description="Student-focused resources and learning materials coming soon." />
-                </Route>
-                <Route path="/scholarships">
-                  <ComingSoon title="Scholarships" description="Information about our scholarship programs and how to apply will be available soon." />
-                </Route>
-                <Route path="/faq">
-                  <ComingSoon title="Frequently Asked Questions" description="Answers to common questions about NURD programs and opportunities." />
-                </Route>
-                
-                {/* Interactive Code Playground */}
-                <Route path="/code-playground">
-                  <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
-                    <CodePlayground />
-                  </Suspense>
-                </Route>
-                
-                <Route component={NotFound} />
-              </Switch>
-            </PageTransition>
-          </main>
-          
-          {!isMobile && (
-            <footer className="py-4 px-6 text-center text-sm">
-              <div className="flex flex-col items-center justify-center space-y-2">
-                <p className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 font-medium">
-                  NURD = Naturally Unstoppable Resourceful Dreamers
-                </p>
-                <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs">
-                  <span className="flex items-center">
-                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-primary to-blue-600 mr-2"></span>
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 font-medium">
-                      Creativity First
-                    </span>
-                  </span>
-                  <span className="flex items-center">
-                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-primary to-blue-600 mr-2"></span>
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 font-medium">
-                      AI Collaboration
-                    </span>
-                  </span>
-                  <span className="flex items-center">
-                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-primary to-blue-600 mr-2"></span>
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 font-medium">
-                      Community Building
-                    </span>
-                  </span>
-                </div>
-                <p className="text-gray-500">© {new Date().getFullYear()} NURD by: ACHIEVEMOR. All rights reserved.</p>
-              </div>
-            </footer>
-          )}
-        </div>
+        <AppContent />
         <Toaster />
       </AuthProvider>
     </QueryClientProvider>
