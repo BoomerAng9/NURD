@@ -170,7 +170,17 @@ export const GlassNav: React.FC = () => {
           <div className="flex items-center space-x-4">
             <Link href="/">
               <div className="flex-shrink-0 flex items-center cursor-pointer">
-                <span className="text-xl font-bold text-primary">NURD</span>
+                <img 
+                  src="/nurd-logo.png" 
+                  alt="NURD Logo" 
+                  className="h-8 w-auto"
+                  onError={(e) => {
+                    // Fallback if image fails to load
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.nextElementSibling.style.display = 'block';
+                  }}
+                />
+                <span className="text-xl font-bold text-primary hidden">NURD</span>
               </div>
             </Link>
             
