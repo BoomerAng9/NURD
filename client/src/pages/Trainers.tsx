@@ -4,14 +4,14 @@ import Footer from '@/components/sections/footer';
 import TrainersList from '@/components/trainers/trainers-list';
 import { TrainerPortal } from '@/components/trainer/trainer-portal';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useSupabase } from '@/components/ui/supabase-provider';
 import { Button } from '@/components/ui/button';
 import { FuturisticContainer, FadeIn } from '@/components/animations/futuristic-transitions';
+import { useAuth } from '@/hooks/use-auth';
 
 const Trainers: React.FC = () => {
   const [viewMode, setViewMode] = useState<'default' | 'compact'>('default');
   const [showTrainerPortal, setShowTrainerPortal] = useState(false);
-  const { user, supabase } = useSupabase();
+  const { user } = useAuth();
   const [isTrainer, setIsTrainer] = useState(false);
   
   // Check if user is a trainer (in a real app, this would check user roles or database)
