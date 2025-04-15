@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { CodeEditor } from '@/components/playground/code-editor';
+import { CodeEnvironmentSetup } from '@/components/playground/code-environment-setup';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { AlertCircle, BookOpen, Code, Cpu, GraduationCap, MessagesSquare } from 'lucide-react';
+import { AlertCircle, BookOpen, Code, Cpu, GraduationCap, MessagesSquare, Settings } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const CHALLENGES = [
@@ -192,6 +193,9 @@ export default function CodePlaygroundPage() {
           
           <TabsContent value="playground" className="space-y-4">
             <div className="grid grid-cols-1 gap-4">
+              <div className="flex justify-end mb-4">
+                <CodeEnvironmentSetup />
+              </div>
               <div className="rounded-xl border bg-card shadow-sm h-[600px]">
                 <CodeEditor />
               </div>
