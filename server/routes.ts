@@ -149,48 +149,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   }, express.static(uploadDir));
   
-  // User Routes
-  app.post('/api/register', async (req, res) => {
-    try {
-      const userData = insertUserSchema.parse(req.body);
-      
-      // Check if username already exists
-      const existingUser = await storage.getUserByUsername(userData.username);
-      if (existingUser) {
-        return res.status(400).json({ message: "Username already exists" });
-      }
-      
-      // Create new user
-      const newUser = await storage.createUser(userData);
-      
-      // Return user data without password
-      const { password, ...userWithoutPassword } = newUser;
-      
-      // Broadcast new user joined event
-      broadcastMessage({
-        type: 'NEW_USER',
-        data: {
-          username: userWithoutPassword.username,
-          first_name: userWithoutPassword.first_name
-        }
-      });
-      
-      return res.status(201).json({
-        message: "User registered successfully",
-        user: userWithoutPassword
-      });
-    } catch (error) {
-      if (error instanceof ZodError) {
-        return res.status(400).json({ 
-          message: "Validation error", 
-          errors: error.errors 
-        });
-      }
-      
-      console.error("Registration error:", error);
-      return res.status(500).json({ message: "Internal server error" });
-    }
-  });
+  // User Routes - Registration handled in auth.ts
 
   app.get('/api/user/:username', async (req, res) => {
     try {
