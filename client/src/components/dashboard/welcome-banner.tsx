@@ -1,5 +1,7 @@
 import React from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'wouter';
 
 interface WelcomeBannerProps {
   name: string;
