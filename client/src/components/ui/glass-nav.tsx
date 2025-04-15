@@ -23,7 +23,7 @@ import {
   Code
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/hooks/use-auth';
+import { useSupabase } from '@/components/ui/supabase-provider';
 
 interface NavItem {
   name: string;
@@ -44,7 +44,7 @@ const navigation: NavItem[] = [
       { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="h-4 w-4 mr-2" /> },
       { name: 'Gallery', path: '/gallery', icon: <GalleryVertical className="h-4 w-4 mr-2" /> },
       { name: 'Learn', path: '/learning', icon: <BookOpen className="h-4 w-4 mr-2" /> },
-      { name: 'Apply to Teach', path: '/register', icon: <UserPlus className="h-4 w-4 mr-2" /> },
+      { name: 'Join Our Team', path: '/join', icon: <UserPlus className="h-4 w-4 mr-2" />, roles: ['admin', 'freelancer'] },
     ]
   },
   { 
@@ -58,6 +58,7 @@ const navigation: NavItem[] = [
     ]
   },
   { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
+  { name: 'Apply to Teach', path: '/register', icon: <UserPlus className="h-4 w-4 mr-2" /> },
 ];
 
 const adminLinks: NavItem[] = [
@@ -102,11 +103,10 @@ export const GlassNav: React.FC = () => {
   const [splatterEffects, setSplatterEffects] = useState<{id: number, path: string, position: {x: number, y: number}}[]>([]);
   const splatterCounter = React.useRef(0);
   const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const { user } = useAuth();
+  const { user } = useSupabase();
   
-  // Default to regular user access roles if user doesn't have role property
-  const isAdmin = user?.isAdmin === true;
-  const isFreelancer = user?.isFreelancer === true;
+  const isAdmin = user?.role === 'admin';
+  const isFreelancer = user?.role === 'freelancer';
 
   // Handle clicks outside dropdown to close it
   useEffect(() => {

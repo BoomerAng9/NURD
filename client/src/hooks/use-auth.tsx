@@ -26,25 +26,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     data: user,
     error,
     isLoading,
-  } = useQuery<User | null, Error>({
+  } = useQuery<User | undefined, Error>({
     queryKey: ["/api/user"],
-    queryFn: async (context) => {
-      try {
-        const url = context.queryKey[0] as string;
-        const response = await fetch(url);
-        if (response.status === 401) {
-          return null;
-        }
-        if (!response.ok) {
-          throw new Error(`API error: ${response.status}`);
-        }
-        return await response.json();
-      } catch (err) {
-        console.log("Error fetching user:", err);
-        return null;
-      }
-    },
-    retry: false,
+    queryFn: getQueryFn({ on401: "returnNull" }),
   });
 
   const loginMutation = useMutation({
