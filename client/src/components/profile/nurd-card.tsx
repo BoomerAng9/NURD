@@ -1,6 +1,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { User } from '@shared/schema';
+import type { HTMLAttributes } from 'react';
 import { Progress } from '@/components/ui/progress';
 import { Sparkles, Zap, RadioTower, Users } from 'lucide-react';
 

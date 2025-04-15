@@ -56,6 +56,7 @@ const Dashboard: React.FC = () => {
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
   const { user, isLoading: authLoading } = useAuth();
+  const userSafe = user || undefined; // Convert null to undefined to satisfy TypeScript
 
   // Redirect to auth page if no user found
   useEffect(() => {
@@ -104,7 +105,7 @@ const Dashboard: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                <ProfileCard user={user} />
+                <ProfileCard user={userSafe} />
               )}
             </div>
 
@@ -256,8 +257,8 @@ const Dashboard: React.FC = () => {
                               <div className="max-w-sm">
                                 <FuturisticContainer>
                                   <NurdCard 
-                                    user={user}
-                                    level={user?.level || 7}
+                                    user={userSafe}
+                                    level={userSafe?.level || 7}
                                     bridges={6}
                                     houses={1}
                                     techs={['TECH SAGE']}
