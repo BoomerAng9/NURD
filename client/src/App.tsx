@@ -41,6 +41,8 @@ const CodePlayground = React.lazy(() => import("@/pages/code-playground"));
 
 // Import NURD skateboard image
 import nurdSkateboardImg from "./assets/nurd-skateboard.png";
+// New skateboard image from Pooler
+import nurdSkateboardPoolerImg from "@assets/nurd-skateboard-pooler.png";
 
 // Simple component for initial testing - updated with glass UI
 const TestComponent = () => {
@@ -53,8 +55,8 @@ const TestComponent = () => {
         
         <div className="mt-8 p-6 glass-card overflow-hidden">
           <img 
-            src={nurdSkateboardImg} 
-            alt="NURD Skateboarding" 
+            src={nurdSkateboardPoolerImg} 
+            alt="NURD Skateboarding in Pooler" 
             className="mx-auto max-h-[500px] rounded-lg shadow-lg"
           />
         </div>
