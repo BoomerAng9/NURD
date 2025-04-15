@@ -360,7 +360,7 @@ const JoinOurTeam: React.FC = () => {
             >
               <motion.div variants={item} className="bg-white/10 backdrop-blur-sm rounded-xl p-8">
                 <h3 className="text-xl font-bold mb-6 text-[#3DE053]">What You'll Bring</h3>
-                <ul className="space-y-4">
+                <ul className="text-white space-y-4">
                   <li className="flex items-start gap-3">
                     <ChevronsRight className="h-5 w-5 text-[#3DE053] mt-0.5 flex-shrink-0" />
                     <span>2+ years of experience with modern web or mobile development</span>
@@ -386,7 +386,7 @@ const JoinOurTeam: React.FC = () => {
               
               <motion.div variants={item} className="bg-white/10 backdrop-blur-sm rounded-xl p-8">
                 <h3 className="text-xl font-bold mb-6 text-[#3EC6E0]">What You'll Do</h3>
-                <ul className="space-y-4">
+                <ul className="text-white space-y-4">
                   <li className="flex items-start gap-3">
                     <ChevronsRight className="h-5 w-5 text-[#3EC6E0] mt-0.5 flex-shrink-0" />
                     <span>Lead workshops and sessions on modern deployment platforms and techniques</span>

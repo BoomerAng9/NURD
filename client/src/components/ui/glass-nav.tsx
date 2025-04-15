@@ -44,7 +44,7 @@ const navigation: NavItem[] = [
       { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="h-4 w-4 mr-2" /> },
       { name: 'Gallery', path: '/gallery', icon: <GalleryVertical className="h-4 w-4 mr-2" /> },
       { name: 'Learn', path: '/learning', icon: <BookOpen className="h-4 w-4 mr-2" /> },
-      { name: 'Join Our Team', path: '/join', icon: <UserPlus className="h-4 w-4 mr-2" />, roles: ['admin', 'freelancer'] },
+      { name: 'Apply to Teach', path: '/join-our-team', icon: <UserPlus className="h-4 w-4 mr-2" /> },
     ]
   },
   { 
@@ -58,7 +58,6 @@ const navigation: NavItem[] = [
     ]
   },
   { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
-  { name: 'Apply to Teach', path: '/register', icon: <UserPlus className="h-4 w-4 mr-2" /> },
 ];
 
 const adminLinks: NavItem[] = [
