@@ -172,7 +172,14 @@ const ModuleDetail: React.FC = () => {
       isCompleted: true,
       isLocked: false,
       contentType: 'video' as const,
-      description: 'An overview of what you will learn in this module and how it will help you build real-world projects.'
+      description: 'An overview of what you will learn in this module and how it will help you build real-world projects.',
+      content: `Welcome to this exciting module! In this introductory lesson, we'll explore the overall structure of what you'll be learning and how it applies to real-world scenarios.
+
+This module is designed to take you from the foundational concepts all the way to advanced implementation techniques. By the end, you'll have the skills to build your own projects from scratch.
+
+The lessons are structured to build upon each other, so it's important to complete them in order. Each concept introduced will be used in subsequent lessons, creating a comprehensive learning experience.
+
+Throughout this module, we've included practical exercises, real-world examples, and interactive components to ensure you're not just learning theory, but also applying what you've learned.`
     },
     {
       id: '2',
@@ -181,7 +188,16 @@ const ModuleDetail: React.FC = () => {
       isCompleted: true,
       isLocked: false,
       contentType: 'text' as const,
-      description: 'Learn the fundamental concepts that will serve as the foundation for the more advanced topics.'
+      description: 'Learn the fundamental concepts that will serve as the foundation for the more advanced topics.',
+      content: `In this lesson, we'll cover the core concepts that form the foundation of everything we'll build in this module.
+
+The first key concept is component-based architecture. This approach allows us to break down complex systems into smaller, reusable pieces that can be developed and tested independently.
+
+Next, we'll explore state management - how data flows through your application and how to maintain consistency across different parts of your system.
+
+We'll also discuss the importance of responsive design principles, ensuring your applications work seamlessly across different devices and screen sizes.
+
+Finally, we'll introduce you to the concept of event-driven programming, which will be crucial for building interactive user interfaces.`
     },
     {
       id: '3',
@@ -190,7 +206,16 @@ const ModuleDetail: React.FC = () => {
       isCompleted: false,
       isLocked: false,
       contentType: 'interactive' as const,
-      description: 'Apply what you have learned by building a simple project step by step with guidance.'
+      description: 'Apply what you have learned by building a simple project step by step with guidance.',
+      content: `Now that we've covered the core concepts, it's time to put them into practice by building a small project together. This hands-on experience will solidify your understanding of the concepts we've discussed.
+
+We'll start by planning our project, identifying the components we'll need and how they'll interact with each other. This planning phase is crucial for any successful project.
+
+Then, we'll implement each component one by one, explaining the decisions behind our implementation choices and how they relate to the concepts we've learned.
+
+As we build, we'll encounter common challenges and learn strategies to overcome them. These problem-solving skills will be invaluable as you progress to more complex projects.
+
+By the end of this lesson, you'll have a functioning project that demonstrates the concepts we've covered so far.`
     },
     {
       id: '4',
@@ -198,7 +223,16 @@ const ModuleDetail: React.FC = () => {
       duration: '20 mins',
       isCompleted: false,
       isLocked: true,
-      contentType: 'video' as const
+      contentType: 'video' as const,
+      content: `Building on our previous lessons, we'll now explore more advanced techniques that will take your skills to the next level.
+
+We'll dive into optimization strategies to ensure your applications perform well even as they grow in complexity. You'll learn techniques for reducing unnecessary re-renders, efficiently handling large datasets, and implementing lazy loading.
+
+Next, we'll cover advanced state management patterns for complex applications, including strategies for managing global state and handling complex data flows.
+
+We'll also explore techniques for implementing smooth animations and transitions that enhance the user experience without sacrificing performance.
+
+Finally, we'll discuss advanced error handling and debugging strategies that will help you identify and fix issues efficiently in your applications.`
     },
     {
       id: '5',
@@ -206,7 +240,16 @@ const ModuleDetail: React.FC = () => {
       duration: '30 mins',
       isCompleted: false,
       isLocked: true,
-      contentType: 'interactive' as const
+      contentType: 'interactive' as const,
+      content: `Congratulations on making it to the final project! In this lesson, you'll apply everything you've learned throughout the module to build a comprehensive application from scratch.
+
+Unlike the previous lessons where you received step-by-step guidance, this project will challenge you to make more independent decisions about how to implement various features.
+
+You'll start with a set of requirements and a basic project structure, then you'll need to plan and implement the solution using the concepts and techniques we've covered.
+
+Don't worry - we'll provide hints and suggestions along the way, but the goal is for you to practice applying your knowledge in a more open-ended context.
+
+By completing this final project, you'll demonstrate your mastery of the module's content and gain confidence in your ability to apply these skills to your own projects in the future.`
     },
   ]);
   
@@ -371,6 +414,120 @@ const ModuleDetail: React.FC = () => {
                           />
                         ))}
                       </div>
+                      
+                      {/* Active Lesson Content */}
+                      {activeLessonId && (
+                        <motion.div 
+                          className="mt-8 border rounded-lg p-6"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.4 }}
+                        >
+                          {(() => {
+                            const activeLesson = lessons.find(l => l.id === activeLessonId);
+                            if (!activeLesson) return null;
+                            
+                            return (
+                              <>
+                                <div className="flex justify-between items-center mb-4">
+                                  <h3 className="text-xl font-bold">{activeLesson.title}</h3>
+                                  <div className="flex gap-3">
+                                    {!activeLesson.isLocked && (
+                                      <>
+                                        <LessonExporter 
+                                          lesson={{
+                                            id: activeLesson.id,
+                                            title: activeLesson.title,
+                                            content: activeLesson.content || ''
+                                          }}
+                                          module={{
+                                            title: module.title
+                                          }}
+                                        />
+                                        <LessonQuiz
+                                          lessonId={activeLesson.id}
+                                          lessonTitle={activeLesson.title}
+                                          onComplete={(score, total) => {
+                                            console.log(`Quiz completed with score ${score}/${total}`);
+                                            
+                                            // In a real app, this would update the lesson progress in the database
+                                            if (score / total >= 0.7) {
+                                              // If passed with 70% or higher
+                                              const updatedLessons = lessons.map(l => 
+                                                l.id === activeLesson.id 
+                                                  ? { ...l, isCompleted: true } 
+                                                  : l
+                                              );
+                                              setLessons(updatedLessons);
+                                            }
+                                          }}
+                                        />
+                                      </>
+                                    )}
+                                  </div>
+                                </div>
+                                
+                                {/* Lesson content */}
+                                <div className="prose prose-slate max-w-none dark:prose-invert">
+                                  {activeLesson.content?.split('\n\n').map((paragraph, i) => (
+                                    <p key={i}>{paragraph}</p>
+                                  ))}
+                                </div>
+                                
+                                {/* Text-to-speech */}
+                                {!activeLesson.isLocked && activeLesson.content && (
+                                  <div className="mt-8">
+                                    <LessonTextToSpeech 
+                                      content={activeLesson.content} 
+                                      title={activeLesson.title}
+                                    />
+                                  </div>
+                                )}
+                                
+                                {/* Navigation between lessons */}
+                                <div className="mt-8 pt-6 border-t flex justify-between">
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => {
+                                      const currentIndex = lessons.findIndex(l => l.id === activeLessonId);
+                                      if (currentIndex > 0) {
+                                        const prevLesson = lessons[currentIndex - 1];
+                                        if (!prevLesson.isLocked) {
+                                          setActiveLessonId(prevLesson.id);
+                                        }
+                                      }
+                                    }}
+                                    disabled={
+                                      lessons.findIndex(l => l.id === activeLessonId) === 0 ||
+                                      lessons[lessons.findIndex(l => l.id === activeLessonId) - 1].isLocked
+                                    }
+                                  >
+                                    Previous Lesson
+                                  </Button>
+                                  
+                                  <Button
+                                    onClick={() => {
+                                      const currentIndex = lessons.findIndex(l => l.id === activeLessonId);
+                                      if (currentIndex < lessons.length - 1) {
+                                        const nextLesson = lessons[currentIndex + 1];
+                                        if (!nextLesson.isLocked) {
+                                          setActiveLessonId(nextLesson.id);
+                                        }
+                                      }
+                                    }}
+                                    disabled={
+                                      lessons.findIndex(l => l.id === activeLessonId) === lessons.length - 1 ||
+                                      lessons[lessons.findIndex(l => l.id === activeLessonId) + 1].isLocked
+                                    }
+                                  >
+                                    Next Lesson
+                                  </Button>
+                                </div>
+                              </>
+                            );
+                          })()}
+                        </motion.div>
+                      )}
                     </motion.div>
                     
                     <motion.div variants={itemVariants}>
