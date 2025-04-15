@@ -12,6 +12,156 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Achievement, User, Course, UserProgress } from '@shared/progress-schema';
 
+// Mock data for development
+const mockUser: User = {
+  id: 1,
+  first_name: "Alex",
+  age: 12,
+  grade_level: "7th Grade",
+  user_type: "student",
+  gender: "non-binary",
+  path_choice: "coding",
+  username: "techkid",
+  password: "********",
+  xp_points: 450,
+  level: 7,
+  created_at: new Date(),
+  updated_at: new Date(),
+  avatar_svg: null,
+  avatar_data: { bio: "A young innovator with boundless energy, always seeking the next big idea.", streak: { current: 5, max: 12 } }
+};
+
+const mockAchievements: Achievement[] = [
+  {
+    id: 1,
+    title: "First Login",
+    description: "Successfully logged into the NURD platform for the first time.",
+    type: "milestone",
+    image_url: "",
+    xp_reward: 10,
+    requirement: "login_count",
+    requirement_value: 1,
+    is_hidden: false,
+    created_at: new Date()
+  },
+  {
+    id: 2,
+    title: "Code Explorer",
+    description: "Completed your first coding module.",
+    type: "completion",
+    image_url: "",
+    xp_reward: 50,
+    requirement: "course_completed",
+    requirement_value: 1,
+    is_hidden: false,
+    created_at: new Date()
+  },
+  {
+    id: 3,
+    title: "5-Day Streak",
+    description: "Logged in for 5 consecutive days.",
+    type: "streak",
+    image_url: "",
+    xp_reward: 100,
+    requirement: "login_streak",
+    requirement_value: 5,
+    is_hidden: false,
+    created_at: new Date()
+  },
+  {
+    id: 4,
+    title: "Teamwork Star",
+    description: "Collaborated with 3 other students on a project.",
+    type: "special",
+    image_url: "",
+    xp_reward: 150,
+    requirement: "collaboration_count",
+    requirement_value: 3,
+    is_hidden: false,
+    created_at: new Date()
+  },
+  {
+    id: 5,
+    title: "Presentation Ace",
+    description: "Delivered your first project presentation.",
+    type: "milestone",
+    image_url: "",
+    xp_reward: 200,
+    requirement: "presentation_count",
+    requirement_value: 1,
+    is_hidden: false,
+    created_at: new Date()
+  }
+];
+
+const mockUserAchievements = [
+  { id: 1, user_id: 1, achievement_id: 1, earned_at: new Date(), is_viewed: true },
+  { id: 2, user_id: 1, achievement_id: 2, earned_at: new Date(), is_viewed: true },
+  { id: 3, user_id: 1, achievement_id: 3, earned_at: new Date(), is_viewed: false }
+];
+
+const mockCourses: Course[] = [
+  {
+    id: 1,
+    title: "Introduction to Coding",
+    description: "Learn the basics of coding with fun interactive exercises.",
+    image_url: "",
+    category: "coding",
+    level: "beginner",
+    duration: "2 weeks",
+    total_lessons: 10,
+    total_xp: 500,
+    tags: ["coding", "beginner", "fundamentals"],
+    is_featured: true,
+    is_published: true,
+    created_at: new Date(),
+    updated_at: new Date()
+  },
+  {
+    id: 2,
+    title: "Digital Art Fundamentals",
+    description: "Explore digital art creation using various tools and techniques.",
+    image_url: "",
+    category: "design",
+    level: "beginner",
+    duration: "3 weeks",
+    total_lessons: 12,
+    total_xp: 600,
+    tags: ["design", "art", "creativity"],
+    is_featured: true,
+    is_published: true,
+    created_at: new Date(),
+    updated_at: new Date()
+  }
+];
+
+const mockProgress: UserProgress[] = [
+  {
+    id: 1,
+    user_id: 1,
+    course_id: 1,
+    progress_percentage: 80,
+    completed_lessons: 8,
+    start_date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
+    last_accessed: new Date(),
+    completion_date: null,
+    is_completed: false,
+    earned_xp: 400
+  },
+  {
+    id: 2,
+    user_id: 1,
+    course_id: 2,
+    progress_percentage: 25,
+    completed_lessons: 3,
+    start_date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+    last_accessed: new Date(),
+    completion_date: null,
+    is_completed: false,
+    earned_xp: 150
+  }
+];
+
 export default function UserProgressPage() {
   const [showAchievement, setShowAchievement] = useState(false);
   const [latestAchievement, setLatestAchievement] = useState<Achievement | null>(null);
@@ -20,30 +170,32 @@ export default function UserProgressPage() {
   // Mock user ID - in a real app this would come from authentication
   const userId = 1;
   
-  // Fetch user data
-  const { data: user, isLoading: isLoadingUser } = useQuery({
-    queryKey: [`/api/users/${userId}`],
-  });
+  // For development, we'll use mock data instead of real API calls
+  // In a production app, these would be real API calls
   
-  // Fetch user progress
-  const { data: progress, isLoading: isLoadingProgress } = useQuery({
-    queryKey: [`/api/users/${userId}/progress`],
-  });
+  // Use state to simulate API loading states
+  const [loading, setLoading] = useState(true);
   
-  // Fetch courses
-  const { data: courses, isLoading: isLoadingCourses } = useQuery({
-    queryKey: ['/api/courses'],
-  });
+  // Simulated user data
+  const [user, setUser] = useState<User | null>(null);
+  const [progress, setProgress] = useState<UserProgress[] | null>(null);
+  const [courses, setCourses] = useState<Course[] | null>(null);
+  const [allAchievements, setAllAchievements] = useState<Achievement[] | null>(null);
+  const [userAchievements, setUserAchievements] = useState<{ achievement_id: number }[] | null>(null);
   
-  // Fetch achievements
-  const { data: allAchievements, isLoading: isLoadingAchievements } = useQuery({
-    queryKey: ['/api/achievements'],
-  });
-  
-  // Fetch user achievements
-  const { data: userAchievements, isLoading: isLoadingUserAchievements } = useQuery({
-    queryKey: [`/api/users/${userId}/achievements`],
-  });
+  // Load mock data with simulated delay to test loading states
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setUser(mockUser);
+      setProgress(mockProgress);
+      setCourses(mockCourses);
+      setAllAchievements(mockAchievements);
+      setUserAchievements(mockUserAchievements);
+      setLoading(false);
+    }, 1000);
+    
+    return () => clearTimeout(timer);
+  }, []);
   
   // Listen for WebSocket achievement events
   useEffect(() => {
@@ -105,11 +257,10 @@ export default function UserProgressPage() {
     }
   }, [user, userId, sendMessage]);
   
-  // Loading state
-  const isLoading = isLoadingUser || isLoadingProgress || isLoadingCourses || 
-                   isLoadingAchievements || isLoadingUserAchievements;
+  // Update streak via API disabled for mock implementation
+  // Let's just use the loading state we already declared
   
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
