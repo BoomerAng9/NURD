@@ -101,45 +101,46 @@ export default function AuthPage() {
                   
                   {/* Login Form */}
                   <TabsContent value="login">
-                    <Form {...loginForm}>
-                      <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
-                        <FormField
-                          control={loginForm.control}
-                          name="username"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Username</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Enter your username" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="username">Username</Label>
+                        <Input 
+                          id="username"
+                          type="text"
+                          placeholder="Enter your username"
+                          value={loginForm.watch('username')}
+                          onChange={(e) => loginForm.setValue('username', e.target.value)}
                         />
-                        
-                        <FormField
-                          control={loginForm.control}
-                          name="password"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Password</FormLabel>
-                              <FormControl>
-                                <Input type="password" placeholder="Enter your password" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
+                        {loginForm.formState.errors.username && (
+                          <p className="text-sm text-red-500 mt-1">{loginForm.formState.errors.username.message}</p>
+                        )}
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="password">Password</Label>
+                        <Input 
+                          id="password"
+                          type="password"
+                          placeholder="Enter your password"
+                          value={loginForm.watch('password')}
+                          onChange={(e) => loginForm.setValue('password', e.target.value)}
                         />
-                        
-                        <Button 
-                          type="submit"
-                          className="w-full"
-                          disabled={loginMutation.isPending}
-                        >
-                          {loginMutation.isPending ? 'Logging in...' : 'Login'}
-                        </Button>
-                      </form>
-                    </Form>
+                        {loginForm.formState.errors.password && (
+                          <p className="text-sm text-red-500 mt-1">{loginForm.formState.errors.password.message}</p>
+                        )}
+                      </div>
+                      
+                      <Button 
+                        type="button"
+                        className="w-full"
+                        disabled={loginMutation.isPending}
+                        onClick={() => {
+                          loginForm.handleSubmit(onLoginSubmit)();
+                        }}
+                      >
+                        {loginMutation.isPending ? 'Logging in...' : 'Login'}
+                      </Button>
+                    </div>
                     
                     <div className="mt-4 text-center text-sm">
                       <p>Don't have an account?{" "}
@@ -155,169 +156,150 @@ export default function AuthPage() {
                   
                   {/* Registration Form */}
                   <TabsContent value="register">
-                    <Form {...registrationForm}>
-                      <form onSubmit={registrationForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
-                        <FormField
-                          control={registrationForm.control}
-                          name="first_name"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>First Name</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Enter your first name" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="first_name">First Name</Label>
+                        <Input
+                          id="first_name" 
+                          placeholder="Enter your first name"
+                          value={registrationForm.watch('first_name')}
+                          onChange={(e) => registrationForm.setValue('first_name', e.target.value)}
                         />
-                        
-                        <div className="grid grid-cols-2 gap-4">
-                          <FormField
-                            control={registrationForm.control}
-                            name="age"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Age</FormLabel>
-                                <FormControl>
-                                  <Input 
-                                    type="number" 
-                                    placeholder="Age"
-                                    min={8}
-                                    max={18}
-                                    {...field}
-                                    onChange={(e) => field.onChange(parseInt(e.target.value))}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
+                        {registrationForm.formState.errors.first_name && (
+                          <p className="text-sm text-red-500 mt-1">{registrationForm.formState.errors.first_name.message}</p>
+                        )}
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="age">Age</Label>
+                          <Input
+                            id="age" 
+                            type="number" 
+                            placeholder="Age"
+                            min={8}
+                            max={18}
+                            value={registrationForm.watch('age')}
+                            onChange={(e) => registrationForm.setValue('age', parseInt(e.target.value))}
                           />
-                          
-                          <FormField
-                            control={registrationForm.control}
-                            name="grade_level"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Grade Level</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="Grade (e.g., 7)" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+                          {registrationForm.formState.errors.age && (
+                            <p className="text-sm text-red-500 mt-1">{registrationForm.formState.errors.age.message}</p>
+                          )}
                         </div>
                         
-                        <div className="grid grid-cols-2 gap-4">
-                          <FormField
-                            control={registrationForm.control}
-                            name="user_type"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>I am a</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                  <FormControl>
-                                    <SelectTrigger>
-                                      <SelectValue placeholder="Select..." />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    <SelectItem value="student">Student</SelectItem>
-                                    <SelectItem value="parent">Parent</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                                <FormMessage />
-                              </FormItem>
-                            )}
+                        <div>
+                          <Label htmlFor="grade_level">Grade Level</Label>
+                          <Input
+                            id="grade_level" 
+                            placeholder="Grade (e.g., 7)"
+                            value={registrationForm.watch('grade_level')}
+                            onChange={(e) => registrationForm.setValue('grade_level', e.target.value)}
                           />
-                          
-                          <FormField
-                            control={registrationForm.control}
-                            name="gender"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Gender</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                  <FormControl>
-                                    <SelectTrigger>
-                                      <SelectValue placeholder="Select..." />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    <SelectItem value="male">Male</SelectItem>
-                                    <SelectItem value="female">Female</SelectItem>
-                                    <SelectItem value="other">Other</SelectItem>
-                                    <SelectItem value="prefer_not_to_say">Prefer not to say</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+                          {registrationForm.formState.errors.grade_level && (
+                            <p className="text-sm text-red-500 mt-1">{registrationForm.formState.errors.grade_level.message}</p>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="user_type">I am a</Label>
+                          <Select 
+                            value={registrationForm.watch('user_type')}
+                            onValueChange={(value) => registrationForm.setValue('user_type', value)}
+                          >
+                            <SelectTrigger id="user_type">
+                              <SelectValue placeholder="Select..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="student">Student</SelectItem>
+                              <SelectItem value="parent">Parent</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          {registrationForm.formState.errors.user_type && (
+                            <p className="text-sm text-red-500 mt-1">{registrationForm.formState.errors.user_type.message}</p>
+                          )}
                         </div>
                         
-                        <FormField
-                          control={registrationForm.control}
-                          name="path_choice"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Program Interest (optional)</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Select a program path..." />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="coding">Coding & Development</SelectItem>
-                                  <SelectItem value="design">Digital Design</SelectItem>
-                                  <SelectItem value="business">Business & Entrepreneurship</SelectItem>
-                                  <SelectItem value="gaming">Gaming & Esports</SelectItem>
-                                  <SelectItem value="creativity">Creative Digital Arts</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
+                        <div>
+                          <Label htmlFor="gender">Gender</Label>
+                          <Select
+                            value={registrationForm.watch('gender')}
+                            onValueChange={(value) => registrationForm.setValue('gender', value)}
+                          >
+                            <SelectTrigger id="gender">
+                              <SelectValue placeholder="Select..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="male">Male</SelectItem>
+                              <SelectItem value="female">Female</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                              <SelectItem value="prefer_not_to_say">Prefer not to say</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          {registrationForm.formState.errors.gender && (
+                            <p className="text-sm text-red-500 mt-1">{registrationForm.formState.errors.gender.message}</p>
                           )}
-                        />
-                        
-                        <FormField
-                          control={registrationForm.control}
-                          name="username"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Username</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Choose a username" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={registrationForm.control}
-                          name="password"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Password</FormLabel>
-                              <FormControl>
-                                <Input type="password" placeholder="Choose a password" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <Button 
-                          type="submit"
-                          className="w-full"
-                          disabled={registerMutation.isPending}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="path_choice">Program Interest (optional)</Label>
+                        <Select
+                          value={registrationForm.watch('path_choice') || ''}
+                          onValueChange={(value) => registrationForm.setValue('path_choice', value)}
                         >
-                          {registerMutation.isPending ? 'Creating Account...' : 'Create Account'}
-                        </Button>
-                      </form>
-                    </Form>
+                          <SelectTrigger id="path_choice">
+                            <SelectValue placeholder="Select a program path..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="coding">Coding & Development</SelectItem>
+                            <SelectItem value="design">Digital Design</SelectItem>
+                            <SelectItem value="business">Business & Entrepreneurship</SelectItem>
+                            <SelectItem value="gaming">Gaming & Esports</SelectItem>
+                            <SelectItem value="creativity">Creative Digital Arts</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="username">Username</Label>
+                        <Input
+                          id="reg-username" 
+                          placeholder="Choose a username"
+                          value={registrationForm.watch('username')}
+                          onChange={(e) => registrationForm.setValue('username', e.target.value)}
+                        />
+                        {registrationForm.formState.errors.username && (
+                          <p className="text-sm text-red-500 mt-1">{registrationForm.formState.errors.username.message}</p>
+                        )}
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="reg-password">Password</Label>
+                        <Input
+                          id="reg-password" 
+                          type="password"
+                          placeholder="Choose a password"
+                          value={registrationForm.watch('password')}
+                          onChange={(e) => registrationForm.setValue('password', e.target.value)}
+                        />
+                        {registrationForm.formState.errors.password && (
+                          <p className="text-sm text-red-500 mt-1">{registrationForm.formState.errors.password.message}</p>
+                        )}
+                      </div>
+                      
+                      <Button 
+                        type="button"
+                        className="w-full"
+                        disabled={registerMutation.isPending}
+                        onClick={() => {
+                          registrationForm.handleSubmit(onRegisterSubmit)();
+                        }}
+                      >
+                        {registerMutation.isPending ? 'Creating Account...' : 'Create Account'}
+                      </Button>
+                    </div>
                     
                     <div className="mt-4 text-center text-sm">
                       <p>Already have an account?{" "}
