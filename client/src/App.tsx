@@ -25,6 +25,7 @@ import ACHIEVERS from "@/pages/AchievementDemo";
 import UserProgress from "@/pages/UserProgress";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect, useState } from "react";
+import { LayoutDashboard, Send } from "lucide-react";
 
 // Import NURD skateboard image
 import nurdSkateboardImg from "./assets/nurd-skateboard.png";
@@ -47,14 +48,23 @@ const TestComponent = () => {
         </div>
         
         <div className="mt-6 flex flex-wrap justify-center gap-4">
-          <a href="/dashboard" className="glass-button transform hover:scale-105 transition-all">
-            Dashboard
+          <a href="/dashboard" className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2">
+            <LayoutDashboard className="h-5 w-5" />
+            <span>Dashboard</span>
           </a>
-          <a href="/home" className="glass-button transform hover:scale-105 transition-all">
-            Home
+          <a href="/home" className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-home">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span>Home</span>
           </a>
-          <a href="/achievers" className="glass-button bg-primary/20 border-primary/30 transform hover:scale-105 transition-all">
-            ACHIEVERS
+          <a href="/achievers" className="glass-button bg-primary/20 border-primary/30 transform hover:scale-105 transition-all flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-send">
+              <path d="m22 2-7 20-4-9-9-4Z"/>
+              <path d="M22 2 11 13"/>
+            </svg>
+            <span>ACHIEVERS</span>
           </a>
         </div>
       </div>
