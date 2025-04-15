@@ -6,7 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { Sparkles, Zap, RadioTower, Users } from 'lucide-react';
 
 interface NurdCardProps {
-  user?: User;
+  user: User | undefined;  // Explicit union type instead of optional
   bridges?: number;
   houses?: number;
   level?: number;
