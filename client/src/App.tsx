@@ -188,7 +188,7 @@ function App() {
           {!isMobile && (
             <footer className="py-4 px-6 text-center text-sm">
               <div className="flex flex-col items-center justify-center space-y-2">
-                <p className="bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-amber-700 to-black font-medium">
+                <p className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 font-medium">
                   NURD = Naturally Unstoppable Resourceful Dreamers
                 </p>
                 <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs">
