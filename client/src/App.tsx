@@ -47,45 +47,51 @@ import nurdSkateboardPoolerImg from "@assets/nurd-skateboard-pooler.png";
 // Simple component for initial testing - updated with glass UI
 const TestComponent = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <div className="glass-container max-w-3xl mx-auto text-center">
-        <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-b from-gray-50 to-gray-100">
+      <div className="glass-container max-w-4xl mx-auto text-center p-8 rounded-2xl shadow-xl backdrop-blur-md border border-white/20">
+        <h1 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-500 to-blue-600 animate-gradient-x mb-3">
           NURD by: ACHIEVEMOR
         </h1>
+        <p className="text-gray-600 text-xl max-w-2xl mx-auto mb-8">Empowering youth through innovative tech education</p>
         
-        <div className="mt-8 p-6 glass-card overflow-hidden">
-          <img 
-            src={nurdSkateboardPoolerImg} 
-            alt="NURD Skateboarding in Pooler" 
-            className="mx-auto max-h-[500px] rounded-lg shadow-lg"
-          />
+        <div className="relative group">
+          <div className="absolute -inset-1 bg-gradient-to-r from-green-400 to-blue-500 rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+          <div className="relative p-1 bg-white rounded-lg">
+            <div className="p-5 glass-card overflow-hidden rounded-lg">
+              <img 
+                src={nurdSkateboardPoolerImg} 
+                alt="NURD Skateboarding in Pooler" 
+                className="mx-auto max-h-[500px] rounded-lg shadow-lg transform transition-transform duration-500 hover:scale-[1.02]"
+              />
+            </div>
+          </div>
         </div>
         
-        <div className="mt-6 flex flex-wrap justify-center gap-4">
-          <a href="/auth" className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2">
+        <div className="mt-10 flex flex-wrap justify-center gap-5">
+          <a href="/auth" className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 border-blue-500/30 px-5 py-3 rounded-lg shadow-md">
             <LayoutDashboard className="h-5 w-5" />
-            <span>Login / Register</span>
+            <span className="font-semibold">Login / Register</span>
           </a>
-          <a href="/code-playground" className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2">
+          <a href="/code-playground" className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-green-600/20 to-teal-600/20 border-green-500/30 px-5 py-3 rounded-lg shadow-md">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-code">
               <polyline points="16 18 22 12 16 6"></polyline>
               <polyline points="8 6 2 12 8 18"></polyline>
             </svg>
-            <span>Code Playground</span>
+            <span className="font-semibold">Code Playground</span>
           </a>
-          <a href="/ai-code-tools" className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-purple-700/30 to-pink-700/30 border-purple-500/30">
+          <a href="/ai-code-tools" className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-purple-700/30 to-pink-700/30 border-purple-500/30 px-5 py-3 rounded-lg shadow-md">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path>
               <path d="M7 7h.01"></path>
             </svg>
-            <span>AI Code Tools</span>
+            <span className="font-semibold">AI Code Tools</span>
           </a>
-          <a href="/achievers" className="glass-button bg-primary/20 border-primary/30 transform hover:scale-105 transition-all flex items-center space-x-2">
+          <a href="/achievers" className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-orange-600/20 to-amber-600/20 border-orange-500/30 px-5 py-3 rounded-lg shadow-md">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-send">
               <path d="m22 2-7 20-4-9-9-4Z"/>
               <path d="M22 2 11 13"/>
             </svg>
-            <span>ACHIEVERS</span>
+            <span className="font-semibold">ACHIEVERS</span>
           </a>
         </div>
       </div>
