@@ -22,6 +22,7 @@ import AuthPage from "@/pages/auth-page";
 import DiscordConnect from "@/pages/DiscordConnect";
 import AvatarCreator from "@/pages/AvatarCreator";
 import AchievementDemo from "@/pages/AchievementDemo";
+import UserProgress from "@/pages/UserProgress";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect, useState } from "react";
 
@@ -87,7 +88,7 @@ function App() {
           <GlassNav />
           
           <main className="flex-grow">
-            <PageTransition mode="glass-shuffle">
+            <PageTransition>
               <Switch>
                 <Route path="/" component={TestComponent} />
                 <Route path="/home" component={Home} />
@@ -106,6 +107,7 @@ function App() {
                 <Route path="/avatar" component={AvatarCreator} />
                 <Route path="/landing" component={Landing} />
                 <Route path="/achievements" component={AchievementDemo} />
+                <Route path="/progress" component={UserProgress} />
                 <Route component={NotFound} />
               </Switch>
             </PageTransition>
