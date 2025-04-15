@@ -195,6 +195,43 @@ const Landing: React.FC = () => {
         </div>
       </section>
       
+      {/* Featured Student Section with Gradient Text */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-8 max-w-6xl mx-auto">
+            <div className="lg:w-1/2">
+              <FadeIn direction="left">
+                <div className="relative rounded-full overflow-hidden border-8 border-indigo-600 shadow-xl max-w-md mx-auto">
+                  <img 
+                    src="/nurd-student.png" 
+                    alt="NURD Student" 
+                    className="w-full h-auto"
+                  />
+                </div>
+              </FadeIn>
+            </div>
+            <div className="lg:w-1/2 text-center lg:text-left mt-8 lg:mt-0">
+              <FadeIn direction="right">
+                <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-indigo-500 to-blue-500 text-transparent bg-clip-text pb-2">
+                  Empowering Youth Through Innovative Learning
+                </h2>
+                <p className="text-xl text-gray-700 mb-8">
+                  At NURD, we believe in creating a future where every student has the opportunity 
+                  to develop technical skills, unleash creativity, and build lifelong connections.
+                </p>
+                <Button 
+                  size="lg" 
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                  asChild
+                >
+                  <Link href="/programs">Explore Programs</Link>
+                </Button>
+              </FadeIn>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="bg-indigo-900 py-16 text-white">
         <div className="container mx-auto px-4 text-center">

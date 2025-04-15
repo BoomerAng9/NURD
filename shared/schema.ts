@@ -46,6 +46,15 @@ export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
   email: true,
+  google_id: true,
+  facebook_id: true, 
+  github_id: true,
+  microsoft_id: true,
+  apple_id: true,
+  email_verified: true,
+  verification_token: true,
+  reset_password_token: true,
+  reset_password_expires: true,
 });
 
 export const registrationSchema = z.object({

@@ -208,7 +208,7 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async createUserFromSocial(userData: Partial<InsertUser> & { email: string }): Promise<User> {
+  async createUserFromSocial(userData: Partial<InsertUser> & { email: string, email_verified?: boolean }): Promise<User> {
     // Generate a verification token if needed
     const verificationToken = !userData.email_verified 
       ? crypto.randomBytes(32).toString('hex')
@@ -218,9 +218,7 @@ export class DatabaseStorage implements IStorage {
       .insert(users)
       .values({
         ...userData,
-        verification_token: verificationToken,
-        created_at: new Date(),
-        updated_at: new Date()
+        verification_token: verificationToken
       })
       .returning();
     
@@ -340,9 +338,9 @@ export class DatabaseStorage implements IStorage {
     const [updatedUser] = await db
       .update(users)
       .set({
-        xp_points: sql`${users.xp_points} + ${xpToAdd}`,
+        xp: sql`${users.xp} + ${xpToAdd}`,
         // Simple level calculation: level = floor(xp / 100) + 1
-        level: sql`GREATEST(FLOOR((${users.xp_points} + ${xpToAdd}) / 100) + 1, ${users.level})`,
+        level: sql`GREATEST(FLOOR((${users.xp} + ${xpToAdd}) / 100) + 1, ${users.level})`,
         updated_at: new Date()
       })
       .where(eq(users.id, userId))
