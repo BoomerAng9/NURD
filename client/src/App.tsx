@@ -19,6 +19,7 @@ import Cohorts from "@/pages/Cohorts";
 import AuthPage from "@/pages/auth-page";
 import DiscordConnect from "@/pages/DiscordConnect";
 import AvatarCreator from "@/pages/AvatarCreator";
+import AchievementDemo from "@/pages/AchievementDemo";
 
 // Simple component for initial testing
 const TestComponent = () => {
@@ -32,6 +33,7 @@ const TestComponent = () => {
       <div className="mt-4 flex space-x-4">
         <a href="/dashboard" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Dashboard</a>
         <a href="/landing" className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600">Landing</a>
+        <a href="/achievements" className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Achievement Animations</a>
       </div>
     </div>
   );
@@ -58,6 +60,7 @@ function App() {
           <Route path="/discord" component={DiscordConnect} />
           <Route path="/avatar" component={AvatarCreator} />
           <Route path="/landing" component={Landing} />
+          <Route path="/achievements" component={AchievementDemo} />
           <Route component={NotFound} />
         </Switch>
         <Toaster />
