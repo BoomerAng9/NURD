@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from 'ws';
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
+import { generateCourse } from "./ai-course-generator";
 import { 
   getSkillCategories, 
   getSkillCategoryById, 
