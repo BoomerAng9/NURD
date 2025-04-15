@@ -1,56 +1,12 @@
 import React from 'react';
-import nurdCoolImage from '../../assets/nurd-cool-like-that.png';
 
 const WhyChooseSection: React.FC = () => {
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row gap-12 items-center">
-          <div className="md:w-1/2">
-            <div className="relative">
-              <div className="bg-white p-4 rounded-xl shadow-lg">
-                <img 
-                  src={nurdCoolImage} 
-                  alt="NURD - I'm cool like that" 
-                  className="w-full h-auto rounded-lg"
-                />
-
-                <div className="mt-6 grid grid-cols-2 gap-4">
-                  <img 
-                    src="https://images.unsplash.com/photo-1509966756634-9c23dd6e6815?auto=format&fit=crop&w=600&q=80" 
-                    alt="Student working on creative project" 
-                    className="rounded-lg shadow-lg"
-                  />
-                  <img 
-                    src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=600&q=80" 
-                    alt="Students collaborating" 
-                    className="rounded-lg shadow-lg"
-                  />
-                </div>
-              </div>
-              
-              {/* Testimonial bubble */}
-              <div className="absolute -right-8 bottom-24 bg-white p-4 rounded-lg shadow-lg max-w-xs">
-                <p className="italic text-gray-600 text-sm">
-                  "NURD gave me the confidence to build my own game. Now I'm teaching my friends how to code!"
-                </p>
-                <p className="text-[#3B82F6] font-medium text-sm mt-2">— Alex, 14</p>
-              </div>
-              
-              {/* NURD Logo overlay */}
-              <div className="absolute -left-10 -bottom-10 w-28 h-28">
-                <div className="relative w-full h-full">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-[#F97316] rounded-full w-20 h-20 flex items-center justify-center shadow-lg">
-                      <div className="text-[#22C55E] font-accent font-bold text-xl">NURD</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="flex flex-col gap-12 items-center">
           
-          <div className="md:w-1/2">
+          <div className="w-full max-w-3xl mx-auto">
             <span className="text-[#3B82F6] font-medium tracking-wider text-sm uppercase">Why Choose NURD?</span>
             <h2 className="section-title mt-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">Empowering Youth Through Innovative Learning</h2>
             <p className="text-lg text-gray-600 mb-8">
