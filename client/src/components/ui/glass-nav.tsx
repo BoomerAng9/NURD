@@ -104,8 +104,9 @@ export const GlassNav: React.FC = () => {
   const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const { user } = useAuth();
   
-  const isAdmin = user?.role === 'admin';
-  const isFreelancer = user?.role === 'freelancer';
+  // Default to regular user access roles if user doesn't have role property
+  const isAdmin = user?.isAdmin === true;
+  const isFreelancer = user?.isFreelancer === true;
 
   // Handle clicks outside dropdown to close it
   useEffect(() => {

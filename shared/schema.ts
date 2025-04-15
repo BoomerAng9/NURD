@@ -20,6 +20,8 @@ export const users = pgTable("users", {
   avatar_svg: text("avatar_svg"),
   level: integer("level").default(1),
   xp: integer("xp").default(0),
+  isAdmin: boolean("is_admin").default(false),
+  isFreelancer: boolean("is_freelancer").default(false),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
