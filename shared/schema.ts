@@ -87,11 +87,67 @@ export const bridges = pgTable('bridges', {
   updated_at: timestamp('updated_at').defaultNow()
 });
 
+// Skill marketplace tables
+export const skill_categories = pgTable('skill_categories', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull().unique(),
+  description: text('description'),
+  icon: text('icon'),
+  created_at: timestamp('created_at').defaultNow()
+});
+
+export const skill_offerings = pgTable('skill_offerings', {
+  id: serial('id').primaryKey(),
+  user_id: integer('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  category_id: integer('category_id').references(() => skill_categories.id).notNull(),
+  title: text('title').notNull(),
+  description: text('description').notNull(),
+  skill_level: text('skill_level').notNull(), // beginner, intermediate, advanced
+  time_commitment: text('time_commitment').notNull(),
+  xp_reward: integer('xp_reward').default(0),
+  is_active: boolean('is_active').default(true),
+  created_at: timestamp('created_at').defaultNow(),
+  updated_at: timestamp('updated_at').defaultNow()
+});
+
+export const skill_requests = pgTable('skill_requests', {
+  id: serial('id').primaryKey(),
+  user_id: integer('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  category_id: integer('category_id').references(() => skill_categories.id).notNull(),
+  title: text('title').notNull(),
+  description: text('description').notNull(),
+  desired_skill_level: text('desired_skill_level').notNull(), // beginner, intermediate, advanced
+  time_availability: text('time_availability').notNull(),
+  is_active: boolean('is_active').default(true),
+  created_at: timestamp('created_at').defaultNow(),
+  updated_at: timestamp('updated_at').defaultNow()
+});
+
+export const skill_exchanges = pgTable('skill_exchanges', {
+  id: serial('id').primaryKey(),
+  offering_id: integer('offering_id').references(() => skill_offerings.id, { onDelete: 'cascade' }),
+  request_id: integer('request_id').references(() => skill_requests.id, { onDelete: 'cascade' }),
+  offerer_id: integer('offerer_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  requester_id: integer('requester_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  status: text('status').notNull().default('pending'), // pending, accepted, completed, cancelled
+  offerer_rating: integer('offerer_rating'),
+  requester_rating: integer('requester_rating'),
+  offerer_feedback: text('offerer_feedback'),
+  requester_feedback: text('requester_feedback'),
+  created_at: timestamp('created_at').defaultNow(),
+  updated_at: timestamp('updated_at').defaultNow(),
+  completed_at: timestamp('completed_at')
+});
+
 // Define relationships
 export const userRelations = relations(users, ({ many }) => ({
   sentFriendships: many(friendships, { relationName: 'userSentFriendships' }),
   receivedFriendships: many(friendships, { relationName: 'userReceivedFriendships' }),
-  bridges: many(bridges)
+  bridges: many(bridges),
+  skillOfferings: many(skill_offerings),
+  skillRequests: many(skill_requests),
+  skillExchangesAsOfferer: many(skill_exchanges, { relationName: 'userOfferedExchanges' }),
+  skillExchangesAsRequester: many(skill_exchanges, { relationName: 'userRequestedExchanges' })
 }));
 
 export const friendshipsRelations = relations(friendships, ({ one }) => ({
@@ -111,6 +167,59 @@ export const bridgesRelations = relations(bridges, ({ one }) => ({
   user: one(users, {
     fields: [bridges.user_id],
     references: [users.id]
+  })
+}));
+
+// Skill marketplace relations
+export const skillCategoriesRelations = relations(skill_categories, ({ many }) => ({
+  offerings: many(skill_offerings),
+  requests: many(skill_requests)
+}));
+
+export const skillOfferingsRelations = relations(skill_offerings, ({ one, many }) => ({
+  user: one(users, {
+    fields: [skill_offerings.user_id],
+    references: [users.id]
+  }),
+  category: one(skill_categories, {
+    fields: [skill_offerings.category_id],
+    references: [skill_categories.id]
+  }),
+  exchanges: many(skill_exchanges, { relationName: 'offeringExchanges' })
+}));
+
+export const skillRequestsRelations = relations(skill_requests, ({ one, many }) => ({
+  user: one(users, {
+    fields: [skill_requests.user_id],
+    references: [users.id]
+  }),
+  category: one(skill_categories, {
+    fields: [skill_requests.category_id],
+    references: [skill_categories.id]
+  }),
+  exchanges: many(skill_exchanges, { relationName: 'requestExchanges' })
+}));
+
+export const skillExchangesRelations = relations(skill_exchanges, ({ one }) => ({
+  offering: one(skill_offerings, {
+    fields: [skill_exchanges.offering_id],
+    references: [skill_offerings.id],
+    relationName: 'offeringExchanges'
+  }),
+  request: one(skill_requests, {
+    fields: [skill_exchanges.request_id],
+    references: [skill_requests.id],
+    relationName: 'requestExchanges'
+  }),
+  offerer: one(users, {
+    fields: [skill_exchanges.offerer_id],
+    references: [users.id],
+    relationName: 'userOfferedExchanges'
+  }),
+  requester: one(users, {
+    fields: [skill_exchanges.requester_id],
+    references: [users.id],
+    relationName: 'userRequestedExchanges'
   })
 }));
 
@@ -135,3 +244,41 @@ export type Friendship = typeof friendships.$inferSelect;
 
 export type InsertBridge = z.infer<typeof insertBridgeSchema>;
 export type Bridge = typeof bridges.$inferSelect;
+
+// Skill marketplace schemas
+export const insertSkillCategorySchema = createInsertSchema(skill_categories).omit({
+  id: true,
+  created_at: true
+});
+
+export const insertSkillOfferingSchema = createInsertSchema(skill_offerings).omit({
+  id: true,
+  created_at: true,
+  updated_at: true
+});
+
+export const insertSkillRequestSchema = createInsertSchema(skill_requests).omit({
+  id: true,
+  created_at: true,
+  updated_at: true
+});
+
+export const insertSkillExchangeSchema = createInsertSchema(skill_exchanges).omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+  completed_at: true
+});
+
+// Skill marketplace types
+export type InsertSkillCategory = z.infer<typeof insertSkillCategorySchema>;
+export type SkillCategory = typeof skill_categories.$inferSelect;
+
+export type InsertSkillOffering = z.infer<typeof insertSkillOfferingSchema>;
+export type SkillOffering = typeof skill_offerings.$inferSelect;
+
+export type InsertSkillRequest = z.infer<typeof insertSkillRequestSchema>;
+export type SkillRequest = typeof skill_requests.$inferSelect;
+
+export type InsertSkillExchange = z.infer<typeof insertSkillExchangeSchema>;
+export type SkillExchange = typeof skill_exchanges.$inferSelect;
