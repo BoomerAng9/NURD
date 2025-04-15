@@ -23,65 +23,75 @@ export const useWebSocket = () => {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsUrl = `${protocol}//${window.location.host}/ws`;
     
-    // Create WebSocket instance
-    const socket = new WebSocket(wsUrl);
-    socketRef.current = socket;
-
-    // Connection opened handler
-    socket.addEventListener('open', () => {
-      console.log('WebSocket connection established');
-      setIsConnected(true);
-    });
-
-    // Message handler
-    socket.addEventListener('message', (event) => {
+    console.log('Attempting to connect to WebSocket:', wsUrl);
+    
+    // Add a short delay before connecting to ensure server is ready
+    const connectTimeout = setTimeout(() => {
       try {
-        const data = JSON.parse(event.data) as WebSocketMessage;
-        console.log('WebSocket message received:', data);
+        // Create WebSocket instance
+        const socket = new WebSocket(wsUrl);
+        socketRef.current = socket;
         
-        // Add to messages
-        setMessages((prev) => [...prev, data]);
-        
-        // Handle different message types
-        switch (data.type) {
-          case 'NEW_USER':
-            // Add notification for new user
-            setNotifications((prev) => [...prev, data]);
-            break;
-          case 'USER_ACTIVITY':
-            // Add notification for user activity
-            setNotifications((prev) => [...prev, data]);
-            break;
-          case 'ONLINE_USERS':
-            // Update online users list
-            if (data.users && Array.isArray(data.users)) {
-              setOnlineUsers(data.users);
+        // Connection opened handler
+        socket.addEventListener('open', () => {
+          console.log('WebSocket connection established');
+          setIsConnected(true);
+        });
+
+        // Message handler
+        socket.addEventListener('message', (event) => {
+          try {
+            const data = JSON.parse(event.data) as WebSocketMessage;
+            console.log('WebSocket message received:', data);
+            
+            // Add to messages
+            setMessages((prev) => [...prev, data]);
+            
+            // Handle different message types
+            switch (data.type) {
+              case 'NEW_USER':
+                // Add notification for new user
+                setNotifications((prev) => [...prev, data]);
+                break;
+              case 'USER_ACTIVITY':
+                // Add notification for user activity
+                setNotifications((prev) => [...prev, data]);
+                break;
+              case 'ONLINE_USERS':
+                // Update online users list
+                if (data.users && Array.isArray(data.users)) {
+                  setOnlineUsers(data.users);
+                }
+                break;
+              default:
+                // Handle other message types as needed
+                break;
             }
-            break;
-          default:
-            // Handle other message types as needed
-            break;
-        }
-      } catch (error) {
-        console.error('Error parsing WebSocket message:', error);
+          } catch (error) {
+            console.error('Error parsing WebSocket message:', error);
+          }
+        });
+
+        // Connection error handler
+        socket.addEventListener('error', (error) => {
+          console.error('WebSocket error:', error);
+        });
+
+        // Connection closed handler
+        socket.addEventListener('close', () => {
+          console.log('WebSocket connection closed');
+          setIsConnected(false);
+        });
+      } catch (err) {
+        console.error('Error creating WebSocket connection:', err);
       }
-    });
-
-    // Connection error handler
-    socket.addEventListener('error', (error) => {
-      console.error('WebSocket error:', error);
-    });
-
-    // Connection closed handler
-    socket.addEventListener('close', () => {
-      console.log('WebSocket connection closed');
-      setIsConnected(false);
-    });
+    }, 1000);
 
     // Cleanup function
     return () => {
-      if (socket.readyState === WebSocket.OPEN) {
-        socket.close();
+      clearTimeout(connectTimeout);
+      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+        socketRef.current.close();
       }
     };
   }, []);

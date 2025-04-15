@@ -107,7 +107,7 @@ export const useIsAdmin = () => {
   useEffect(() => {
     // Check if user is admin (this is a simplified check)
     // In a real app, you would check a roles table or user metadata
-    if (user && user.email?.includes('admin')) {
+    if (user && (user.email?.includes('admin') || user.role === 'admin' || user.user_metadata?.is_admin)) {
       setIsAdmin(true);
     } else {
       setIsAdmin(false);
@@ -125,7 +125,7 @@ export const useIsFreelancer = () => {
   useEffect(() => {
     // Check if user is a freelancer
     // In a real app, this would check a proper roles table
-    if (user && user.user_metadata?.is_freelancer === true) {
+    if (user && (user.user_metadata?.is_freelancer === true || user.role === 'freelancer')) {
       setIsFreelancer(true);
     } else {
       setIsFreelancer(false);

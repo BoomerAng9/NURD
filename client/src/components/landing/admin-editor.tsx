@@ -43,7 +43,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Loader2, Plus, Trash2, PencilLine, ExternalLink, FilePlus, Upload } from 'lucide-react';
 import { useIsAdmin } from '@/lib/auth-guard';
-import { useSupabase } from '@/components/ui/supabase-provider';
 import { LandingContent } from '@shared/schema';
 
 // Form schema for adding/editing landing content
@@ -60,9 +59,8 @@ const landingContentSchema = z.object({
 
 type LandingContentForm = z.infer<typeof landingContentSchema>;
 
-export function LandingPageAdminEditor() {
+export function AdminLandingEditor() {
   const isAdmin = useIsAdmin();
-  const { supabase } = useSupabase();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingContent, setEditingContent] = useState<LandingContent | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -146,39 +144,57 @@ export function LandingPageAdminEditor() {
     setUploadProgress(0);
     
     try {
-      // Generate a unique file name to avoid collisions
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
-      const filePath = `landing/${fileName}`;
+      // Create a FormData object to send the file
+      const formData = new FormData();
+      formData.append('file', file);
       
-      // Upload to Supabase Storage
-      const { data, error } = await supabase.storage
-        .from('public')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: false,
-          onUploadProgress: (progress) => {
-            setUploadProgress(Math.round((progress.loaded / progress.total) * 100));
-          },
-        });
+      // Upload to server
+      const xhr = new XMLHttpRequest();
       
-      if (error) throw error;
+      // Track upload progress
+      xhr.upload.addEventListener('progress', (event) => {
+        if (event.lengthComputable) {
+          const percentComplete = Math.round((event.loaded / event.total) * 100);
+          setUploadProgress(percentComplete);
+        }
+      });
       
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('public')
-        .getPublicUrl(filePath);
+      // Create a promise to handle the XHR request
+      const uploadPromise = new Promise<string>((resolve, reject) => {
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              const response = JSON.parse(xhr.responseText);
+              resolve(response.url);
+            } catch (e) {
+              reject(new Error('Invalid response from server'));
+            }
+          } else {
+            reject(new Error(`Upload failed with status ${xhr.status}`));
+          }
+        };
+        
+        xhr.onerror = () => reject(new Error('Network error during upload'));
+        xhr.ontimeout = () => reject(new Error('Upload timed out'));
+      });
+      
+      // Start the upload
+      xhr.open('POST', '/api/upload', true);
+      xhr.send(formData);
+      
+      // Wait for upload to complete
+      const fileUrl = await uploadPromise;
       
       toast({
         title: 'Upload successful',
         description: 'File has been uploaded successfully',
       });
       
-      return publicUrl;
-    } catch (error) {
+      return fileUrl;
+    } catch (error: any) {
       toast({
         title: 'Upload failed',
-        description: error.message,
+        description: error.message || 'An unknown error occurred',
         variant: 'destructive',
       });
       return null;

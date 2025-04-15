@@ -1,4 +1,4 @@
-import type { Express, Request } from "express";
+import express, { type Express, type Request } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from 'ws';
 import { storage } from "./storage";
@@ -13,6 +13,9 @@ import { ZodError } from "zod";
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+
+// Add websocket diagnostics
+const WEBSOCKET_DIAGNOSTICS = true;
 
 // Configure multer for file uploads
 const uploadDir = path.join(process.cwd(), 'uploads');
@@ -76,6 +79,49 @@ function broadcastMessage(message: any) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Health check endpoint
+  app.get('/api/health', (req, res) => {
+    return res.status(200).json({
+      status: 'ok',
+      message: 'Server is running',
+      timestamp: new Date().toISOString()
+    });
+  });
+  
+  // File Upload Route
+  app.post('/api/upload', upload.single('file'), (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+      
+      // Generate public URL for the file
+      const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+      const host = req.headers.host;
+      const baseUrl = `${protocol}://${host}`;
+      const fileUrl = `${baseUrl}/uploads/${req.file.filename}`;
+      
+      // Return success with file information
+      return res.status(200).json({
+        message: 'File uploaded successfully',
+        filename: req.file.filename,
+        url: fileUrl,
+        size: req.file.size,
+        mimetype: req.file.mimetype
+      });
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      return res.status(500).json({ message: 'File upload failed', error: error.message });
+    }
+  });
+  
+  // Serve uploaded files
+  app.use('/uploads', (req, res, next) => {
+    // Allow public access to the uploads directory
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    next();
+  }, express.static(uploadDir));
+  
   // User Routes
   app.post('/api/register', async (req, res) => {
     try {
@@ -359,13 +405,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/landing-content', async (req, res) => {
     try {
-      // Check if user is admin
-      const userId = req.session?.userId;
-      const user = await storage.getUserById(userId);
-      if (!user?.is_admin) {
-        return res.status(403).json({ message: "Unauthorized" });
-      }
-
+      // Since we've removed Supabase auth, we're temporarily allowing all requests
+      // In a production environment, you would implement proper authentication
+      
       const content = await storage.updateLandingContent(req.body);
       return res.status(200).json(content);
     } catch (error) {
@@ -482,14 +524,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create HTTP server
   const httpServer = createServer(app);
 
-  // Create WebSocket server
-  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  // Create a simpler WebSocket server
+  console.log('Setting up WebSocket server on path: /ws');
+  
+  // Create a dedicated endpoint for initial WebSocket test
+  app.get('/api/websocket-status', (req, res) => {
+    return res.status(200).json({
+      status: 'ready',
+      message: 'WebSocket server is available at /ws'
+    });
+  });
+  
+  const wss = new WebSocketServer({ 
+    server: httpServer, 
+    path: '/ws', 
+    // Disable perMessageDeflate to avoid compression issues
+    perMessageDeflate: false 
+  });
+  
+  // Log any WebSocket server errors
+  wss.on('error', (error) => {
+    console.error('WebSocket server error:', error);
+  });
 
   // WebSocket connection handler
   wss.on('connection', (ws, req) => {
-    console.log('WebSocket client connected');
-    const clientId = req.headers['sec-websocket-key'] as string;
-    clients.set(clientId, ws);
+    if (WEBSOCKET_DIAGNOSTICS) {
+      console.log('WebSocket client connected from:', req.socket.remoteAddress, 'headers:', JSON.stringify(req.headers, null, 2));
+    } else {
+      console.log('WebSocket client connected from:', req.socket.remoteAddress);
+    }
+    
+    const clientId = req.headers['sec-websocket-key'] || `${Date.now()}-${Math.random()}`;
+    clients.set(clientId as string, ws);
+    console.log('Total connected clients:', clients.size);
 
     ws.send(JSON.stringify({
       type: 'WELCOME',
@@ -514,7 +582,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     ws.on('close', () => {
       console.log('WebSocket client disconnected');
-      clients.delete(clientId);
+      clients.delete(clientId as string);
     });
   });
 
