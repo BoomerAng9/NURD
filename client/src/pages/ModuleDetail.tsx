@@ -26,7 +26,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LearningModule } from '@/components/learning/module-card';
 
 // This would come from your API/database with all module data
-import { sampleModules } from '@/data/learning-modules';
+import { sampleModules } from '../data/learning-modules';
 
 interface LessonCardProps {
   lesson: {
@@ -157,7 +157,7 @@ const ModuleDetail: React.FC = () => {
   const moduleId = params?.id;
   
   // Find module by ID
-  const module = sampleModules.find(m => m.id === moduleId) || sampleModules[0];
+  const module = sampleModules.find((m: LearningModule) => m.id === moduleId) || sampleModules[0];
   
   // Sample lessons for this module 
   const [lessons, setLessons] = useState([
