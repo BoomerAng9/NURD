@@ -1,7 +1,7 @@
 import React from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'wouter';
+import { useLocation } from 'wouter';
 
 interface WelcomeBannerProps {
   name: string;
@@ -9,6 +9,9 @@ interface WelcomeBannerProps {
 }
 
 const WelcomeBanner: React.FC<WelcomeBannerProps> = ({ name, isLoading }) => {
+  const { toast } = useToast();
+  const [_, setLocation] = useLocation();
+
   // Get time of day for custom greeting
   const getTimeOfDay = () => {
     const hour = new Date().getHours();
@@ -25,6 +28,31 @@ const WelcomeBanner: React.FC<WelcomeBannerProps> = ({ name, isLoading }) => {
       day: 'numeric'
     };
     return new Date().toLocaleDateString('en-US', options);
+  };
+
+  // Handle button clicks
+  const handleStartProject = () => {
+    setLocation('/learning');
+    toast({
+      title: "New Project Started",
+      description: "You've been redirected to the learning center to start a new project."
+    });
+  };
+
+  const handleViewSchedule = () => {
+    setLocation('/schedule');
+    toast({
+      title: "Schedule View",
+      description: "Here's your upcoming training schedule."
+    });
+  };
+
+  const handleContactTrainer = () => {
+    setLocation('/trainers');
+    toast({
+      title: "Contact Trainer",
+      description: "Connect with your trainer to get help with your projects."
+    });
   };
 
   return (
@@ -71,23 +99,32 @@ const WelcomeBanner: React.FC<WelcomeBannerProps> = ({ name, isLoading }) => {
       
       <div className="px-6 py-4 border-t border-gray-100 bg-gray-50">
         <div className="flex flex-wrap gap-4">
-          <button className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+          <button 
+            onClick={handleStartProject}
+            className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 cursor-pointer"
+          >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
             Start New Project
           </button>
-          <button className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+          <button 
+            onClick={handleViewSchedule}
+            className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 cursor-pointer"
+          >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             View Schedule
           </button>
-          <button className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+          <button 
+            onClick={handleContactTrainer}
+            className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 cursor-pointer"
+          >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
             </svg>
-            Contact Mentor
+            Contact Trainer
           </button>
         </div>
       </div>

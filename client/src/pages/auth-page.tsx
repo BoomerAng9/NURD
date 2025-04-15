@@ -27,7 +27,10 @@ const loginSchema = z.object({
 const registerSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
   first_name: z.string().min(1, "First name is required"),
-  age: z.number().min(8, "Minimum age is 8").max(18, "Maximum age is 18"),
+  age: z.union([
+    z.string().refine(val => val === '', { message: 'Age is required' }),
+    z.number().min(8, "Minimum age is 8").max(18, "Maximum age is 18")
+  ]),
   grade_level: z.string().min(1, "Grade level is required"),
   user_type: z.enum(["student", "parent"]),
   gender: z.enum(["male", "female", "other", "prefer_not_to_say"]),
@@ -87,7 +90,14 @@ export default function AuthPage() {
   };
 
   const onRegisterSubmit = (data: RegisterFormValues) => {
-    const { confirmPassword, ...registerData } = data;
+    const { confirmPassword, ...formData } = data;
+    
+    // Ensure age is a number for API submission
+    const registerData = {
+      ...formData,
+      age: typeof formData.age === 'string' ? 12 : formData.age  // Default to 12 if empty string
+    };
+    
     registerMutation.mutate(registerData);
   };
 
@@ -221,7 +231,10 @@ export default function AuthPage() {
                                 placeholder="Your age" 
                                 className="bg-white/5 border-gray-700 focus:border-primary text-white" 
                                 {...field}
-                                onChange={(e) => field.onChange(parseInt(e.target.value) || 12)}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  field.onChange(value === '' ? '' : parseInt(value));
+                                }}
                               />
                             </FormControl>
                             <FormMessage />
