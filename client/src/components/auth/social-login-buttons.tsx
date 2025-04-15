@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { SiGoogle, SiFacebook, SiGithub, SiMicrosoft } from 'react-icons/si';
+import { SiGoogle, SiFacebook, SiGithub } from 'react-icons/si';
+import { SquareCode } from 'lucide-react';
 
 interface SocialLoginButtonsProps {
   className?: string;
@@ -72,7 +73,7 @@ export const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
           onClick={handleMicrosoftLogin}
           className="bg-white/5 border-gray-700 text-white hover:bg-white/10 hover:text-white"
         >
-          <SiMicrosoft className="mr-2 h-4 w-4 text-blue-500" />
+          <SquareCode className="mr-2 h-4 w-4 text-blue-500" />
           Microsoft
         </Button>
       </div>
