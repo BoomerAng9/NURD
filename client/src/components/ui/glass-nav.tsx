@@ -88,10 +88,7 @@ export const GlassNav: React.FC = () => {
   const [splatterEffects, setSplatterEffects] = useState<{id: number, path: string, position: {x: number, y: number}}[]>([]);
   const splatterCounter = React.useRef(0);
   const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const { user } = useAuth();
-  
-  const isAdmin = user?.user_type === 'admin';
-  const isFreelancer = user?.user_type === 'freelancer';
+  // Removed authentication checks to make all navigation accessible
 
   // Handle clicks outside dropdown to close it
   useEffect(() => {
@@ -161,33 +158,10 @@ export const GlassNav: React.FC = () => {
     });
   };
 
-  // Filter navigation based on user roles
-  const filteredNavigation = navigation.map(item => {
-    if (item.children) {
-      return {
-        ...item,
-        children: item.children.filter(child => {
-          if (!child.roles) return true;
-          if (isAdmin) return true;
-          if (isFreelancer && child.roles.includes('freelancer')) return true;
-          return false;
-        })
-      };
-    }
-    return item;
-  }).filter(item => {
-    // If it's a dropdown, only include if it has visible children
-    if (item.isDropdown && item.children) {
-      return item.children.length > 0;
-    }
-    // For regular items
-    if (!item.roles) return true;
-    if (isAdmin) return true;
-    if (isFreelancer && item.roles.includes('freelancer')) return true;
-    return false;
-  });
+  // Show all navigation items without filtering
+  const filteredNavigation = navigation;
 
-  const visibleAdminLinks = isAdmin ? adminLinks : [];
+  const visibleAdminLinks = adminLinks;
   
   return (
     <nav className="sticky top-0 z-40 w-full backdrop-blur-md bg-background/70 border-b border-border/40">
@@ -357,19 +331,11 @@ export const GlassNav: React.FC = () => {
               );
             })}
             
-            {user ? (
-              <Link href="/settings">
-                <div className="ml-2 p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors cursor-pointer">
-                  <Settings className="h-5 w-5 text-primary" />
-                </div>
-              </Link>
-            ) : (
-              <Link href="/auth">
-                <div className="ml-2 px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer">
-                  Sign In
-                </div>
-              </Link>
-            )}
+            <Link href="/settings">
+              <div className="ml-2 p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors cursor-pointer">
+                <Settings className="h-5 w-5 text-primary" />
+              </div>
+            </Link>
           </div>
           
           {/* Mobile menu button */}
@@ -458,31 +424,17 @@ export const GlassNav: React.FC = () => {
             );
           })}
           
-          {user ? (
-            <Link href="/settings">
-              <div 
-                onClick={() => setIsOpen(false)}
-                className="block px-3 py-2 rounded-md text-base font-medium text-foreground/70 hover:text-foreground hover:bg-background/50 cursor-pointer"
-              >
-                <span className="flex items-center">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Settings
-                </span>
-              </div>
-            </Link>
-          ) : (
-            <Link href="/auth">
-              <div 
-                onClick={() => setIsOpen(false)}
-                className="block px-3 py-2 rounded-md text-base font-medium bg-primary text-primary-foreground cursor-pointer"
-              >
-                <span className="flex items-center">
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Sign In
-                </span>
-              </div>
-            </Link>
-          )}
+          <Link href="/settings">
+            <div 
+              onClick={() => setIsOpen(false)}
+              className="block px-3 py-2 rounded-md text-base font-medium text-foreground/70 hover:text-foreground hover:bg-background/50 cursor-pointer"
+            >
+              <span className="flex items-center">
+                <Settings className="h-4 w-4 mr-2" />
+                Settings
+              </span>
+            </div>
+          </Link>
         </div>
       </div>
     </nav>
