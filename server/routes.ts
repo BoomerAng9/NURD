@@ -37,6 +37,7 @@ import { ZodError } from "zod";
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import Anthropic from '@anthropic-ai/sdk';
 
 // Add websocket diagnostics
 const WEBSOCKET_DIAGNOSTICS = true;
@@ -791,6 +792,95 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error logging activity:", error);
       return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Initialize Anthropic API client
+  const anthropic = new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY,
+  });
+
+  // AI Code Snippet Generator Endpoint
+  app.post('/api/code-generator', async (req, res) => {
+    try {
+      const { prompt, language, context } = req.body;
+      
+      if (!prompt) {
+        return res.status(400).json({ message: "Prompt is required" });
+      }
+
+      const systemPrompt = `You are an expert coding assistant specializing in ${language || 'programming'}. 
+Your task is to generate high-quality, efficient, and well-documented code snippets based on user requests.
+Follow these guidelines:
+1. Write clean, maintainable code that follows best practices for the language
+2. Include brief comments explaining key parts of the code
+3. Return ONLY code without explanations before or after (comments within code are encouraged)
+4. Focus on practical, working solutions that demonstrate good programming patterns`;
+
+      const userPrompt = context 
+        ? `Using the following code context:\n\`\`\`\n${context}\n\`\`\`\n\nPlease generate: ${prompt}`
+        : prompt;
+
+      const response = await anthropic.messages.create({
+        model: "claude-3-7-sonnet-20250219", // the newest Anthropic model is "claude-3-7-sonnet-20250219" which was released February 24, 2025
+        max_tokens: 2000,
+        system: systemPrompt,
+        messages: [
+          { role: "user", content: userPrompt }
+        ],
+      });
+
+      return res.status(200).json({
+        code: response.content[0].text,
+        language: language || 'text'
+      });
+    } catch (error: any) {
+      console.error("Error generating code snippet:", error);
+      return res.status(500).json({ 
+        message: "Failed to generate code snippet",
+        error: error.message
+      });
+    }
+  });
+
+  // AI Code Suggestion Endpoint (real-time suggestions)
+  app.post('/api/code-suggestion', async (req, res) => {
+    try {
+      const { code, language, cursorPosition } = req.body;
+      
+      if (!code) {
+        return res.status(400).json({ message: "Code content is required" });
+      }
+
+      const systemPrompt = `You are an intelligent code completion assistant. 
+Your task is to provide helpful autocompletion suggestions based on the code a user is writing.
+Follow these guidelines:
+1. Analyze the code context and the cursor position to provide relevant suggestions
+2. Provide brief, focused completions that follow the established code style and patterns
+3. Return ONLY the suggested code completion without any explanations
+4. Suggestions should be 1-5 lines at most and directly applicable as a completion`;
+
+      const response = await anthropic.messages.create({
+        model: "claude-3-7-sonnet-20250219", // the newest Anthropic model is "claude-3-7-sonnet-20250219" which was released February 24, 2025
+        max_tokens: 200,
+        system: systemPrompt,
+        messages: [
+          { 
+            role: "user", 
+            content: `I'm writing code in ${language || 'a programming language'}. My cursor is at position ${cursorPosition || 'the end'}. Please suggest a completion for this code:\n\`\`\`\n${code}\n\`\`\`` 
+          }
+        ],
+      });
+
+      return res.status(200).json({
+        suggestion: response.content[0].text,
+      });
+    } catch (error: any) {
+      console.error("Error generating code suggestion:", error);
+      return res.status(500).json({ 
+        message: "Failed to generate suggestion",
+        error: error.message
+      });
     }
   });
 
