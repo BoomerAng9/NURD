@@ -93,9 +93,9 @@ const Footer: React.FC = () => {
         
         <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
           <p className="flex items-center justify-center">
-            {/* Palmetto Palm Tree SVG */}
+            {/* Palmetto Palm Tree image */}
             <img 
-              src="/assets/palmetto_palm.svg" 
+              src="/assets/pooler_palm.svg" 
               alt="Palmetto Palm" 
               className="h-10 w-auto mr-3 text-gray-400"
             />

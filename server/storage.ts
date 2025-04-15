@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { 
   users, 
   type User, 
@@ -180,12 +181,158 @@ export class DatabaseStorage implements IStorage {
     return user || undefined;
   }
 
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user || undefined;
+  }
+
+  async getUserByProvider(provider: string, providerId: string): Promise<User | undefined> {
+    const providerField = `${provider}_id` as keyof typeof users;
+    if (!users[providerField]) {
+      return undefined;
+    }
+    
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users[providerField] as any, providerId));
+    
+    return user || undefined;
+  }
+
   async createUser(insertUser: InsertUser): Promise<User> {
     const [user] = await db
       .insert(users)
       .values(insertUser)
       .returning();
     return user;
+  }
+
+  async createUserFromSocial(userData: Partial<InsertUser> & { email: string }): Promise<User> {
+    // Generate a verification token if needed
+    const verificationToken = !userData.email_verified 
+      ? crypto.randomBytes(32).toString('hex')
+      : undefined;
+    
+    const [user] = await db
+      .insert(users)
+      .values({
+        ...userData,
+        verification_token: verificationToken,
+        created_at: new Date(),
+        updated_at: new Date()
+      })
+      .returning();
+    
+    // If email not verified, send verification email
+    if (verificationToken) {
+      // Import sendVerificationEmail without creating circular dependency
+      const { sendVerificationEmail } = require('./sso-auth');
+      await sendVerificationEmail(userData.email, verificationToken);
+    }
+    
+    return user;
+  }
+
+  async linkSocialProvider(userId: number, provider: string, providerId: string): Promise<User> {
+    const providerField = `${provider}_id` as keyof typeof users;
+    if (!users[providerField]) {
+      throw new Error(`Provider ${provider} not supported`);
+    }
+    
+    const [updatedUser] = await db
+      .update(users)
+      .set({ 
+        [providerField]: providerId,
+        updated_at: new Date()
+      } as any)
+      .where(eq(users.id, userId))
+      .returning();
+    
+    return updatedUser;
+  }
+
+  async verifyEmail(token: string): Promise<boolean> {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.verification_token, token));
+    
+    if (!user) {
+      return false;
+    }
+    
+    await db
+      .update(users)
+      .set({
+        email_verified: true,
+        verification_token: null,
+        updated_at: new Date()
+      })
+      .where(eq(users.id, user.id));
+    
+    return true;
+  }
+
+  async requestPasswordReset(email: string): Promise<boolean> {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, email));
+    
+    if (!user) {
+      return false;
+    }
+    
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const expiration = new Date(Date.now() + 3600000); // 1 hour
+    
+    await db
+      .update(users)
+      .set({
+        reset_password_token: resetToken,
+        reset_password_expires: expiration,
+        updated_at: new Date()
+      })
+      .where(eq(users.id, user.id));
+    
+    // Import sendPasswordResetEmail without creating circular dependency
+    const { sendPasswordResetEmail } = require('./sso-auth');
+    return await sendPasswordResetEmail(email, resetToken);
+  }
+
+  async resetPassword(token: string, newPassword: string): Promise<boolean> {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.reset_password_token, token));
+    
+    if (!user) {
+      return false;
+    }
+    
+    // Check if token has expired
+    if (!user.reset_password_expires || user.reset_password_expires < new Date()) {
+      return false;
+    }
+    
+    // Hash the new password
+    const hashPassword = (password: string) => {
+      const salt = crypto.randomBytes(16).toString('hex');
+      return crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex') + ':' + salt;
+    };
+    
+    await db
+      .update(users)
+      .set({
+        password: hashPassword(newPassword),
+        reset_password_token: null,
+        reset_password_expires: null,
+        updated_at: new Date()
+      })
+      .where(eq(users.id, user.id));
+    
+    return true;
   }
 
   async updateUserXP(userId: number, xpToAdd: number): Promise<User> {

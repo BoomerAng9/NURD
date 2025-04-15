@@ -216,7 +216,7 @@ const AppContent = () => {
             <p className="text-gray-500 flex items-center justify-center">
               {/* Palmetto Palm Tree SVG */}
               <img 
-                src="/assets/palmetto_palm.svg" 
+                src="/assets/pooler_palm.svg" 
                 alt="Palmetto Palm" 
                 className="h-8 w-auto mr-3"
               />

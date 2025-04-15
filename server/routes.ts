@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from 'ws';
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
+import { setupSSOAuth } from "./sso-auth";
 import { generateCourse } from "./ai-course-generator";
 import { 
   getSkillCategories, 
@@ -107,6 +108,7 @@ function broadcastMessage(message: any) {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
   setupAuth(app);
+  setupSSOAuth(app);
   
   // Health check endpoint
   app.get('/api/health', (req, res) => {
