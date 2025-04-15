@@ -33,7 +33,6 @@ import ModuleDetail from "@/pages/ModuleDetail";
 import AICourseCreator from "@/pages/AICourseCreator";
 import Reinvestment from "@/pages/reinvestment";
 import CreateCourse from "@/pages/create-course";
-import CanvaIntegrationPage from "@/pages/CanvaIntegrationPage";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { LayoutDashboard, Send } from "lucide-react";
 
@@ -42,7 +41,6 @@ const CodePlayground = React.lazy(() => import("@/pages/code-playground"));
 
 // Import NURD skateboard image
 import nurdSkateboardImg from "./assets/nurd-skateboard.png";
-import backgroundImg from "./assets/IMG_9573.jpeg";
 
 // Simple component for initial testing - updated with glass UI
 const TestComponent = () => {
@@ -53,25 +51,12 @@ const TestComponent = () => {
           NURD by: ACHIEVEMOR
         </h1>
         
-        {/* Main background image with centered skateboard image */}
-        <div className="mt-8 p-6 glass-card overflow-hidden relative">
+        <div className="mt-8 p-6 glass-card overflow-hidden">
           <img 
-            src={backgroundImg} 
-            alt="NURD Background" 
-            className="w-full rounded-lg shadow-lg"
+            src={nurdSkateboardImg} 
+            alt="NURD Skateboarding" 
+            className="mx-auto max-h-[500px] rounded-lg shadow-lg"
           />
-          
-          {/* Centered skateboard image with solid background */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="bg-white rounded-lg" style={{ padding: '4px' }}>
-              <img 
-                src={nurdSkateboardImg} 
-                alt="NURD Skateboarding" 
-                className="w-auto h-auto max-h-[450px] max-w-[450px]"
-                style={{ display: 'block' }}
-              />
-            </div>
-          </div>
         </div>
         
         <div className="mt-6 flex flex-wrap justify-center gap-4">
@@ -99,14 +84,6 @@ const TestComponent = () => {
               <path d="M22 2 11 13"/>
             </svg>
             <span>ACHIEVERS</span>
-          </a>
-          <a href="/canva-integration" className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-green-700/30 to-blue-700/30 border-green-500/30">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 21a9 9 0 0 0 0-18c-4.97 0-9 4.03-9 9s4.03 9 9 9Z"></path>
-              <path d="M7 10.3c2.83-3.46 7.53-3.46 10.36 0"></path>
-              <path d="M19 11.66c-1.94 2.24-4.89 3.03-7.56 2.38"></path>
-            </svg>
-            <span>Canva Design</span>
           </a>
         </div>
       </div>
@@ -168,7 +145,6 @@ const AppContent = () => {
             <Route path="/skill-marketplace" component={SkillMarketplace} />
             <Route path="/reinvestment" component={Reinvestment} />
             <Route path="/create-course" component={CreateCourse} />
-            <Route path="/canva-integration" component={CanvaIntegrationPage} />
             
             {/* Coming Soon placeholder pages */}
             <Route path="/summer-initiative">

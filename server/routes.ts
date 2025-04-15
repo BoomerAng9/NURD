@@ -5,14 +5,6 @@ import { storage } from "./storage";
 import { setupAuth } from "./auth";
 import { generateCourse } from "./ai-course-generator";
 import { 
-  initiateCanvaAuth,
-  handleCanvaCallback,
-  getCanvaDesigns,
-  getCanvaDesign,
-  createCanvaDesign,
-  getCanvaEditorUrl
-} from "./canva-integration";
-import { 
   getSkillCategories, 
   getSkillCategoryById, 
   createSkillCategory,
@@ -906,14 +898,6 @@ Follow these guidelines:
   // Create HTTP server
   // AI Course Generation Endpoint
   app.post('/api/ai/generate-course', generateCourse);
-  
-  // Canva Integration Routes
-  app.get('/api/canva/auth/init', initiateCanvaAuth);
-  app.get('/api/canva/auth/callback', handleCanvaCallback);
-  app.get('/api/canva/designs', getCanvaDesigns);
-  app.get('/api/canva/designs/:designId', getCanvaDesign);
-  app.post('/api/canva/designs', createCanvaDesign);
-  app.get('/api/canva/editor-url', getCanvaEditorUrl);
 
   const httpServer = createServer(app);
 
