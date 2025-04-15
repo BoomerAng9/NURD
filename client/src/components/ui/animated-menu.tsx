@@ -13,7 +13,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useSupabase } from '@/components/ui/supabase-provider';
+import { useAuth } from '@/hooks/use-auth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -32,13 +32,13 @@ interface AnimatedMenuProps {
 
 const AnimatedMenu: React.FC<AnimatedMenuProps> = ({ className }) => {
   const [location] = useLocation();
-  const { user, supabase } = useSupabase();
+  const { user, logoutMutation } = useAuth();
   const { toast } = useToast();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   
   // Simulate an admin user check
-  const isAdmin = user?.email?.includes('admin');
+  const isAdmin = user?.user_type === 'admin';
   
   const menuItems: MenuItem[] = [
     {
@@ -86,9 +86,9 @@ const AnimatedMenu: React.FC<AnimatedMenuProps> = ({ className }) => {
     setIsExpanded(!isExpanded);
   };
   
-  const handleLogout = async () => {
+  const handleLogout = () => {
     try {
-      await supabase.auth.signOut();
+      logoutMutation.mutate();
       toast({
         title: "Logged out",
         description: "You have been successfully logged out",
@@ -214,15 +214,15 @@ const AnimatedMenu: React.FC<AnimatedMenuProps> = ({ className }) => {
         {user ? (
           <div className="mb-6 px-3 flex items-center">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={user.user_metadata?.avatar_url || ''} />
-              <AvatarFallback>{user.email?.charAt(0)?.toUpperCase() || 'N'}</AvatarFallback>
+              <AvatarImage src={user.avatar_url || ''} />
+              <AvatarFallback>{user.first_name?.charAt(0)?.toUpperCase() || 'N'}</AvatarFallback>
             </Avatar>
             
             <motion.div 
               variants={itemVariants}
               className="ml-3 text-sm font-medium truncate"
             >
-              {user.email}
+              {user.username}
             </motion.div>
           </div>
         ) : null}

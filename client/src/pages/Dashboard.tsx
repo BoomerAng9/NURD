@@ -11,7 +11,7 @@ import ActivityCard from '@/components/dashboard/activity-card';
 import AnimatedMenu from '@/components/ui/animated-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useSupabase } from '@/components/ui/supabase-provider';
+import { useAuth } from '@/hooks/use-auth';
 import { User } from '@shared/schema';
 import ProgressDashboard from '@/components/progress/progress-dashboard';
 import { BridgeSystem } from '@/components/friends/bridge-system';
@@ -55,7 +55,7 @@ const activities = [
 const Dashboard: React.FC = () => {
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
-  const { user, supabase } = useSupabase();
+  const { user } = useAuth();
   const [username, setUsername] = useState<string | null>(null);
 
   // Find a stored username in localStorage if user isn't logged in properly

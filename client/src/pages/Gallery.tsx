@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useSupabase } from '@/components/ui/supabase-provider';
+import { useAuth } from '@/hooks/use-auth';
 
 const Gallery: React.FC = () => {
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
@@ -20,7 +20,7 @@ const Gallery: React.FC = () => {
     file: null as File | null
   });
   const { toast } = useToast();
-  const { user } = useSupabase();
+  const { user } = useAuth();
 
   // Handle opening upload dialog
   const handleOpenUploadDialog = () => {
