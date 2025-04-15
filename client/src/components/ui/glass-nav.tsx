@@ -57,7 +57,15 @@ const navigation: NavItem[] = [
       { name: 'ACHIEVERS', path: '/achievers', icon: <Award className="h-4 w-4 mr-2" /> },
     ]
   },
-  { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
+  {
+    name: 'Code Tools',
+    icon: <Code className="h-4 w-4 mr-2" />,
+    isDropdown: true,
+    children: [
+      { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
+      { name: 'AI Code Tools', path: '/ai-code-tools', icon: <FileText className="h-4 w-4 mr-2" /> },
+    ]
+  },
   { name: 'Apply to Teach', path: '/register', icon: <UserPlus className="h-4 w-4 mr-2" /> },
 ];
 
@@ -160,11 +168,20 @@ export const GlassNav: React.FC = () => {
   };
 
   const toggleDropdown = (name: string, e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
-    setOpenDropdowns(prev => ({
-      ...prev,
-      [name]: !prev[name]
-    }));
+    
+    // Close all other dropdowns when opening this one
+    setOpenDropdowns(prev => {
+      const newState = { ...prev };
+      // Close all except the one being toggled
+      Object.keys(newState).forEach(key => {
+        if (key !== name) newState[key] = false;
+      });
+      // Toggle the current dropdown
+      newState[name] = !prev[name];
+      return newState;
+    });
   };
 
   // Filter navigation based on user roles
@@ -259,18 +276,25 @@ export const GlassNav: React.FC = () => {
                             const isChildActive = location === child.path;
                             
                             return (
-                              <Link key={`${child.path}-${childIndex}`} href={ensurePath(child.path)}>
-                                <div
-                                  onClick={(e) => handleNavClick(ensurePath(child.path), e)}
-                                  className={cn(
-                                    "px-4 py-2 text-sm flex items-center hover:bg-primary/10 transition-colors",
-                                    isChildActive ? "text-primary font-medium" : "text-gray-700"
-                                  )}
-                                >
-                                  {child.icon}
-                                  <span className="ml-2">{child.name}</span>
-                                </div>
-                              </Link>
+                              <div key={`${child.path}-${childIndex}`}>
+                                <Link href={ensurePath(child.path)}>
+                                  <div 
+                                    onClick={(e) => {
+                                      e.stopPropagation(); // Prevent event bubbling
+                                      handleNavClick(ensurePath(child.path), e);
+                                      // Close the dropdown after clicking a child item
+                                      setOpenDropdowns(prev => ({...prev, [item.name]: false}));
+                                    }}
+                                    className={cn(
+                                      "px-4 py-2 text-sm flex items-center hover:bg-primary/10 transition-colors",
+                                      isChildActive ? "text-primary font-medium" : "text-gray-700"
+                                    )}
+                                  >
+                                    {child.icon}
+                                    <span className="ml-2">{child.name}</span>
+                                  </div>
+                                </Link>
+                              </div>
                             );
                           })}
                         </div>
@@ -443,22 +467,31 @@ export const GlassNav: React.FC = () => {
                         if (!child.path) return null;
                         
                         return (
-                          <Link key={`mobile-child-${childIndex}`} href={child.path}>
-                            <div
-                              onClick={(e) => handleNavClick(ensurePath(child.path), e)}
-                              className={cn(
-                                "block px-3 py-2 rounded-md text-sm font-medium cursor-pointer",
-                                isChildActive
-                                  ? "text-primary bg-primary/10 border-l-2 border-primary"
-                                  : "text-foreground/70 hover:text-foreground hover:bg-background/20"
-                              )}
-                            >
-                              <span className="flex items-center">
-                                {child.icon}
-                                <span className="ml-2">{child.name}</span>
-                              </span>
-                            </div>
-                          </Link>
+                          <div key={`mobile-child-${childIndex}`}>
+                            <Link href={child.path}>
+                              <div
+                                onClick={(e) => {
+                                  e.stopPropagation(); // Prevent event bubbling
+                                  handleNavClick(ensurePath(child.path), e);
+                                  // Close the dropdown after clicking a child item
+                                  setOpenDropdowns(prev => ({...prev, [item.name]: false}));
+                                  // Also close the mobile menu after navigating
+                                  setTimeout(() => setIsOpen(false), 100);
+                                }}
+                                className={cn(
+                                  "block px-3 py-2 rounded-md text-sm font-medium cursor-pointer",
+                                  isChildActive
+                                    ? "text-primary bg-primary/10 border-l-2 border-primary"
+                                    : "text-foreground/70 hover:text-foreground hover:bg-background/20"
+                                )}
+                              >
+                                <span className="flex items-center">
+                                  {child.icon}
+                                  <span className="ml-2">{child.name}</span>
+                                </span>
+                              </div>
+                            </Link>
+                          </div>
                         );
                       })}
                     </motion.div>
