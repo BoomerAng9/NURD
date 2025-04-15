@@ -33,7 +33,8 @@ const navigation: NavItem[] = [
   { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="h-4 w-4 mr-2" /> },
   { name: 'Learn', path: '/learning', icon: <BookOpen className="h-4 w-4 mr-2" /> },
   { name: 'Trainers', path: '/trainers', icon: <Users className="h-4 w-4 mr-2" /> },
-  { name: 'Achievements', path: '/achievements', icon: <Award className="h-4 w-4 mr-2" /> },
+  { name: 'Techies', path: '/cohorts', icon: <UserPlus className="h-4 w-4 mr-2" /> },
+  { name: 'ACHIEVERS', path: '/achievers', icon: <Award className="h-4 w-4 mr-2" /> },
   { name: 'Gallery', path: '/gallery', icon: <GalleryVertical className="h-4 w-4 mr-2" /> },
   { name: 'Join Our Team', path: '/join', icon: <UserPlus className="h-4 w-4 mr-2" />, roles: ['admin', 'freelancer'] },
 ];
@@ -125,10 +126,18 @@ export const GlassNav: React.FC = () => {
     <nav className="sticky top-0 z-40 w-full backdrop-blur-md bg-background/70 border-b border-border/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center">
+          <div className="flex items-center space-x-4">
             <Link href="/">
               <div className="flex-shrink-0 flex items-center cursor-pointer">
                 <span className="text-xl font-bold text-primary">NURD</span>
+              </div>
+            </Link>
+            
+            {/* Universal Home Button */}
+            <Link href="/home">
+              <div className="px-3 py-1 rounded-md text-sm font-medium bg-primary/10 border border-primary/30 hover:bg-primary/20 transition-all duration-300 transform hover:scale-105 flex items-center">
+                <Home className="h-4 w-4 mr-1" />
+                Home
               </div>
             </Link>
           </div>
@@ -240,6 +249,15 @@ export const GlassNav: React.FC = () => {
       {/* Mobile menu, show/hide based on menu state */}
       <div className={cn("sm:hidden", isOpen ? "block" : "hidden")}>
         <div className="px-2 pt-2 pb-3 space-y-1 backdrop-blur-md bg-background/95 border-b border-border/20">
+          {/* Universal Home Button for Mobile */}
+          <Link href="/home">
+            <div className="block px-3 py-2 rounded-md text-base font-medium bg-primary/10 border-l-2 border-primary/30 text-primary cursor-pointer mb-2">
+              <span className="flex items-center">
+                <Home className="h-4 w-4 mr-2" />
+                Home
+              </span>
+            </div>
+          </Link>
           {filteredNavigation.map((item) => {
             const isActive = location === item.path;
             

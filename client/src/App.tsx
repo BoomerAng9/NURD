@@ -21,7 +21,7 @@ import Cohorts from "@/pages/Cohorts";
 import AuthPage from "@/pages/auth-page";
 import DiscordConnect from "@/pages/DiscordConnect";
 import AvatarCreator from "@/pages/AvatarCreator";
-import AchievementDemo from "@/pages/AchievementDemo";
+import ACHIEVERS from "@/pages/AchievementDemo";
 import UserProgress from "@/pages/UserProgress";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect, useState } from "react";
@@ -48,11 +48,11 @@ const TestComponent = () => {
           <a href="/dashboard" className="glass-button transform hover:scale-105 transition-all">
             Dashboard
           </a>
-          <a href="/landing" className="glass-button transform hover:scale-105 transition-all">
-            Landing
+          <a href="/home" className="glass-button transform hover:scale-105 transition-all">
+            Home
           </a>
-          <a href="/achievements" className="glass-button bg-primary/20 border-primary/30 transform hover:scale-105 transition-all">
-            Achievement Demo
+          <a href="/achievers" className="glass-button bg-primary/20 border-primary/30 transform hover:scale-105 transition-all">
+            ACHIEVERS
           </a>
         </div>
       </div>
@@ -91,7 +91,6 @@ function App() {
             <PageTransition>
               <Switch>
                 <Route path="/" component={TestComponent} />
-                <Route path="/home" component={Home} />
                 <Route path="/about" component={About} />
                 <Route path="/auth" component={AuthPage} />
                 <Route path="/register" component={Register} />
@@ -105,8 +104,8 @@ function App() {
                 <Route path="/cohorts" component={Cohorts} />
                 <Route path="/discord" component={DiscordConnect} />
                 <Route path="/avatar" component={AvatarCreator} />
-                <Route path="/landing" component={Landing} />
-                <Route path="/achievements" component={AchievementDemo} />
+                <Route path="/home" component={Landing} />
+                <Route path="/achievers" component={ACHIEVERS} />
                 <Route path="/progress" component={UserProgress} />
                 <Route component={NotFound} />
               </Switch>
