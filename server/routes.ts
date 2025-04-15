@@ -392,30 +392,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Achievement Routes
-  // Landing Page Content Routes
-  app.get('/api/landing-content', async (req, res) => {
-    try {
-      const content = await storage.getLandingContent();
-      return res.status(200).json(content);
-    } catch (error) {
-      console.error("Error fetching landing content:", error);
-      return res.status(500).json({ message: "Internal server error" });
-    }
-  });
-
-  app.post('/api/landing-content', async (req, res) => {
-    try {
-      // Since we've removed Supabase auth, we're temporarily allowing all requests
-      // In a production environment, you would implement proper authentication
-      
-      const content = await storage.updateLandingContent(req.body);
-      return res.status(200).json(content);
-    } catch (error) {
-      console.error("Error updating landing content:", error);
-      return res.status(500).json({ message: "Internal server error" });
-    }
-  });
-
   app.get('/api/achievements', async (req, res) => {
     try {
       const achievements = await storage.getAchievements();
@@ -441,20 +417,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = parseInt(req.params.userId);
       const achievementId = parseInt(req.params.achievementId);
-      const userAchievement = await storage.awardAchievement(userId, achievementId);
       
-      // Broadcast achievement earned
+      const achievement = await storage.awardAchievement(userId, achievementId);
+      
+      // Broadcast achievement earned event
       broadcastMessage({
         type: 'ACHIEVEMENT_EARNED',
         data: {
           userId,
-          achievementId
+          achievementId,
+          timestamp: new Date().toISOString()
         }
       });
       
-      return res.status(201).json(userAchievement);
+      return res.status(201).json(achievement);
     } catch (error) {
       console.error("Error awarding achievement:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
+  // Landing Page Content Routes
+  app.get('/api/landing-content', async (req, res) => {
+    try {
+      const content = await storage.getLandingContent();
+      return res.status(200).json(content);
+    } catch (error) {
+      console.error("Error fetching landing content:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post('/api/landing-content', async (req, res) => {
+    try {
+      // Since we've removed Supabase auth, we're temporarily allowing all requests
+      // In a production environment, you would implement proper authentication
+      
+      const content = await storage.updateLandingContent(req.body);
+      return res.status(200).json(content);
+    } catch (error) {
+      console.error("Error updating landing content:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });

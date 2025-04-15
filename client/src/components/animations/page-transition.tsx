@@ -1,65 +1,81 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useLocation } from 'wouter';
+import React, { ReactNode } from 'react';
+import { motion } from 'framer-motion';
 
 interface PageTransitionProps {
-  children: React.ReactNode;
-  mode?: 'fade' | 'slide' | 'scale' | 'glass-shuffle';
+  children: ReactNode;
 }
 
 const variants = {
-  fade: {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 0 },
-    transition: { duration: 0.3 }
-  },
-  slide: {
-    initial: { x: '100%', opacity: 0 },
-    animate: { x: 0, opacity: 1 },
-    exit: { x: '-100%', opacity: 0 },
-    transition: { duration: 0.4, ease: 'easeInOut' }
-  },
-  scale: {
-    initial: { scale: 0.9, opacity: 0 },
-    animate: { scale: 1, opacity: 1 },
-    exit: { scale: 0.9, opacity: 0 },
-    transition: { duration: 0.3 }
-  },
-  'glass-shuffle': {
-    initial: { opacity: 0, rotateY: -15, scale: 0.95, y: 10 },
-    animate: { opacity: 1, rotateY: 0, scale: 1, y: 0 },
-    exit: { opacity: 0, rotateY: 15, scale: 0.95, y: -10 },
-    transition: { 
-      duration: 0.5, 
-      ease: [0.19, 1, 0.22, 1] 
-    }
-  }
+  hidden: { opacity: 0, x: 0, y: 20 },
+  enter: { opacity: 1, x: 0, y: 0 },
+  exit: { opacity: 0, x: 0, y: 20 }
 };
 
-export const PageTransition: React.FC<PageTransitionProps> = ({ 
-  children, 
-  mode = 'glass-shuffle'
-}) => {
-  const [location] = useLocation();
-
+export function PageTransition({ children }: PageTransitionProps) {
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={location}
-        initial={variants[mode].initial}
-        animate={variants[mode].animate}
-        exit={variants[mode].exit}
-        transition={variants[mode].transition}
-        style={{ 
-          transformStyle: 'preserve-3d',
-          perspective: '1000px',
-          width: '100%'
-        }}
-        className="page-container"
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+    <motion.div
+      initial="hidden"
+      animate="enter"
+      exit="exit"
+      variants={variants}
+      transition={{ 
+        type: 'tween', 
+        ease: 'easeInOut', 
+        duration: 0.4
+      }}
+      className="h-full flex-1"
+    >
+      {children}
+    </motion.div>
   );
-};
+}
+
+export function SlideTransition({ children }: PageTransitionProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      transition={{ 
+        type: 'spring', 
+        stiffness: 300, 
+        damping: 30 
+      }}
+      className="h-full flex-1"
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export function FadeTransition({ children }: PageTransitionProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="h-full flex-1"
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export function ScaleTransition({ children }: PageTransitionProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ 
+        type: 'spring', 
+        stiffness: 300, 
+        damping: 30 
+      }}
+      className="h-full flex-1"
+    >
+      {children}
+    </motion.div>
+  );
+}
