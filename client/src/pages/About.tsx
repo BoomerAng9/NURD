@@ -42,7 +42,7 @@ const About: React.FC = () => {
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto">
-              <h2 className="text-3xl font-bold text-center mb-10">Connect With Us</h2>
+              <h2 className="text-3xl font-bold text-center mb-10 bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 text-transparent bg-clip-text">Connect With Us</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div className="bg-gray-50 p-6 rounded-lg text-center">

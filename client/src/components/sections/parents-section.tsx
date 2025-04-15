@@ -8,7 +8,7 @@ const ParentsSection: React.FC = () => {
         <div className="flex flex-col md:flex-row gap-12 items-center">
           <div className="md:w-1/2 order-2 md:order-1">
             <span className="text-[#3B82F6] font-medium tracking-wider text-sm uppercase">For Parents</span>
-            <h2 className="section-title mt-2">Your Child's Imagination, Supercharged by AI.</h2>
+            <h2 className="section-title mt-2 bg-gradient-to-r from-purple-600 via-indigo-500 to-blue-400 text-transparent bg-clip-text">Your Child's Imagination, Supercharged by AI.</h2>
             <p className="text-lg text-gray-600 mb-6">
               At NURD, we recognize that every child possesses unique creativity. Our program channels this creativity through AI-assisted coding, enabling them to bring their ideas to life. It's not just about learning to code; it's about learning to create with purpose.
             </p>
