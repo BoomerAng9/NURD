@@ -213,11 +213,11 @@ const AppContent = () => {
               </span>
             </div>
             <p className="text-gray-500 flex items-center justify-center">
-              {/* Palmetto Palm Tree SVG */}
+              {/* NURD Logo */}
               <img 
-                src="/assets/pooler_palm.svg" 
-                alt="Palmetto Palm" 
-                className="h-8 w-auto mr-3"
+                src="/assets/nurd-logo.png" 
+                alt="NURD Logo" 
+                className="h-6 w-auto mr-3"
               />
               
               <span>Made in Pooler, GA</span>
