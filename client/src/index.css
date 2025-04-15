@@ -12,11 +12,10 @@
   }
 
   body {
-    @apply font-sans antialiased text-foreground;
-    background-color: rgba(255, 255, 255, 0.9);
+    @apply font-sans antialiased bg-[#2d2d2d] text-foreground;
     background-image: 
-      radial-gradient(circle at 20% 30%, rgba(61, 224, 83, 0.1) 0%, transparent 25%),
-      radial-gradient(circle at 80% 70%, rgba(62, 198, 224, 0.1) 0%, transparent 25%);
+      radial-gradient(circle at 20% 30%, rgba(61, 224, 83, 0.05) 0%, transparent 25%),
+      radial-gradient(circle at 80% 70%, rgba(62, 198, 224, 0.05) 0%, transparent 25%);
   }
 
   :root {
@@ -108,7 +107,7 @@
   }
   
   .section-title {
-    @apply font-bold text-3xl md:text-4xl lg:text-5xl mb-6 text-gray-800;
+    @apply font-bold text-3xl md:text-4xl lg:text-5xl mb-6 text-gray-100;
   }
   
   .card-nurd {

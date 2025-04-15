@@ -256,9 +256,9 @@ export const GlassNav: React.FC = () => {
                             const isChildActive = location === child.path;
                             
                             return (
-                              <Link key={`${child.path}-${childIndex}`} href={child.path || '#'}>
+                              <Link key={`${child.path}-${childIndex}`} href={ensurePath(child.path)}>
                                 <div
-                                  onClick={(e) => handleNavClick(child.path || '', e)}
+                                  onClick={(e) => handleNavClick(ensurePath(child.path), e)}
                                   className={cn(
                                     "px-4 py-2 text-sm flex items-center hover:bg-primary/10 transition-colors",
                                     isChildActive ? "text-primary font-medium" : "text-gray-700"
@@ -286,7 +286,7 @@ export const GlassNav: React.FC = () => {
                   {item.path && (
                     <Link href={item.path}>
                       <div
-                        onClick={(e) => handleNavClick(item.path || '', e)}
+                        onClick={(e) => handleNavClick(ensurePath(item.path), e)}
                         className={cn(
                           "relative overflow-hidden px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 cursor-pointer",
                           "bg-background/20 backdrop-blur-md border border-border/10",
@@ -332,7 +332,7 @@ export const GlassNav: React.FC = () => {
                 <div key={`admin-${index}`} className="relative">
                   <Link href={item.path}>
                     <div
-                      onClick={(e) => handleNavClick(item.path, e)}
+                      onClick={(e) => handleNavClick(ensurePath(item.path), e)}
                       className={cn(
                         "relative overflow-hidden px-3 py-2 rounded-md text-sm font-medium cursor-pointer",
                         "bg-red-500/10 backdrop-blur-md border border-red-500/20",
@@ -442,7 +442,7 @@ export const GlassNav: React.FC = () => {
                         return (
                           <Link key={`mobile-child-${childIndex}`} href={child.path}>
                             <div
-                              onClick={(e) => handleNavClick(child.path, e)}
+                              onClick={(e) => handleNavClick(ensurePath(child.path), e)}
                               className={cn(
                                 "block px-3 py-2 rounded-md text-sm font-medium cursor-pointer",
                                 isChildActive
@@ -471,7 +471,7 @@ export const GlassNav: React.FC = () => {
             return (
               <Link key={`mobile-item-${index}`} href={item.path}>
                 <div
-                  onClick={(e) => handleNavClick(item.path, e)}
+                  onClick={(e) => handleNavClick(ensurePath(item.path), e)}
                   className={cn(
                     "block px-3 py-2 rounded-md text-base font-medium cursor-pointer",
                     isActive
@@ -495,7 +495,7 @@ export const GlassNav: React.FC = () => {
             return (
               <Link key={`mobile-admin-${index}`} href={item.path}>
                 <div
-                  onClick={(e) => handleNavClick(item.path, e)}
+                  onClick={(e) => handleNavClick(ensurePath(item.path), e)}
                   className={cn(
                     "block px-3 py-2 rounded-md text-base font-medium cursor-pointer",
                     isActive
