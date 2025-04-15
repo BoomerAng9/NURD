@@ -193,20 +193,20 @@ function App() {
                 </p>
                 <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs">
                   <span className="flex items-center">
-                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-orange-400 to-red-500 mr-2"></span>
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500 font-medium">
+                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-primary to-blue-600 mr-2"></span>
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 font-medium">
                       Creativity First
                     </span>
                   </span>
                   <span className="flex items-center">
-                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-amber-400 to-amber-700 mr-2"></span>
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-amber-700 font-medium">
+                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-primary to-blue-600 mr-2"></span>
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 font-medium">
                       AI Collaboration
                     </span>
                   </span>
                   <span className="flex items-center">
-                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-stone-500 to-black mr-2"></span>
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-stone-500 to-black font-medium">
+                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-primary to-blue-600 mr-2"></span>
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 font-medium">
                       Community Building
                     </span>
                   </span>
