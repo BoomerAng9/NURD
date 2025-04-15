@@ -123,7 +123,7 @@ const JoinOurTeam: React.FC = () => {
               variants={fadeIn}
               className="max-w-3xl mx-auto text-center mb-16"
             >
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">Modern Platform Expertise Meets Young Minds</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-black via-orange-500 to-amber-400">Modern Platform Expertise Meets Young Minds</h2>
               <p className="text-xl text-gray-600">
                 At NURD, we're bridging the gap between cutting-edge technology and young innovators. Our trainers are the catalyst for this transformation.
               </p>
