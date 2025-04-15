@@ -278,7 +278,7 @@ const JoinOurTeam: React.FC = () => {
               variants={fadeIn}
               className="max-w-3xl mx-auto text-center mb-16"
             >
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">Why Join Our Training Team?</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">Why Join Our Training Team?</h2>
               <p className="text-xl text-gray-600">
                 Beyond sharing your expertise, being a NURD trainer offers unique opportunities for your professional growth.
               </p>
