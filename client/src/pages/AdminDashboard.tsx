@@ -6,7 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { LandingContent } from '@shared/schema';
 import Navbar from '@/components/ui/navbar';
 import Footer from '@/components/sections/footer';
-import { useSupabase } from '@/components/ui/supabase-provider';
+import { useAuth } from '@/hooks/use-auth';
 import { 
   Tabs, 
   TabsContent, 
@@ -42,7 +42,7 @@ import {
 const AdminDashboard: React.FC = () => {
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
-  const { user, supabase } = useSupabase();
+  const { user } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const queryClient = useQueryClient();
 

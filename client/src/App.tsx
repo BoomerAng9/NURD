@@ -28,6 +28,7 @@ import ACHIEVERS from "@/pages/AchievementDemo";
 import UserProgress from "@/pages/UserProgress";
 import AICodeTools from "@/pages/AICodeTools";
 import SkillMarketplace from "@/pages/SkillMarketplace";
+import ModuleDetail from "@/pages/ModuleDetail";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { LayoutDashboard, Send } from "lucide-react";
 
