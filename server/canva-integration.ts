@@ -116,11 +116,13 @@ export async function handleCanvaCallback(req: Request, res: Response) {
     
     // Store tokens in session or database
     // This is a simplified example - in production, you would securely store these tokens
-    req.session.canvaTokens = {
-      accessToken: access_token,
-      refreshToken: refresh_token,
-      expiresAt: Date.now() + (expires_in * 1000),
-    };
+    if (req.session) {
+      (req.session as any).canvaTokens = {
+        accessToken: access_token,
+        refreshToken: refresh_token,
+        expiresAt: Date.now() + (expires_in * 1000),
+      };
+    }
     
     return res.redirect('/canva-integration');
   } catch (error) {
