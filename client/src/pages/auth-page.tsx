@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useLocation } from "wouter";
 import {
   Form,
   FormControl,
@@ -44,7 +45,19 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 export default function AuthPage() {
   const [activeTab, setActiveTab] = useState<string>("login");
   const { toast } = useToast();
-  const { loginMutation, registerMutation } = useAuth();
+  const [, setLocation] = useLocation();
+  const { user, isLoading, loginMutation, registerMutation } = useAuth();
+  
+  // Redirect if user is already logged in
+  useEffect(() => {
+    if (user && !isLoading) {
+      toast({
+        title: "Already logged in",
+        description: "You are already logged in. Redirecting to dashboard...",
+      });
+      setLocation('/dashboard');
+    }
+  }, [user, isLoading, setLocation, toast]);
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),

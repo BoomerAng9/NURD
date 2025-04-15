@@ -55,26 +55,11 @@ const activities = [
 const Dashboard: React.FC = () => {
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
-  const { user } = useAuth();
-  const [username, setUsername] = useState<string | null>(null);
+  const { user, isLoading: authLoading } = useAuth();
 
-  // Find a stored username in localStorage if user isn't logged in properly
+  // Redirect to auth page if no user found
   useEffect(() => {
-    const storedUsername = localStorage.getItem('nurd_username');
-    if (storedUsername) {
-      setUsername(storedUsername);
-    }
-  }, []);
-
-  // Fetch user data from API
-  const { data: userData, isLoading, error } = useQuery<User>({
-    queryKey: ['/api/user/' + (username || 'undefined')],
-    enabled: !!username
-  });
-
-  // Redirect to registration if no user found
-  useEffect(() => {
-    if (error) {
+    if (!authLoading && !user) {
       toast({
         title: "Authentication Error",
         description: "Please log in to access your dashboard",
@@ -83,12 +68,12 @@ const Dashboard: React.FC = () => {
       
       // Give the toast time to display before redirecting
       const timer = setTimeout(() => {
-        setLocation('/register');
+        setLocation('/auth');
       }, 2000);
       
       return () => clearTimeout(timer);
     }
-  }, [error, setLocation, toast]);
+  }, [user, authLoading, setLocation, toast]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -100,13 +85,13 @@ const Dashboard: React.FC = () => {
       <div className="flex-grow pt-20">
         <div className="container mx-auto px-4 py-8">
           <WelcomeBanner 
-            name={userData?.first_name || 'NURD'} 
-            isLoading={isLoading} 
+            name={user?.first_name || 'NURD'} 
+            isLoading={authLoading} 
           />
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
             <div className="lg:col-span-1">
-              {isLoading ? (
+              {authLoading ? (
                 <div className="bg-white rounded-xl shadow-lg p-6">
                   <Skeleton className="h-6 w-1/3 mb-4" />
                   <Skeleton className="h-20 w-20 rounded-full mx-auto mb-4" />
@@ -119,7 +104,7 @@ const Dashboard: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                <ProfileCard user={userData} />
+                <ProfileCard user={user} />
               )}
             </div>
 
@@ -139,7 +124,7 @@ const Dashboard: React.FC = () => {
 
                   <TabsContent value="activities" className="p-6 pt-2">
                     <div className="space-y-6">
-                      {isLoading ? (
+                      {authLoading ? (
                         Array(3).fill(0).map((_, i) => (
                           <div key={i} className="border rounded-lg p-4">
                             <Skeleton className="h-5 w-1/3 mb-2" />
@@ -159,7 +144,7 @@ const Dashboard: React.FC = () => {
                   </TabsContent>
                   
                   <TabsContent value="progress" className="p-6 pt-2">
-                    {isLoading ? (
+                    {authLoading ? (
                       <div className="space-y-4">
                         <Skeleton className="h-8 w-1/4 mb-2" />
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -171,13 +156,13 @@ const Dashboard: React.FC = () => {
                       </div>
                     ) : (
                       <div>
-                        {userData && (
+                        {user && (
                           <p className="text-muted-foreground mb-6">
                             Track your progress through courses, earn achievements, and build your learning streak.
                           </p>
                         )}
                         <div className="py-4 px-1">
-                          {userData ? (
+                          {user ? (
                             <div className="text-center py-8">
                               <h3 className="font-heading font-bold text-xl text-gray-900 mb-2">Progress Tracking Feature</h3>
                               <p className="text-gray-600 max-w-md mx-auto mb-6">
@@ -200,7 +185,7 @@ const Dashboard: React.FC = () => {
                   </TabsContent>
                   
                   <TabsContent value="connections" className="p-6 pt-2">
-                    {isLoading ? (
+                    {authLoading ? (
                       <div className="space-y-4">
                         <Skeleton className="h-8 w-1/3 mb-2" />
                         <Skeleton className="h-64 w-full rounded-lg" />
