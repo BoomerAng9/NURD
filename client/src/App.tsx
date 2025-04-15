@@ -67,7 +67,7 @@ const TestComponent = () => {
               <img 
                 src={nurdSkateboardImg} 
                 alt="NURD Skateboarding" 
-                className="w-auto h-auto max-h-[280px] max-w-[280px]"
+                className="w-auto h-auto max-h-[450px] max-w-[450px]"
                 style={{ display: 'block' }}
               />
             </div>
