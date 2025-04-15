@@ -119,6 +119,7 @@ function App() {
                 <Route path="/about" component={About} />
                 <Route path="/auth" component={AuthPage} />
                 <Route path="/register" component={Register} />
+                <Route path="/apply" component={Register} />
                 <ProtectedRoute path="/dashboard" component={Dashboard} />
                 <ProtectedRoute path="/trainers" component={Trainers} />
                 <ProtectedRoute path="/gallery" component={Gallery} />

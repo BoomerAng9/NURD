@@ -34,39 +34,16 @@ interface NavItem {
   isDropdown?: boolean;
 }
 
-// Main navigation structure with dropdowns
+// Main navigation structure - no dropdowns for reliability
 const navigation: NavItem[] = [
-  { 
-    name: 'Dashboard', 
-    icon: <LayoutDashboard className="h-4 w-4 mr-2" />,
-    isDropdown: true,
-    children: [
-      { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="h-4 w-4 mr-2" /> },
-      { name: 'Gallery', path: '/gallery', icon: <GalleryVertical className="h-4 w-4 mr-2" /> },
-      { name: 'Learn', path: '/learning', icon: <BookOpen className="h-4 w-4 mr-2" /> },
-      { name: 'Join Our Team', path: '/join', icon: <UserPlus className="h-4 w-4 mr-2" />, roles: ['admin', 'freelancer'] },
-    ]
-  },
-  { 
-    name: 'Community', 
-    icon: <Users2 className="h-4 w-4 mr-2" />,
-    isDropdown: true,
-    children: [
-      { name: 'Trainers', path: '/trainers', icon: <Users className="h-4 w-4 mr-2" /> },
-      { name: 'Techies', path: '/cohorts', icon: <Globe className="h-4 w-4 mr-2" /> },
-      { name: 'ACHIEVERS', path: '/achievers', icon: <Award className="h-4 w-4 mr-2" /> },
-    ]
-  },
-  {
-    name: 'Code Tools',
-    icon: <Code className="h-4 w-4 mr-2" />,
-    isDropdown: true,
-    children: [
-      { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
-      { name: 'AI Code Tools', path: '/ai-code-tools', icon: <FileText className="h-4 w-4 mr-2" /> },
-    ]
-  },
-  { name: 'Apply to Teach', path: '/register', icon: <UserPlus className="h-4 w-4 mr-2" /> },
+  { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="h-4 w-4 mr-2" /> },
+  { name: 'Learn', path: '/learning', icon: <BookOpen className="h-4 w-4 mr-2" /> },
+  { name: 'Gallery', path: '/gallery', icon: <GalleryVertical className="h-4 w-4 mr-2" /> },
+  { name: 'Trainers', path: '/trainers', icon: <Users className="h-4 w-4 mr-2" /> },
+  { name: 'ACHIEVERS', path: '/achievers', icon: <Award className="h-4 w-4 mr-2" /> },
+  { name: 'AI Code Tools', path: '/ai-code-tools', icon: <FileText className="h-4 w-4 mr-2" /> },
+  { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
+  { name: 'Apply to Teach', path: '/apply', icon: <UserPlus className="h-4 w-4 mr-2" /> },
 ];
 
 const adminLinks: NavItem[] = [
@@ -417,7 +394,7 @@ export const GlassNav: React.FC = () => {
       <div className={cn("sm:hidden", isOpen ? "block" : "hidden")}>
         <div className="px-2 pt-2 pb-3 space-y-1 backdrop-blur-md bg-background/95 border-b border-border/20">
           {/* Home button for mobile navigation */}
-          <Link href="/home">
+          <Link href="/">
             <div className="block px-3 py-2 rounded-md text-base font-medium bg-primary/10 border-l-2 border-primary/30 text-primary cursor-pointer mb-2">
               <span className="flex items-center">
                 <Home className="h-4 w-4 mr-2" />
@@ -426,88 +403,18 @@ export const GlassNav: React.FC = () => {
             </div>
           </Link>
           
+          {/* Simple flat mobile menu - no dropdowns */}
           {filteredNavigation.map((item, index) => {
-            // For dropdown items on mobile
-            if (item.isDropdown) {
-              const isOpen = openDropdowns[item.name] || false;
-              const isParentActive = item.children?.some(child => location === child.path);
-              
-              return (
-                <div key={`mobile-dropdown-${index}`} className="mb-1">
-                  <div
-                    onClick={(e) => toggleDropdown(item.name, e)}
-                    className={cn(
-                      "flex items-center justify-between px-3 py-2 rounded-md text-base font-medium cursor-pointer",
-                      isParentActive
-                        ? "text-primary bg-primary/10 border-l-2 border-primary"
-                        : "text-foreground/70 hover:text-foreground hover:bg-background/50"
-                    )}
-                  >
-                    <span className="flex items-center">
-                      {item.icon}
-                      <span className="ml-2">{item.name}</span>
-                    </span>
-                    <ChevronDown className={cn(
-                      "h-4 w-4 transition-transform duration-200",
-                      isOpen ? "rotate-180" : ""
-                    )} />
-                  </div>
-                  
-                  {/* Mobile dropdown content */}
-                  {isOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="pl-4 mt-1 space-y-1"
-                    >
-                      {item.children?.map((child, childIndex) => {
-                        const isChildActive = location === child.path;
-                        if (!child.path) return null;
-                        
-                        return (
-                          <div key={`mobile-child-${childIndex}`}>
-                            <Link href={child.path}>
-                              <div
-                                onClick={(e) => {
-                                  e.stopPropagation(); // Prevent event bubbling
-                                  handleNavClick(ensurePath(child.path), e);
-                                  // Close the dropdown after clicking a child item
-                                  setOpenDropdowns(prev => ({...prev, [item.name]: false}));
-                                  // Also close the mobile menu after navigating
-                                  setTimeout(() => setIsOpen(false), 100);
-                                }}
-                                className={cn(
-                                  "block px-3 py-2 rounded-md text-sm font-medium cursor-pointer",
-                                  isChildActive
-                                    ? "text-primary bg-primary/10 border-l-2 border-primary"
-                                    : "text-foreground/70 hover:text-foreground hover:bg-background/20"
-                                )}
-                              >
-                                <span className="flex items-center">
-                                  {child.icon}
-                                  <span className="ml-2">{child.name}</span>
-                                </span>
-                              </div>
-                            </Link>
-                          </div>
-                        );
-                      })}
-                    </motion.div>
-                  )}
-                </div>
-              );
-            }
-            
-            // For regular items
             if (!item.path) return null;
             const isActive = location === item.path;
             
             return (
               <Link key={`mobile-item-${index}`} href={item.path}>
                 <div
-                  onClick={(e) => handleNavClick(ensurePath(item.path), e)}
+                  onClick={(e) => {
+                    handleNavClick(ensurePath(item.path), e);
+                    setIsOpen(false); // Close mobile menu after clicking
+                  }}
                   className={cn(
                     "block px-3 py-2 rounded-md text-base font-medium cursor-pointer",
                     isActive
@@ -531,7 +438,10 @@ export const GlassNav: React.FC = () => {
             return (
               <Link key={`mobile-admin-${index}`} href={item.path}>
                 <div
-                  onClick={(e) => handleNavClick(ensurePath(item.path), e)}
+                  onClick={(e) => {
+                    handleNavClick(ensurePath(item.path), e);
+                    setIsOpen(false); // Close mobile menu after clicking
+                  }}
                   className={cn(
                     "block px-3 py-2 rounded-md text-base font-medium cursor-pointer",
                     isActive
@@ -550,7 +460,10 @@ export const GlassNav: React.FC = () => {
           
           {user ? (
             <Link href="/settings">
-              <div className="block px-3 py-2 rounded-md text-base font-medium text-foreground/70 hover:text-foreground hover:bg-background/50 cursor-pointer">
+              <div 
+                onClick={() => setIsOpen(false)}
+                className="block px-3 py-2 rounded-md text-base font-medium text-foreground/70 hover:text-foreground hover:bg-background/50 cursor-pointer"
+              >
                 <span className="flex items-center">
                   <Settings className="h-4 w-4 mr-2" />
                   Settings
@@ -559,7 +472,10 @@ export const GlassNav: React.FC = () => {
             </Link>
           ) : (
             <Link href="/auth">
-              <div className="block px-3 py-2 rounded-md text-base font-medium bg-primary text-primary-foreground cursor-pointer">
+              <div 
+                onClick={() => setIsOpen(false)}
+                className="block px-3 py-2 rounded-md text-base font-medium bg-primary text-primary-foreground cursor-pointer"
+              >
                 <span className="flex items-center">
                   <ExternalLink className="h-4 w-4 mr-2" />
                   Sign In

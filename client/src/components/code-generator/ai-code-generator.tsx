@@ -80,14 +80,14 @@ const AICodeGenerator: React.FC<AICodeGeneratorProps> = ({ className = '' }) => 
           logs.push(`Return value: ${typeof result === 'object' ? JSON.stringify(result, null, 2) : result}`);
         }
         setOutput(logs.join('\n'));
-      } catch (error) {
-        setOutput(`Error: ${error.message}`);
+      } catch (error: unknown) {
+        setOutput(`Error: ${error instanceof Error ? error.message : String(error)}`);
       }
 
       // Restore original console.log
       console.log = originalConsoleLog;
-    } catch (error) {
-      setOutput(`Error: ${error.message}`);
+    } catch (error: unknown) {
+      setOutput(`Error: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       setIsRunning(false);
     }
