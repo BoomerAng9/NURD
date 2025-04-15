@@ -633,7 +633,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
       const activeOnly = req.query.activeOnly === 'true';
       
-      const requests = await storage.getSkillRequests(categoryId, userId, activeOnly);
+      const requests = await getSkillRequests(categoryId, userId, activeOnly);
       return res.status(200).json(requests);
     } catch (error) {
       console.error("Error fetching skill requests:", error);
@@ -644,7 +644,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/skill-requests/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const request = await storage.getSkillRequestById(id);
+      const request = await getSkillRequestById(id);
       
       if (!request) {
         return res.status(404).json({ message: "Skill request not found" });
@@ -660,7 +660,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/skill-requests', async (req, res) => {
     try {
       const requestData = insertSkillRequestSchema.parse(req.body);
-      const newRequest = await storage.createSkillRequest(requestData);
+      const newRequest = await createSkillRequest(requestData);
       
       // Broadcast new skill request
       broadcastMessage({
@@ -689,7 +689,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.patch('/api/skill-requests/:id/toggle-status', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const request = await storage.toggleSkillRequestStatus(id);
+      const request = await toggleSkillRequestStatus(id);
       
       if (!request) {
         return res.status(404).json({ message: "Skill request not found" });
@@ -717,7 +717,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
       const status = req.query.status as string | undefined;
       
-      const exchanges = await storage.getSkillExchanges(userId, status);
+      const exchanges = await getSkillExchanges(userId, status);
       return res.status(200).json(exchanges);
     } catch (error) {
       console.error("Error fetching skill exchanges:", error);
@@ -728,7 +728,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/skill-exchanges/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const exchange = await storage.getSkillExchangeById(id);
+      const exchange = await getSkillExchangeById(id);
       
       if (!exchange) {
         return res.status(404).json({ message: "Skill exchange not found" });
@@ -744,7 +744,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/skill-exchanges', async (req, res) => {
     try {
       const exchangeData = insertSkillExchangeSchema.parse(req.body);
-      const newExchange = await storage.createSkillExchange(exchangeData);
+      const newExchange = await createSkillExchange(exchangeData);
       
       // Broadcast new skill exchange
       broadcastMessage({
@@ -775,7 +775,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
       const { status } = req.body;
       
-      const exchange = await storage.updateSkillExchangeStatus(id, status);
+      const exchange = await updateSkillExchangeStatus(id, status);
       
       if (!exchange) {
         return res.status(404).json({ message: "Skill exchange not found" });
