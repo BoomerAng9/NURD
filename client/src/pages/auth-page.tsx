@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/form";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
-import SocialLoginButtons from "@/components/auth/social-login-buttons";
 import nurdHeroImage from "@assets/IMG_0115.jpeg";
 
 // Define schemas for form validation
@@ -133,191 +132,125 @@ export default function AuthPage() {
             </CardHeader>
             <CardContent>
               {activeTab === "login" ? (
-                <>
-                  <Form {...loginForm}>
-                    <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
-                      <FormField
-                        control={loginForm.control}
-                        name="username"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-gray-200">Username</FormLabel>
-                            <FormControl>
-                              <Input 
-                                placeholder="Enter your username" 
-                                className="bg-white/5 border-gray-700 focus:border-primary text-white" 
-                                {...field} 
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={loginForm.control}
-                        name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-gray-200">Password</FormLabel>
-                            <FormControl>
-                              <Input 
-                                type="password" 
-                                placeholder="Enter your password" 
-                                className="bg-white/5 border-gray-700 focus:border-primary text-white" 
-                                {...field} 
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <Button 
-                        type="submit" 
-                        className="w-full btn-nurd"
-                        disabled={loginMutation.isPending}
-                      >
-                        {loginMutation.isPending ? "Logging in..." : "Login"}
-                      </Button>
-                    </form>
-                  </Form>
-                  
-                  <div className="mt-6">
-                    <SocialLoginButtons className="mt-6" />
-                  </div>
-                </>
+                <Form {...loginForm}>
+                  <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
+                    <FormField
+                      control={loginForm.control}
+                      name="username"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-200">Username</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Enter your username" 
+                              className="bg-white/5 border-gray-700 focus:border-primary text-white" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={loginForm.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-200">Password</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="password" 
+                              placeholder="Enter your password" 
+                              className="bg-white/5 border-gray-700 focus:border-primary text-white" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button 
+                      type="submit" 
+                      className="w-full btn-nurd"
+                      disabled={loginMutation.isPending}
+                    >
+                      {loginMutation.isPending ? "Logging in..." : "Login"}
+                    </Button>
+                  </form>
+                </Form>
               ) : (
-                <>
-                  <Form {...registerForm}>
-                    <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
+                <Form {...registerForm}>
+                  <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
+                    <FormField
+                      control={registerForm.control}
+                      name="username"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-200">Username</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Choose a username" 
+                              className="bg-white/5 border-gray-700 focus:border-primary text-white" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={registerForm.control}
+                      name="first_name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-200">First Name</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Enter your first name" 
+                              className="bg-white/5 border-gray-700 focus:border-primary text-white" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={registerForm.control}
-                        name="username"
+                        name="age"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-gray-200">Username</FormLabel>
+                            <FormLabel className="text-gray-200">Age</FormLabel>
                             <FormControl>
                               <Input 
-                                placeholder="Choose a username" 
+                                type="number"
+                                min={8}
+                                max={18}
+                                placeholder="Your age" 
                                 className="bg-white/5 border-gray-700 focus:border-primary text-white" 
-                                {...field} 
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={registerForm.control}
-                        name="first_name"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-gray-200">First Name</FormLabel>
-                            <FormControl>
-                              <Input 
-                                placeholder="Enter your first name" 
-                                className="bg-white/5 border-gray-700 focus:border-primary text-white" 
-                                {...field} 
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={registerForm.control}
-                          name="age"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-gray-200">Age</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  type="number"
-                                  min={8}
-                                  max={18}
-                                  placeholder="Your age" 
-                                  className="bg-white/5 border-gray-700 focus:border-primary text-white" 
-                                  {...field}
-                                  onChange={(e) => {
-                                    const value = e.target.value;
-                                    field.onChange(value === '' ? '' : parseInt(value));
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={registerForm.control}
-                          name="grade_level"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-gray-200">Grade Level</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  placeholder="Your grade" 
-                                  className="bg-white/5 border-gray-700 focus:border-primary text-white" 
-                                  {...field} 
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={registerForm.control}
-                          name="user_type"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-gray-200">User Type</FormLabel>
-                              <select
-                                className="flex h-10 w-full rounded-md border border-gray-700 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                                 {...field}
-                              >
-                                <option value="student" className="bg-gray-800">Student</option>
-                                <option value="parent" className="bg-gray-800">Parent</option>
-                              </select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={registerForm.control}
-                          name="gender"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-gray-200">Gender</FormLabel>
-                              <select
-                                className="flex h-10 w-full rounded-md border border-gray-700 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-                                {...field}
-                              >
-                                <option value="male" className="bg-gray-800">Male</option>
-                                <option value="female" className="bg-gray-800">Female</option>
-                                <option value="other" className="bg-gray-800">Other</option>
-                                <option value="prefer_not_to_say" className="bg-gray-800">Prefer not to say</option>
-                              </select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  field.onChange(value === '' ? '' : parseInt(value));
+                                }}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                       
                       <FormField
                         control={registerForm.control}
-                        name="path_choice"
+                        name="grade_level"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-gray-200">Preferred Learning Path (Optional)</FormLabel>
+                            <FormLabel className="text-gray-200">Grade Level</FormLabel>
                             <FormControl>
                               <Input 
-                                placeholder="e.g. Coding, Art, Design, etc." 
+                                placeholder="Your grade" 
                                 className="bg-white/5 border-gray-700 focus:border-primary text-white" 
                                 {...field} 
                               />
@@ -326,56 +259,110 @@ export default function AuthPage() {
                           </FormItem>
                         )}
                       />
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={registerForm.control}
-                        name="password"
+                        name="user_type"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-gray-200">Password</FormLabel>
-                            <FormControl>
-                              <Input 
-                                type="password" 
-                                placeholder="Create a password" 
-                                className="bg-white/5 border-gray-700 focus:border-primary text-white" 
-                                {...field} 
-                              />
-                            </FormControl>
+                            <FormLabel className="text-gray-200">User Type</FormLabel>
+                            <select
+                              className="flex h-10 w-full rounded-md border border-gray-700 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                              {...field}
+                            >
+                              <option value="student" className="bg-gray-800">Student</option>
+                              <option value="parent" className="bg-gray-800">Parent</option>
+                            </select>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
+                      
                       <FormField
                         control={registerForm.control}
-                        name="confirmPassword"
+                        name="gender"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-gray-200">Confirm Password</FormLabel>
-                            <FormControl>
-                              <Input 
-                                type="password" 
-                                placeholder="Confirm your password" 
-                                className="bg-white/5 border-gray-700 focus:border-primary text-white" 
-                                {...field} 
-                              />
-                            </FormControl>
+                            <FormLabel className="text-gray-200">Gender</FormLabel>
+                            <select
+                              className="flex h-10 w-full rounded-md border border-gray-700 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                              {...field}
+                            >
+                              <option value="male" className="bg-gray-800">Male</option>
+                              <option value="female" className="bg-gray-800">Female</option>
+                              <option value="other" className="bg-gray-800">Other</option>
+                              <option value="prefer_not_to_say" className="bg-gray-800">Prefer not to say</option>
+                            </select>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                      <Button 
-                        type="submit" 
-                        className="w-full btn-nurd"
-                        disabled={registerMutation.isPending}
-                      >
-                        {registerMutation.isPending ? "Creating account..." : "Create Account"}
-                      </Button>
-                    </form>
-                  </Form>
-                  
-                  <div className="mt-6">
-                    <SocialLoginButtons className="mt-6" />
-                  </div>
-                </>
+                    </div>
+                    
+                    <FormField
+                      control={registerForm.control}
+                      name="path_choice"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-200">Preferred Learning Path (Optional)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="e.g. Coding, Art, Design, etc." 
+                              className="bg-white/5 border-gray-700 focus:border-primary text-white" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={registerForm.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-200">Password</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="password" 
+                              placeholder="Create a password" 
+                              className="bg-white/5 border-gray-700 focus:border-primary text-white" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={registerForm.control}
+                      name="confirmPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-200">Confirm Password</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="password" 
+                              placeholder="Confirm your password" 
+                              className="bg-white/5 border-gray-700 focus:border-primary text-white" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button 
+                      type="submit" 
+                      className="w-full btn-nurd"
+                      disabled={registerMutation.isPending}
+                    >
+                      {registerMutation.isPending ? "Creating account..." : "Create Account"}
+                    </Button>
+                  </form>
+                </Form>
               )}
             </CardContent>
             <CardFooter className="flex flex-col space-y-4 pb-6">

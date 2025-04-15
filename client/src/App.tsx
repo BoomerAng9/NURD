@@ -1,6 +1,5 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { Switch, Route } from "wouter";
-import { ThemeProvider } from "@/hooks/use-theme";
 import { ProtectedRoute } from "@/lib/protected-route";
 import { AdminProtectedRoute } from "@/lib/admin-protected-route";
 import { queryClient } from "./lib/queryClient";
@@ -40,7 +39,8 @@ import { LayoutDashboard, Send } from "lucide-react";
 // Lazy load code playground
 const CodePlayground = React.lazy(() => import("@/pages/code-playground"));
 
-// Import NURD skateboard image is now loaded directly from public/attached_assets
+// Import NURD skateboard image
+import nurdSkateboardImg from "./assets/nurd-skateboard.png";
 
 // Simple component for initial testing - updated with glass UI
 const TestComponent = () => {
@@ -53,8 +53,8 @@ const TestComponent = () => {
         
         <div className="mt-8 p-6 glass-card overflow-hidden">
           <img 
-            src="/attached_assets/Untitled design.png" 
-            alt="NURD Skateboarding in Pooler" 
+            src={nurdSkateboardImg} 
+            alt="NURD Skateboarding" 
             className="mx-auto max-h-[500px] rounded-lg shadow-lg"
           />
         </div>
@@ -214,19 +214,19 @@ const AppContent = () => {
               </span>
             </div>
             <p className="text-gray-500 flex items-center justify-center">
-              {/* NURD Logo */}
+              {/* Palmetto Palm Tree SVG */}
               <img 
-                src="/assets/nurd-logo.png" 
-                alt="NURD Logo" 
-                className="h-6 w-auto mr-3"
+                src="/assets/pooler_palm.svg" 
+                alt="Palmetto Palm" 
+                className="h-8 w-auto mr-3"
               />
               
               <span>Made in Pooler, GA</span>
               
-              {/* ACHIEVEMOR Logo */}
+              {/* Osprey SVG */}
               <img 
-                src="/assets/achievemor-logo.png" 
-                alt="ACHIEVEMOR Logo" 
+                src="/assets/osprey.svg" 
+                alt="Osprey" 
                 className="h-8 w-auto ml-3"
               />
             </p>
@@ -241,12 +241,10 @@ const AppContent = () => {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="system">
-        <AuthProvider>
-          <AppContent />
-          <Toaster />
-        </AuthProvider>
-      </ThemeProvider>
+      <AuthProvider>
+        <AppContent />
+        <Toaster />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

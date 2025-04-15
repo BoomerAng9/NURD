@@ -85,7 +85,7 @@ const Footer: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <span className="text-gray-400">Pooler, GA</span>
+                <span className="text-gray-400">Made in Pooler, GA</span>
               </li>
             </ul>
           </div>
@@ -97,7 +97,7 @@ const Footer: React.FC = () => {
             <img 
               src="/assets/pooler_palm.svg" 
               alt="Palmetto Palm" 
-              className="h-10 w-auto mr-3"
+              className="h-10 w-auto mr-3 text-gray-400"
             />
             
             <span>Made in Pooler, GA</span>
@@ -106,7 +106,7 @@ const Footer: React.FC = () => {
             <img 
               src="/assets/osprey.svg" 
               alt="Osprey" 
-              className="h-10 w-auto ml-3"
+              className="h-10 w-auto ml-3 text-gray-400"
             />
           </p>
           
