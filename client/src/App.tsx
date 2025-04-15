@@ -18,7 +18,7 @@ import Gallery from "@/pages/Gallery";
 import AdminDashboard from "@/pages/AdminDashboard";
 import Learning from "@/pages/Learning";
 import ProfileSettings from "@/pages/ProfileSettings";
-import JoinOurTeam from "@/pages/Join-Our-Team";
+
 import Cohorts from "@/pages/Cohorts";
 import AuthPage from "@/pages/auth-page";
 import DiscordConnect from "@/pages/DiscordConnect";
@@ -116,7 +116,7 @@ function App() {
                 <Route path="/admin" component={AdminDashboard} />
                 <Route path="/learning" component={Learning} />
                 <Route path="/settings" component={ProfileSettings} />
-                <Route path="/join" component={JoinOurTeam} />
+
                 <Route path="/cohorts" component={Cohorts} />
                 <Route path="/discord" component={DiscordConnect} />
                 <Route path="/avatar" component={AvatarCreator} />
