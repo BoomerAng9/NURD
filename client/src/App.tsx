@@ -183,21 +183,27 @@ function App() {
           {!isMobile && (
             <footer className="py-4 px-6 text-center text-sm">
               <div className="flex flex-col items-center justify-center space-y-2">
-                <p className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-purple-600 font-medium">
+                <p className="bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-amber-700 to-black font-medium">
                   NURD = Naturally Unstoppable Resourceful Dreamers
                 </p>
-                <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-gray-400">
+                <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs">
                   <span className="flex items-center">
-                    <span className="h-2 w-2 rounded-full bg-emerald-400 mr-2"></span>
-                    Creativity First
+                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-orange-400 to-red-500 mr-2"></span>
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500 font-medium">
+                      Creativity First
+                    </span>
                   </span>
                   <span className="flex items-center">
-                    <span className="h-2 w-2 rounded-full bg-blue-400 mr-2"></span>
-                    AI Collaboration
+                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-amber-400 to-amber-700 mr-2"></span>
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-amber-700 font-medium">
+                      AI Collaboration
+                    </span>
                   </span>
                   <span className="flex items-center">
-                    <span className="h-2 w-2 rounded-full bg-purple-400 mr-2"></span>
-                    Community Building
+                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-stone-500 to-black mr-2"></span>
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-stone-500 to-black font-medium">
+                      Community Building
+                    </span>
                   </span>
                 </div>
                 <p className="text-gray-500">© {new Date().getFullYear()} NURD by: ACHIEVEMOR. All rights reserved.</p>

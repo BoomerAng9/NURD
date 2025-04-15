@@ -87,7 +87,7 @@ const Navbar = () => {
                 </div>
               </Link>
               <Link href="/register">
-                <div className="btn-nurd text-sm cursor-pointer">Join the Summer Initiative</div>
+                <Link href="/join"><div className="btn-nurd text-sm cursor-pointer">Apply to Teach</div></Link>
               </Link>
             </div>
           )}
