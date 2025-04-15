@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 interface NavItem {
   name: string;
