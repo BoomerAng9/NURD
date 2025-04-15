@@ -32,17 +32,17 @@
     width: 8px;
     height: 8px;
   }
-  
+
   ::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.1);
     border-radius: 4px;
   }
-  
+
   ::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.15);
     border-radius: 4px;
   }
-  
+
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.25);
   }
@@ -52,17 +52,17 @@
   .bg-gradient-nurd {
     background: linear-gradient(135deg, var(--nurd-purple) 0%, var(--nurd-blue) 50%, var(--nurd-orange) 100%);
   }
-  
+
   .text-gradient {
     background: linear-gradient(to right, var(--nurd-green), var(--nurd-blue));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  
+
   .logo-gradient {
     background: linear-gradient(to bottom, var(--nurd-green) 0%, var(--nurd-green) 65%, var(--nurd-orange) 65%, var(--nurd-orange) 100%);
   }
-  
+
   .drip-path {
     filter: drop-shadow(0 0 8px rgba(61, 224, 83, 0.7));
   }
@@ -73,7 +73,7 @@
     border-radius: 5px;
     overflow: visible;
   }
-  
+
   .nurd-drip::after {
     content: '';
     position: absolute;
@@ -88,28 +88,28 @@
       96% 0%, 100% 0%, 100% 100%, 0% 100%
     );
   }
-  
+
   .input-nurd {
     @apply border-2 border-gray-200 bg-white bg-opacity-90 p-3 rounded-lg text-gray-900 focus:border-blue-500 focus:outline-none transition duration-300 w-full;
   }
-  
+
   .btn-nurd {
     @apply relative bg-gradient-to-r from-[#6A2FF8] to-[#3EC6E0] text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:from-[#3DE053] hover:to-[#3EC6E0] transition-all duration-300 overflow-hidden;
   }
-  
+
   .btn-nurd::after {
     content: '';
     @apply absolute bottom-0 left-0 right-0 h-1.5 bg-[#FF8A00] transform scale-x-0 transition-transform duration-300 origin-bottom-left;
   }
-  
+
   .btn-nurd:hover::after {
     @apply scale-x-100;
   }
-  
+
   .section-title {
     @apply font-bold text-3xl md:text-4xl lg:text-5xl mb-6 text-gray-100;
   }
-  
+
   .card-nurd {
     @apply bg-white bg-opacity-90 backdrop-blur-md rounded-xl shadow-xl p-6 transition-all duration-300 border-t-4 hover:shadow-2xl;
   }
@@ -143,7 +143,7 @@
     @apply hover:bg-primary/10 hover:border-primary/30;
     @apply transform hover:scale-105 hover:rotate-1;
   }
-  
+
   .glass-container {
     @apply bg-white/70 backdrop-blur-lg border border-gray-200/50 rounded-xl p-6 shadow-lg;
   }

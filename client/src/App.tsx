@@ -5,7 +5,7 @@ import { AdminProtectedRoute } from "@/lib/admin-protected-route";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
-import { AuthProvider } from "@/hooks/use-auth";
+import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { PageTransition } from "@/components/animations/page-transition";
 import { GlassNav } from "@/components/ui/glass-nav";
 import { ComingSoon } from "@/components/ui/coming-soon";
@@ -139,6 +139,7 @@ function App() {
                 <Route path="/discord" component={DiscordConnect} />
                 <Route path="/avatar" component={AvatarCreator} />
                 <Route path="/home" component={Landing} />
+                <Route path="/auth" component={AuthPage} />
                 <Route path="/achievers" component={ACHIEVERS} />
                 <Route path="/ai-code-tools" component={AICodeTools} />
                 <Route path="/progress" component={UserProgress} />
