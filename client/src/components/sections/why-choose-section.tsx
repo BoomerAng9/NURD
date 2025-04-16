@@ -22,25 +22,15 @@ const WhyChooseSection: React.FC = () => {
                 </div>
                 
                 {/* Right panel */}
-                <div className="bg-gradient-to-br from-[#3B82F6]/80 to-[#8B5CF6]/70 rounded-xl p-6 backdrop-blur-md shadow-lg flex flex-col justify-center relative overflow-hidden">
+                <div className="bg-gradient-to-br from-[#3B82F6]/80 to-[#8B5CF6]/70 rounded-xl p-6 backdrop-blur-md shadow-lg flex items-center justify-center relative overflow-hidden">
                   <div className="absolute inset-0 bg-blue-500/10 backdrop-blur-md"></div>
                   
-                  {/* ACHIEVEMOR logo in top right corner */}
-                  <div className="absolute top-4 right-4 w-16 h-16">
-                    <img 
-                      src={achievemorLogoImg} 
-                      alt="ACHIEVEMOR Logo" 
-                      className="w-full h-full object-contain drop-shadow-lg"
-                    />
-                  </div>
-                  
-                  <div className="relative z-10 mt-8">
-                    <h3 className="text-xl font-bold text-white mb-3">Build Your Future</h3>
-                    <p className="text-white/90 text-sm">
-                      "NURD gave me the tools to express my ideas through technology and build solutions that matter."
-                    </p>
-                    <p className="text-white/90 text-sm font-medium mt-2">— Pooler Student, 15</p>
-                  </div>
+                  {/* ACHIEVEMOR logo centered and same size as NURD logo */}
+                  <img 
+                    src={achievemorLogoImg} 
+                    alt="ACHIEVEMOR Logo" 
+                    className="w-4/5 h-auto object-contain relative z-10 drop-shadow-xl transform hover:scale-105 transition-all duration-300"
+                  />
                 </div>
               </div>
               
