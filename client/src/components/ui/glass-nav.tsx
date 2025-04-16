@@ -23,7 +23,9 @@ import {
   Code,
   Layers,
   Star,
-  Heart
+  Heart,
+  Info,
+  Handshake
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
@@ -39,6 +41,8 @@ interface NavItem {
 
 // Main navigation structure with dropdowns for better organization
 const navigation: NavItem[] = [
+  { name: 'About Us', path: '/about', icon: <Info className="h-4 w-4 mr-2" /> },
+  { name: 'Partners', path: '/partners', icon: <Handshake className="h-4 w-4 mr-2" /> },
   { 
     name: 'Learning', 
     icon: <BookOpen className="h-4 w-4 mr-2" />,

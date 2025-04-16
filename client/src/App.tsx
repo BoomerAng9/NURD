@@ -14,6 +14,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Landing from "@/pages/Landing";
 import About from "@/pages/About";
+import Partners from "@/pages/Partners";
 import Register from "@/pages/Register";
 import Dashboard from "@/pages/Dashboard";
 import Trainers from "@/pages/Trainers";
@@ -137,6 +138,7 @@ const AppContent = () => {
           <Switch>
             <Route path="/" component={TestComponent} />
             <Route path="/about" component={About} />
+            <Route path="/partners" component={Partners} />
             <Route path="/dashboard" component={Dashboard} />
             <Route path="/trainers" component={Trainers} />
             <Route path="/gallery" component={Gallery} />
