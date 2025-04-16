@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense } from "react";
-import { Switch, Route } from "wouter";
+import { Switch, Route, Link } from "wouter";
 import { ProtectedRoute } from "@/lib/protected-route";
 import { AdminProtectedRoute } from "@/lib/admin-protected-route";
 import { queryClient } from "./lib/queryClient";
@@ -9,6 +9,8 @@ import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { PageTransition } from "@/components/animations/page-transition";
 import MagicCursor from "@/components/ui/magic-cursor";
+import { useCursorInteraction } from "@/hooks/use-cursor-interaction";
+import { UserPlus } from "lucide-react";
 import { GlassNav } from "@/components/ui/glass-nav";
 import { ComingSoon } from "@/components/ui/coming-soon";
 import NotFound from "@/pages/not-found";
@@ -51,49 +53,14 @@ import madeInPoolerImg from "./assets/made-in-pooler.png";
 // Made in Pooler green logo
 import madeInPoolerGreenImg from "./assets/made-in-pooler-green.png";
 
-// Simple component for initial testing - updated with glass UI and cursor interactions
+// Simple component for initial testing - updated with glass UI
 const TestComponent = () => {
-  // Import the cursor interaction hook
-  const useCursorInteraction = require('@/hooks/use-cursor-interaction').default;
-  
-  // Create refs for elements that should have special cursor effects
-  const titleRef = useCursorInteraction({ 
-    hoverText: 'Welcome to NURD!', 
-    interactive: true 
-  });
-  
-  const imageRef = useCursorInteraction({ 
-    hoverText: 'Made in Pooler, GA', 
-    hoverScale: 1.05,
-    interactive: true
-  });
-  
-  const loginRef = useCursorInteraction({ 
-    hoverText: 'Sign in or create an account', 
-    interactive: true 
-  });
-  
-  const codeRef = useCursorInteraction({ 
-    hoverText: 'Try our interactive code editor', 
-    interactive: true 
-  });
-  
-  const aiToolsRef = useCursorInteraction({ 
-    hoverText: 'AI-powered coding tools', 
-    interactive: true 
-  });
-  
-  const achieversRef = useCursorInteraction({ 
-    hoverText: 'Join our ACHIEVERS program!', 
-    interactive: true 
-  });
-  
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-b from-gray-50 to-gray-100">
       <div className="glass-container max-w-4xl mx-auto text-center p-8 rounded-2xl shadow-xl backdrop-blur-md border border-white/20">
         <h1 
-          ref={titleRef}
           className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-500 to-blue-600 animate-gradient-x mb-3 inline-block cursor-pointer"
+          data-cursor-text="Welcome to NURD!"
         >
           NURD by: ACHIEVEMOR
         </h1>
@@ -104,10 +71,10 @@ const TestComponent = () => {
           <div className="relative p-1 bg-white rounded-lg">
             <div className="p-5 glass-card overflow-hidden rounded-lg">
               <img 
-                ref={imageRef}
                 src={madeInPoolerImg} 
                 alt="NURD Made in Pooler, GA" 
                 className="mx-auto max-h-[500px] rounded-lg shadow-lg transform transition-transform duration-500 hover:scale-[1.02] cursor-pointer"
+                data-cursor-text="Made in Pooler, GA"
               />
             </div>
           </div>
@@ -115,17 +82,17 @@ const TestComponent = () => {
         
         <div className="mt-10 flex flex-wrap justify-center gap-5">
           <a 
-            ref={loginRef}
             href="/auth" 
-            className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 border-blue-500/30 px-5 py-3 rounded-lg shadow-md"
+            className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 border-blue-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
+            data-cursor-text="Sign in or create an account"
           >
             <LayoutDashboard className="h-5 w-5" />
             <span className="font-semibold">Login / Register</span>
           </a>
           <a 
-            ref={codeRef}
             href="/code-playground" 
-            className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-green-600/20 to-teal-600/20 border-green-500/30 px-5 py-3 rounded-lg shadow-md"
+            className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-green-600/20 to-teal-600/20 border-green-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
+            data-cursor-text="Try our interactive code editor"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-code">
               <polyline points="16 18 22 12 16 6"></polyline>
@@ -134,9 +101,9 @@ const TestComponent = () => {
             <span className="font-semibold">Code Playground</span>
           </a>
           <a 
-            ref={aiToolsRef}
             href="/ai-code-tools" 
-            className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-purple-700/30 to-pink-700/30 border-purple-500/30 px-5 py-3 rounded-lg shadow-md"
+            className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-purple-700/30 to-pink-700/30 border-purple-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
+            data-cursor-text="AI-powered coding tools"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path>
@@ -145,9 +112,9 @@ const TestComponent = () => {
             <span className="font-semibold">AI Code Tools</span>
           </a>
           <a 
-            ref={achieversRef}
             href="/achievers" 
-            className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-orange-600/20 to-amber-600/20 border-orange-500/30 px-5 py-3 rounded-lg shadow-md"
+            className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-orange-600/20 to-amber-600/20 border-orange-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
+            data-cursor-text="Join our ACHIEVERS program!"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-send">
               <path d="m22 2-7 20-4-9-9-4Z"/>
@@ -166,6 +133,22 @@ const AppContent = () => {
   const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState(true);
   const { user, isLoading: authLoading } = useAuth();
+  const [isCursorEnabled, setIsCursorEnabled] = useState(false);
+
+  useEffect(() => {
+    // Load cursor preference from localStorage
+    const savedPreference = localStorage.getItem('magic-cursor-enabled');
+    if (savedPreference !== null) {
+      setIsCursorEnabled(savedPreference === 'true');
+    }
+  }, []);
+
+  // Toggle cursor function
+  const toggleCursor = () => {
+    const newValue = !isCursorEnabled;
+    setIsCursorEnabled(newValue);
+    localStorage.setItem('magic-cursor-enabled', String(newValue));
+  };
 
   useEffect(() => {
     if (!authLoading) {
@@ -187,8 +170,40 @@ const AppContent = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <MagicCursor />
+      {isCursorEnabled && <MagicCursor />}
       <GlassNav />
+      
+      {/* Cursor toggle button */}
+      <button 
+        onClick={toggleCursor}
+        className="fixed bottom-4 right-4 z-50 p-2 bg-black/20 hover:bg-black/30 backdrop-blur-md rounded-full transition-all"
+        title={isCursorEnabled ? "Disable custom cursor" : "Enable custom cursor"}
+      >
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          width="20" 
+          height="20" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          strokeWidth="2" 
+          strokeLinecap="round" 
+          strokeLinejoin="round"
+          className={isCursorEnabled ? "text-primary" : "text-gray-400"}
+        >
+          <path d="m3 3 7 7"></path>
+          <path d="m21 21-7-7"></path>
+          <path d="M11 4 7 20l4-1 1 4 4-16-4 1-1-4z"></path>
+        </svg>
+      </button>
+      
+      {/* Apply Now button fixed at bottom right */}
+      <Link href="/apply">
+        <div className="fixed bottom-4 right-20 z-50 px-4 py-2 bg-primary text-white font-bold rounded-full shadow-lg hover:bg-primary/90 transition-all transform hover:scale-105 flex items-center space-x-2">
+          <UserPlus className="h-5 w-5" />
+          <span>Apply Now</span>
+        </div>
+      </Link>
       
       <main className="flex-grow">
         <PageTransition>
