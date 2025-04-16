@@ -26,6 +26,19 @@ import { useToast } from '@/hooks/use-toast';
 const JoinOurTeam: React.FC = () => {
   const { toast } = useToast();
 
+  // Function to scroll to application form
+  const scrollToApplicationForm = () => {
+    const formElement = document.getElementById('application-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Focus on first input after scrolling
+      setTimeout(() => {
+        const firstInput = document.getElementById('firstName');
+        if (firstInput) firstInput.focus();
+      }, 800);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast({
@@ -106,17 +119,7 @@ const JoinOurTeam: React.FC = () => {
             </p>
             <Button 
               className="bg-[#3DE053] hover:bg-[#32bd45] text-black font-medium px-8 py-6 text-lg"
-              onClick={() => {
-                const formElement = document.getElementById('application-form');
-                if (formElement) {
-                  formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  // Add focus to first input field for better UX
-                  setTimeout(() => {
-                    const firstInput = document.getElementById('firstName');
-                    if (firstInput) firstInput.focus();
-                  }, 800);
-                }
-              }}
+              onClick={scrollToApplicationForm}
             >
               Apply Now <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
