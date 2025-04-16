@@ -40,61 +40,82 @@ const About: React.FC = () => {
                   ACHIEVEMOR is the global consulting arm that drives our innovative ecosystem—a house built on expertise, creativity, and emerging technology implementation. At the core of our operations is <span className="font-semibold text-[#121645]">The STARGATE</span>, a central hub that deploys our suite of branches we call portals.
                 </p>
                 
-                <div className="flex flex-col gap-8 my-12">
+                <h3 className="text-2xl font-bold mb-6 text-center">Our Portals</h3>
+                
+                <div className="flex flex-col gap-6 my-12 relative">
+                  {/* Connecting line for staircase effect */}
+                  <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gray-200 transform -translate-x-1/2 hidden md:block"></div>
+                  
                   {/* The STARGATE - First in stacked staircase layout */}
-                  <div className="bg-gradient-to-r from-[#121645] to-[#121645]/90 p-6 rounded-xl text-white shadow-lg transform transition-transform hover:scale-[1.02] ml-auto mr-0 w-full md:w-11/12">
-                    <div className="flex items-center mb-4">
-                      <div className="w-16 h-16 bg-gradient-to-r from-primary to-primary/50 rounded-full flex items-center justify-center mr-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <circle cx="12" cy="12" r="10"></circle>
-                          <line x1="12" y1="8" x2="12" y2="12"></line>
-                          <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                        </svg>
+                  <div className="relative md:ml-auto md:mr-8 w-full md:w-[85%] z-10">
+                    <div className="bg-gradient-to-r from-[#121645] to-[#121645]/90 p-6 rounded-xl text-white shadow-lg transform transition-transform hover:scale-[1.01]">
+                      <div className="flex items-center mb-4">
+                        <div className="w-16 h-16 bg-gradient-to-r from-primary to-primary/50 rounded-full flex items-center justify-center mr-4">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                          </svg>
+                        </div>
+                        <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-300">The STARGATE</h3>
                       </div>
-                      <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-300">The STARGATE</h3>
+                      <p className="text-gray-100 pl-20">
+                        Our central hub that coordinates and deploys all ACHIEVEMOR portals, ensuring seamless operation and strategic alignment.
+                      </p>
                     </div>
-                    <p className="text-gray-100 pl-20">
-                      Our central hub that coordinates and deploys all ACHIEVEMOR portals, ensuring seamless operation and strategic alignment.
-                    </p>
+                    {/* Connecting dot */}
+                    <div className="hidden md:block absolute left-0 top-1/2 w-6 h-6 bg-[#121645] rounded-full transform -translate-x-1/2 -translate-y-1/2 border-4 border-white z-20"></div>
                   </div>
                   
                   {/* The Boost|Bridge - Second in stacked staircase layout */}
-                  <div className="bg-gradient-to-r from-[#4A26AB] to-[#4A26AB]/90 p-6 rounded-xl text-white shadow-lg transform transition-transform hover:scale-[1.02] ml-0 mr-auto w-full md:w-11/12">
-                    <div className="flex items-center mb-4">
-                      <div className="w-16 h-16 flex items-center justify-center mr-4">
-                        <img src="/attached_assets/IMG_0098.png" alt="BoostBridge Logo" className="h-14 w-auto object-contain" />
+                  <div className="relative md:ml-8 md:mr-auto w-full md:w-[85%] z-10">
+                    <div className="bg-gradient-to-r from-[#4A26AB] to-[#4A26AB]/90 p-6 rounded-xl text-white shadow-lg transform transition-transform hover:scale-[1.01]">
+                      <div className="flex items-center mb-4">
+                        <div className="w-16 h-16 flex items-center justify-center mr-4">
+                          <img src="/attached_assets/IMG_0098.png" alt="BoostBridge Logo" className="h-14 w-auto object-contain" />
+                        </div>
+                        <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-300">The Boost|Bridge</h3>
                       </div>
-                      <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-300">The Boost|Bridge</h3>
+                      <p className="text-gray-100 pl-20">
+                        Our collaboration portal that onboards learning partners by seamlessly connecting people and ideas.
+                      </p>
                     </div>
-                    <p className="text-gray-100 pl-20">
-                      Our collaboration portal that onboards learning partners by seamlessly connecting people and ideas.
-                    </p>
+                    {/* Connecting dot */}
+                    <div className="hidden md:block absolute right-0 top-1/2 w-6 h-6 bg-[#4A26AB] rounded-full transform translate-x-1/2 -translate-y-1/2 border-4 border-white z-20"></div>
                   </div>
                   
                   {/* OpenKlass AI - Third in stacked staircase layout */}
-                  <div className="bg-gradient-to-r from-[#0B7285] to-[#0B7285]/90 p-6 rounded-xl text-white shadow-lg transform transition-transform hover:scale-[1.02] ml-auto mr-0 w-full md:w-11/12">
-                    <div className="flex items-center mb-4">
-                      <div className="w-16 h-16 flex items-center justify-center mr-4">
-                        <img src="/attached_assets/OKAI logo.png" alt="OpenKlass AI Logo" className="h-14 w-auto object-contain" />
+                  <div className="relative md:ml-auto md:mr-8 w-full md:w-[85%] z-10">
+                    <div className="bg-gradient-to-r from-[#0B7285] to-[#0B7285]/90 p-6 rounded-xl text-white shadow-lg transform transition-transform hover:scale-[1.01]">
+                      <div className="flex items-center mb-4">
+                        <div className="w-16 h-16 flex items-center justify-center mr-4">
+                          <img src="/attached_assets/OKAI logo.png" alt="OpenKlass AI Logo" className="h-14 w-auto object-contain" />
+                        </div>
+                        <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-300">OpenKlass AI</h3>
                       </div>
-                      <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-300">OpenKlass AI</h3>
+                      <p className="text-gray-100 pl-20">
+                        Dedicated to creating cutting-edge educational materials with a focus on AI-powered instructional design and curriculum development.
+                      </p>
                     </div>
-                    <p className="text-gray-100 pl-20">
-                      Dedicated to creating cutting-edge educational materials with a focus on AI-powered instructional design and curriculum development.
-                    </p>
+                    {/* Connecting dot */}
+                    <div className="hidden md:block absolute left-0 top-1/2 w-6 h-6 bg-[#0B7285] rounded-full transform -translate-x-1/2 -translate-y-1/2 border-4 border-white z-20"></div>
                   </div>
                   
                   {/* NURD Initiative - Fourth in stacked staircase layout */}
-                  <div className="bg-gradient-to-r from-[#121645] to-[#121645]/90 p-6 rounded-xl text-white shadow-lg transform transition-transform hover:scale-[1.02] ml-0 mr-auto w-full md:w-11/12">
-                    <div className="flex items-center mb-4">
-                      <div className="w-16 h-16 flex items-center justify-center mr-4">
-                        <img src="/attached_assets/33C74D57-C126-4BBE-A4B4-54F38CDD6AFD.png" alt="NURD Logo" className="h-14 w-auto object-contain" />
+                  <div className="relative md:ml-8 md:mr-auto w-full md:w-[85%] z-10">
+                    <div className="bg-gradient-to-r from-[#121645] to-[#121645]/90 p-6 rounded-xl text-white shadow-lg transform transition-transform hover:scale-[1.01]">
+                      <div className="flex items-center mb-4">
+                        <div className="w-16 h-16 flex items-center justify-center mr-4">
+                          <img src="/attached_assets/33C74D57-C126-4BBE-A4B4-54F38CDD6AFD.png" alt="NURD Logo" className="h-14 w-auto object-contain" />
+                        </div>
+                        <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-300">The NURD Initiative</h3>
                       </div>
-                      <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-300">The NURD Initiative</h3>
+                      <p className="text-gray-100 pl-20">
+                        Proudly born in Pooler, GA, exemplifies our commitment to fostering local talent and providing them with essential resources to compete today and tomorrow.
+                      </p>
                     </div>
-                    <p className="text-gray-100 pl-20">
-                      Proudly born in Pooler, GA, exemplifies our commitment to fostering local talent and providing them with essential resources to compete today and tomorrow.
-                    </p>
+                    {/* Connecting dot */}
+                    <div className="hidden md:block absolute right-0 top-1/2 w-6 h-6 bg-[#121645] rounded-full transform translate-x-1/2 -translate-y-1/2 border-4 border-white z-20"></div>
                   </div>
                 </div>
                 
