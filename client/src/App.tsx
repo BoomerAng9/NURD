@@ -17,7 +17,6 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Landing from "@/pages/Landing";
 import About from "@/pages/About";
-import Partners from "@/pages/Partners";
 import Register from "@/pages/Register";
 import Dashboard from "@/pages/Dashboard";
 import Trainers from "@/pages/Trainers";
@@ -198,26 +197,24 @@ const AppContent = () => {
       </button>
       
       {/* Apply Now button fixed at bottom right */}
-      <Link href="/apply">
-        <div className="fixed bottom-4 right-20 z-50 px-4 py-2 bg-primary text-white font-bold rounded-full shadow-lg hover:bg-primary/90 transition-all transform hover:scale-105 flex items-center space-x-2">
-          <UserPlus className="h-5 w-5" />
-          <span>Apply Now</span>
-        </div>
-      </Link>
+      <a href="/apply" className="fixed bottom-4 right-20 z-50 px-4 py-2 bg-primary text-white font-bold rounded-full shadow-lg hover:bg-primary/90 transition-all transform hover:scale-105 flex items-center space-x-2">
+        <UserPlus className="h-5 w-5" />
+        <span>Apply Now</span>
+      </a>
       
       <main className="flex-grow">
         <PageTransition>
           <Switch>
             <Route path="/" component={TestComponent} />
             <Route path="/about" component={About} />
-            <Route path="/partners" component={Partners} />
             <Route path="/dashboard" component={Dashboard} />
             <Route path="/trainers" component={Trainers} />
             <Route path="/gallery" component={Gallery} />
             <AdminProtectedRoute path="/admin" component={AdminDashboard} />
+            <Route path="/partners" component={Learning} />
+            <Route path="/partners/create" component={AICourseCreator} />
+            <Route path="/partners/:id" component={ModuleDetail} />
             <Route path="/learning" component={Learning} />
-            <Route path="/learning/create" component={AICourseCreator} />
-            <Route path="/learning/:id" component={ModuleDetail} />
             <Route path="/learn" component={Learning} />
             <Route path="/settings" component={ProfileSettings} />
             <Route path="/join" component={JoinOurTeam} />
