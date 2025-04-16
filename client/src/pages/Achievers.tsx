@@ -48,7 +48,11 @@ const formSchema = z.object({
 const Achievers = () => {
   const { user } = useAuth();
   const [, setLocation] = useLocation();
-  const [activeTab, setActiveTab] = useState("about");
+  
+  // Use URL search parameters to determine active tab
+  const searchParams = new URLSearchParams(window.location.search);
+  const tabParam = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState(tabParam === "signup" ? "signup" : "about");
 
   // Initialize the form
   const form = useForm<z.infer<typeof formSchema>>({
