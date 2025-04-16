@@ -35,6 +35,8 @@ import AvatarCreator from "@/pages/AvatarCreator";
 import Achievers from "@/pages/Achievers";
 import UserProgress from "@/pages/UserProgress";
 import AICodeTools from "@/pages/AICodeTools";
+import CodeTools from "@/pages/CodeTools";
+import Payment from "@/pages/Payment";
 import SkillMarketplace from "@/pages/SkillMarketplace";
 import ModuleDetail from "@/pages/ModuleDetail";
 import AICourseCreator from "@/pages/AICourseCreator";
@@ -491,6 +493,8 @@ const AppContent = () => {
             <Route path="/auth" component={AuthPage} />
             <Route path="/achievers" component={Achievers} />
             <Route path="/ai-code-tools" component={AICodeTools} />
+            <Route path="/code-tools" component={CodeTools} />
+            <Route path="/payment" component={Payment} />
             <Route path="/progress" component={UserProgress} />
             <Route path="/skill-marketplace" component={SkillMarketplace} />
             <Route path="/reinvestment" component={Reinvestment} />

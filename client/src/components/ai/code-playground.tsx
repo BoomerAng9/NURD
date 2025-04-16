@@ -78,8 +78,8 @@ export default function CodePlayground() {
             }
             
             setOutput(outputBuffer || 'Code executed successfully. No output generated.');
-          } catch (error) {
-            setOutput(`Error: ${error.toString()}`);
+          } catch (error: any) {
+            setOutput(`Error: ${error?.toString() || 'Unknown error occurred'}`);
           } finally {
             // Restore original console.log
             console.log = originalLog;
@@ -88,8 +88,8 @@ export default function CodePlayground() {
           // For other languages, we'll just simulate execution
           setOutput(`[${languageType?.label || language} code execution simulated]\n\nConsole Output:\nHello, world!\n\nNote: Full execution of ${languageType?.label || language} code requires a backend service.`);
         }
-      } catch (error) {
-        setOutput(`Error executing code: ${error.toString()}`);
+      } catch (error: any) {
+        setOutput(`Error executing code: ${error?.toString() || 'Unknown error occurred'}`);
       } finally {
         setIsRunning(false);
       }
