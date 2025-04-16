@@ -13,7 +13,7 @@ import { PageTransition } from "@/components/animations/page-transition";
 import MagicCursor from "@/components/ui/magic-cursor";
 import { ApplyModal } from "@/components/ui/apply-modal";
 import { useCursorInteraction } from "@/hooks/use-cursor-interaction";
-import { UserPlus } from "lucide-react";
+import { UserPlus, Calendar, User, MapPin } from "lucide-react";
 import { GlassNav } from "@/components/ui/glass-nav";
 import { ComingSoon } from "@/components/ui/coming-soon";
 import NotFound from "@/pages/not-found";
@@ -57,6 +57,39 @@ import madeInPoolerGreenImg from "./assets/made-in-pooler-green.png";
 
 // Simple component for initial testing - updated with glass UI
 const TestComponent = () => {
+  // State for the animated counters
+  const [joinedCount, setJoinedCount] = useState(0);
+  const [createdCount, setCreatedCount] = useState(0);
+  
+  // Animation for counters
+  useEffect(() => {
+    const joinedInterval = setInterval(() => {
+      setJoinedCount(prev => {
+        if (prev < 120) return prev + 1;
+        clearInterval(joinedInterval);
+        return prev;
+      });
+    }, 50);
+    
+    const createdInterval = setInterval(() => {
+      setCreatedCount(prev => {
+        if (prev < 87) return prev + 1;
+        clearInterval(createdInterval);
+        return prev;
+      });
+    }, 70);
+    
+    return () => {
+      clearInterval(joinedInterval);
+      clearInterval(createdInterval);
+    };
+  }, []);
+  
+  // Format counter to ensure 4 digits with leading zeros
+  const formatCounter = (count: number) => {
+    return count.toString().padStart(4, '0');
+  };
+  
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-b from-gray-50 to-gray-100">
       <div className="glass-container max-w-4xl mx-auto text-center p-8 rounded-2xl shadow-xl backdrop-blur-md border border-white/20">
@@ -88,42 +121,150 @@ const TestComponent = () => {
           Empowering youth through innovative tech education
         </motion.p>
         
-        <motion.div 
-          className="relative group"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
+        <div className="flex gap-6">
+          {/* Left Stats Panel */}
           <motion.div 
-            className="absolute -inset-1 bg-gradient-to-r from-green-400 to-blue-500 rounded-lg blur"
-            initial={{ opacity: 0.25 }}
-            whileHover={{ opacity: 0.75, transition: { duration: 0.3 } }}
-            animate={{ 
-              opacity: [0.25, 0.35, 0.25],
-              scale: [1, 1.02, 1]
-            }}
-            transition={{
-              duration: 5,
-              repeat: Infinity,
-              repeatType: "reverse",
-              ease: "easeInOut"
-            }}
-          />
-          <div className="relative p-1 bg-white rounded-lg">
-            <div className="p-5 glass-card overflow-hidden rounded-lg">
-              <motion.img 
-                src={madeInPoolerImg} 
-                alt="NURD Made in Pooler, GA" 
-                className="mx-auto max-h-[500px] rounded-lg shadow-lg cursor-pointer"
-                data-cursor-text="Made in Pooler, GA"
-                whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}
-                initial={{ scale: 1, y: 20 }}
-                animate={{ scale: 1, y: 0 }}
-                transition={{ type: "spring", damping: 15, stiffness: 300 }}
-              />
+            className="w-[180px] flex flex-col h-full"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <div className="flex flex-col h-full px-4 py-6 glass-card rounded-lg border border-white/20">
+              {/* Top Section - NURDs Joined */}
+              <motion.div
+                className="mb-6"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.3 }}
+              >
+                <h3 className="text-sm font-medium text-white/70 mb-2">NURDs Joined</h3>
+                <div className="flex items-center">
+                  <motion.div 
+                    className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-400"
+                    initial={{ scale: 0.8 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    0120
+                  </motion.div>
+                  <motion.span 
+                    className="ml-2 px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-md"
+                    animate={{ 
+                      scale: [1, 1.15, 1],
+                      opacity: [1, 0.8, 1]
+                    }}
+                    transition={{ 
+                      duration: 1.5, 
+                      repeat: Infinity, 
+                      repeatType: "reverse",
+                      ease: "easeInOut" 
+                    }}
+                  >
+                    Active
+                  </motion.span>
+                </div>
+              </motion.div>
+              
+              {/* Middle Section - NURDs Created */}
+              <motion.div
+                className="mb-6"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.4 }}
+              >
+                <h3 className="text-sm font-medium text-white/70 mb-2">NURDs Created</h3>
+                <div className="flex items-center">
+                  <motion.div 
+                    className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400"
+                    initial={{ scale: 0.8 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    0087
+                  </motion.div>
+                  <motion.span 
+                    className="ml-2 px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-md"
+                    animate={{ 
+                      scale: [1, 1.15, 1],
+                      opacity: [1, 0.8, 1]
+                    }}
+                    transition={{ 
+                      duration: 1.5, 
+                      repeat: Infinity, 
+                      repeatType: "reverse",
+                      ease: "easeInOut",
+                      delay: 0.5
+                    }}
+                  >
+                    Graduates
+                  </motion.span>
+                </div>
+              </motion.div>
+              
+              {/* Bottom Section - Upcoming Cohort Info */}
+              <motion.div
+                className="mt-auto"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.5 }}
+              >
+                <h3 className="text-sm font-medium text-white/70 mb-3">Upcoming Cohort</h3>
+                <div className="space-y-2">
+                  <div className="flex items-center text-white/80">
+                    <Calendar className="h-4 w-4 mr-2 text-primary" />
+                    <span className="text-sm">TBD</span>
+                  </div>
+                  <div className="flex items-center text-white/80">
+                    <User className="h-4 w-4 mr-2 text-primary" />
+                    <span className="text-sm">TBD</span>
+                  </div>
+                  <div className="flex items-center text-white/80">
+                    <MapPin className="h-4 w-4 mr-2 text-primary" />
+                    <span className="text-sm">TBD</span>
+                  </div>
+                </div>
+              </motion.div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+          
+          {/* Central Hero Image - Keep all original properties unchanged */}
+          <motion.div 
+            className="relative group flex-1"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <motion.div 
+              className="absolute -inset-1 bg-gradient-to-r from-green-400 to-blue-500 rounded-lg blur"
+              initial={{ opacity: 0.25 }}
+              whileHover={{ opacity: 0.75, transition: { duration: 0.3 } }}
+              animate={{ 
+                opacity: [0.25, 0.35, 0.25],
+                scale: [1, 1.02, 1]
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                repeatType: "reverse",
+                ease: "easeInOut"
+              }}
+            />
+            <div className="relative p-1 bg-white rounded-lg">
+              <div className="p-5 glass-card overflow-hidden rounded-lg">
+                <motion.img 
+                  src={madeInPoolerImg} 
+                  alt="NURD Made in Pooler, GA" 
+                  className="mx-auto max-h-[500px] rounded-lg shadow-lg cursor-pointer"
+                  data-cursor-text="Made in Pooler, GA"
+                  whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}
+                  initial={{ scale: 1, y: 20 }}
+                  animate={{ scale: 1, y: 0 }}
+                  transition={{ type: "spring", damping: 15, stiffness: 300 }}
+                />
+              </div>
+            </div>
+          </motion.div>
+        </div>
         
         <div className="mt-10 flex flex-wrap justify-center gap-5">
           <motion.a 
