@@ -9,7 +9,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { useToast } from '@/hooks/use-toast';
 
 // This would come from environment variables in a production environment
-const stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY || '';
+const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '';
 const stripePromise = loadStripe(stripePublishableKey);
 
 // Stripe might not be configured yet, so we'll create a placeholder
