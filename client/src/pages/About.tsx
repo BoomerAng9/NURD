@@ -8,6 +8,12 @@ import WhyChooseSection from '@/components/sections/why-choose-section';
 import VibeCodingSection from '@/components/sections/vibe-coding-section';
 import ParentsSection from '@/components/sections/parents-section';
 
+// Import images
+import nurdLaptopImg from '@assets/4288A514-4A16-4431-944E-9130EC4BCC2F.png';
+import boostBridgeImg from '@assets/IMG_0098.png';
+import okaiLogoImg from '@assets/OKAI logo.png';
+import nurdLogoImg from '@assets/33C74D57-C126-4BBE-A4B4-54F38CDD6AFD.png';
+
 const About: React.FC = () => {
   return (
     <div className="relative min-h-screen w-full bg-gray-50">
@@ -25,7 +31,7 @@ const About: React.FC = () => {
             <div className="flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="md:w-2/5 order-2 md:order-1">
                 <img 
-                  src="/attached_assets/4288A514-4A16-4431-944E-9130EC4BCC2F.png" 
+                  src={nurdLaptopImg} 
                   alt="NURD Laptop" 
                   className="rounded-lg shadow-xl transform hover:scale-[1.02] transition-transform duration-300 max-w-full"
                 />
@@ -83,7 +89,7 @@ const About: React.FC = () => {
                     <div className="bg-gradient-to-r from-[#4A26AB] to-[#4A26AB]/90 p-6 rounded-xl text-white shadow-lg transform transition-transform hover:scale-[1.01]">
                       <div className="flex items-center mb-4">
                         <div className="w-16 h-16 flex items-center justify-center mr-4">
-                          <img src="/attached_assets/IMG_0098.png" alt="BoostBridge Logo" className="h-14 w-auto object-contain" />
+                          <img src={boostBridgeImg} alt="BoostBridge Logo" className="h-14 w-auto object-contain" />
                         </div>
                         <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-300">The Boost|Bridge</h3>
                       </div>
@@ -100,7 +106,7 @@ const About: React.FC = () => {
                     <div className="bg-gradient-to-r from-[#0B7285] to-[#0B7285]/90 p-6 rounded-xl text-white shadow-lg transform transition-transform hover:scale-[1.01]">
                       <div className="flex items-center mb-4">
                         <div className="w-16 h-16 flex items-center justify-center mr-4">
-                          <img src="/attached_assets/OKAI logo.png" alt="OpenKlass AI Logo" className="h-14 w-auto object-contain" />
+                          <img src={okaiLogoImg} alt="OpenKlass AI Logo" className="h-14 w-auto object-contain" />
                         </div>
                         <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-300">OpenKlass AI</h3>
                       </div>
@@ -117,7 +123,7 @@ const About: React.FC = () => {
                     <div className="bg-gradient-to-r from-[#121645] to-[#121645]/90 p-6 rounded-xl text-white shadow-lg transform transition-transform hover:scale-[1.01]">
                       <div className="flex items-center mb-4">
                         <div className="w-16 h-16 flex items-center justify-center mr-4">
-                          <img src="/attached_assets/33C74D57-C126-4BBE-A4B4-54F38CDD6AFD.png" alt="NURD Logo" className="h-14 w-auto object-contain" />
+                          <img src="@assets/33C74D57-C126-4BBE-A4B4-54F38CDD6AFD.png" alt="NURD Logo" className="h-14 w-auto object-contain" />
                         </div>
                         <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-300">The NURD Initiative</h3>
                       </div>
