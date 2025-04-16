@@ -145,7 +145,7 @@ const TestComponent = () => {
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.5 }}
                   >
-                    0120
+                    {formatCounter(joinedCount)}
                   </motion.div>
                   <motion.span 
                     className="ml-2 px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-md"
@@ -180,7 +180,7 @@ const TestComponent = () => {
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.5 }}
                   >
-                    0087
+                    {formatCounter(createdCount)}
                   </motion.div>
                   <motion.span 
                     className="ml-2 px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-md"
