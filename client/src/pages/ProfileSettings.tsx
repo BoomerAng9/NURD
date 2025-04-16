@@ -72,14 +72,6 @@ const ProfileSettings: React.FC = () => {
     allowTagging: true,
   });
   
-  const [themeSettings, setThemeSettings] = useState<ThemeFormValues>({
-    colorScheme: 'default' as const,
-    appearance: 'system' as const,
-    radius: 0.5,
-    animations: true,
-    hapticFeedback: true,
-  });
-  
   // Load user data and settings
   useEffect(() => {
     const loadUserData = async () => {
@@ -140,15 +132,7 @@ const ProfileSettings: React.FC = () => {
     });
   };
   
-  const handleSaveThemeSettings = (values: ThemeFormValues) => {
-    setThemeSettings(prev => ({ ...prev, ...values }));
-    
-    // This simulates saving to a database
-    toast({
-      title: "Theme updated",
-      description: "Your dashboard theme settings have been saved",
-    });
-  };
+  // Theme settings are now handled by the ThemeProvider and ThemeEditor
   
   if (isLoading) {
     return (
@@ -243,10 +227,7 @@ const ProfileSettings: React.FC = () => {
             </TabsContent>
             
             <TabsContent value="theme" className="space-y-6">
-              <ThemeCustomizer
-                initialTheme={themeSettings}
-                onSave={handleSaveThemeSettings}
-              />
+              <ThemeEditor />
             </TabsContent>
             
             <TabsContent value="avatar" className="space-y-6">
