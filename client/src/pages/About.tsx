@@ -9,7 +9,7 @@ import VibeCodingSection from '@/components/sections/vibe-coding-section';
 import ParentsSection from '@/components/sections/parents-section';
 
 // Import images
-import achievemorLogoImg from '@assets/A196ADAE-A9D1-4CC5-8183-A442053AA511.png';
+import achievemorLogoImg from '@assets/achievemor-neon-drip-logo.png';
 import boostBridgeImg from '@assets/IMG_0098.png';
 import okaiLogoImg from '@assets/OKAI logo.png';
 import nurdLogoImg from '@assets/33C74D57-C126-4BBE-A4B4-54F38CDD6AFD.png';
@@ -38,7 +38,7 @@ const About: React.FC = () => {
               </div>
               <div className="md:w-3/5 order-1 md:order-2">
                 <div className="text-center md:text-left">
-                  <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">About ACHIEVEMOR</h1>
+                  <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-600">About ACHIEVEMOR</h1>
                   <p className="text-xl leading-relaxed text-white">
                     Driving innovation through expertise, creativity, and emerging technology implementation.
                   </p>

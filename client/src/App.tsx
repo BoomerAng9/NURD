@@ -288,25 +288,25 @@ const AppContent = () => {
       {!isMobile && (
         <footer className="py-4 px-6 text-center text-sm">
           <div className="flex flex-col items-center justify-center space-y-2">
-            <p className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 font-medium">
+            <p className="bg-clip-text text-transparent bg-gradient-to-r from-teal-400 via-green-500 to-blue-600 font-medium">
               NURD = Naturally Unstoppable Resourceful Dreamers
             </p>
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs">
               <span className="flex items-center">
-                <span className="h-2 w-2 rounded-full bg-gradient-to-r from-primary to-blue-600 mr-2"></span>
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 font-medium">
+                <span className="h-2 w-2 rounded-full bg-gradient-to-r from-teal-400 to-green-500 mr-2"></span>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-400 via-green-500 to-blue-600 font-medium">
                   Creativity First
                 </span>
               </span>
               <span className="flex items-center">
-                <span className="h-2 w-2 rounded-full bg-gradient-to-r from-primary to-blue-600 mr-2"></span>
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 font-medium">
+                <span className="h-2 w-2 rounded-full bg-gradient-to-r from-green-500 to-blue-600 mr-2"></span>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-400 via-green-500 to-blue-600 font-medium">
                   AI Collaboration
                 </span>
               </span>
               <span className="flex items-center">
-                <span className="h-2 w-2 rounded-full bg-gradient-to-r from-primary to-blue-600 mr-2"></span>
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 font-medium">
+                <span className="h-2 w-2 rounded-full bg-gradient-to-r from-teal-400 to-blue-600 mr-2"></span>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-400 via-green-500 to-blue-600 font-medium">
                   Community Building
                 </span>
               </span>

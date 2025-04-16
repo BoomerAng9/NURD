@@ -151,7 +151,7 @@ const Achievers = () => {
         <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-500 to-blue-600 mb-4">
           ACHIEVERS Program
         </h1>
-        <p className="max-w-2xl mx-auto text-lg text-gray-600 dark:text-gray-300">
+        <p className="max-w-2xl mx-auto text-lg text-gray-400 dark:text-gray-300 font-medium" style={{ color: '#F1F5F9' }}>
           Empowering the next generation of tech leaders through creative coding, AI collaboration, and community innovation.
         </p>
       </motion.div>
@@ -270,22 +270,26 @@ const Achievers = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-6">
                 {Object.entries(programTiers).map(([key, tier]) => (
                   <div 
                     key={key}
-                    className={`border rounded-xl overflow-hidden transition-all ${
-                      key === 'premium' 
-                        ? 'shadow-lg ring-2 ring-primary/50 transform md:scale-105' 
-                        : 'shadow hover:shadow-md'
-                    }`}
+                    className={`border rounded-xl overflow-hidden transition-all duration-300 hover:transform hover:scale-105 
+                      ${key === form.getValues("programTier") ? 'ring-4 ring-primary shadow-xl' : ''}
+                      ${key === 'premium' 
+                        ? 'shadow-lg ring-2 ring-primary/50 md:scale-105' 
+                        : 'shadow hover:shadow-xl hover:border-primary/50'}
+                    `}
+                    onClick={() => {
+                      form.setValue("programTier", key as "basic" | "plus" | "premium");
+                    }}
                   >
                     <div className={`p-5 ${
                       key === 'basic' 
-                        ? 'bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20' 
+                        ? 'bg-gradient-to-br from-blue-500/20 to-indigo-500/30 text-gray-800 dark:text-white' 
                         : key === 'plus'
-                          ? 'bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20'
-                          : 'bg-gradient-to-br from-primary/10 to-blue-400/10'
+                          ? 'bg-gradient-to-br from-purple-500/30 to-pink-500/30 text-gray-800 dark:text-white'
+                          : 'bg-gradient-to-br from-primary/30 to-blue-400/30 text-gray-800 dark:text-white'
                     }`}>
                       <h3 className="text-xl font-bold">{tier.title}</h3>
                       <div className="mt-2 mb-4">
@@ -295,20 +299,22 @@ const Achievers = () => {
                         <Badge className="bg-primary">Most Popular</Badge>
                       )}
                     </div>
-                    <div className="p-5">
+                    <div className="p-5 bg-white dark:bg-gray-800">
                       <ul className="space-y-3">
                         {tier.features.map((feature, i) => (
                           <li key={i} className="flex items-start">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-primary mr-2 flex-shrink-0">
                               <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
                             </svg>
-                            <span>{feature}</span>
+                            <span className="text-gray-700 dark:text-gray-200">{feature}</span>
                           </li>
                         ))}
                       </ul>
                       <Button 
-                        className={`w-full mt-6 ${
-                          key === 'premium' ? '' : 'bg-gray-700 hover:bg-gray-600'
+                        className={`w-full mt-6 transition-all duration-300 hover:scale-105 ${
+                          key === 'premium' ? 'bg-primary hover:bg-primary/90' : 
+                          key === form.getValues("programTier") ? 'bg-primary hover:bg-primary/90' : 
+                          'bg-gray-700 hover:bg-gray-600'
                         }`}
                         onClick={() => {
                           setActiveTab("signup");
