@@ -6,6 +6,16 @@ import { setupAuth } from "./auth";
 import { setupSSOAuth } from "./sso-auth";
 import { generateCourse } from "./ai-course-generator";
 import { 
+  generateCodeSuggestion,
+  explainCode,
+  optimizeCode 
+} from "./ai-code-tools";
+import { 
+  createPaymentIntent,
+  createSubscription,
+  createCustomer
+} from "./payment-processing";
+import { 
   getSkillCategories, 
   getSkillCategoryById, 
   createSkillCategory,
@@ -938,8 +948,19 @@ Follow these guidelines:
   });
 
   // Create HTTP server
-  // AI Course Generation Endpoint
+  // AI Endpoints
+  // AI Course Generation
   app.post('/api/ai/generate-course', generateCourse);
+  
+  // AI Code Tools
+  app.post('/api/ai/code-suggestion', generateCodeSuggestion);
+  app.post('/api/ai/code-explanation', explainCode);
+  app.post('/api/ai/code-optimization', optimizeCode);
+  
+  // Payment Processing Endpoints
+  app.post('/api/payments/create-payment-intent', createPaymentIntent);
+  app.post('/api/payments/create-subscription', createSubscription);
+  app.post('/api/payments/create-customer', createCustomer);
 
   const httpServer = createServer(app);
 
