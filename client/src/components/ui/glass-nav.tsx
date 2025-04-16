@@ -42,6 +42,7 @@ interface NavItem {
 // Main navigation structure with dropdowns for better organization
 const navigation: NavItem[] = [
   { name: 'About Us', path: '/about', icon: <Info className="h-4 w-4 mr-2" /> },
+  { name: 'ACHIEVERS', path: '/achievers', icon: <Award className="h-4 w-4 mr-2" /> },
   { 
     name: 'Partners', 
     icon: <Handshake className="h-4 w-4 mr-2" />,
