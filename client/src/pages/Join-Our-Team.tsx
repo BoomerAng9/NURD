@@ -104,7 +104,12 @@ const JoinOurTeam: React.FC = () => {
             <p className="text-xl opacity-90 mb-8 leading-relaxed">
               We're looking for experienced IT professionals who are passionate about mentoring the next generation of tech innovators.
             </p>
-            <Button className="bg-[#3DE053] hover:bg-[#32bd45] text-black font-medium px-8 py-6 text-lg">
+            <Button 
+              className="bg-[#3DE053] hover:bg-[#32bd45] text-black font-medium px-8 py-6 text-lg"
+              onClick={() => {
+                document.getElementById('application-form')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
               Apply Now <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </motion.div>
@@ -435,7 +440,7 @@ const JoinOurTeam: React.FC = () => {
               variants={fadeIn}
               className="max-w-2xl mx-auto"
             >
-              <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
+              <form id="application-form" onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <div>
                     <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">First Name</label>

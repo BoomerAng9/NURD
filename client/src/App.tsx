@@ -143,6 +143,7 @@ const AppContent = () => {
             <Route path="/learn" component={Learning} />
             <Route path="/settings" component={ProfileSettings} />
             <Route path="/join" component={JoinOurTeam} />
+            <Route path="/apply" component={JoinOurTeam} />
             <Route path="/cohorts" component={Cohorts} />
             <Route path="/discord" component={DiscordConnect} />
             <Route path="/avatar" component={AvatarCreator} />
