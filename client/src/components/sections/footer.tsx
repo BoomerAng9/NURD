@@ -92,22 +92,8 @@ const Footer: React.FC = () => {
         </div>
         
         <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
-          <p className="flex items-center justify-center">
-            {/* Palmetto Palm Tree image */}
-            <img 
-              src="/assets/pooler_palm.svg" 
-              alt="Palmetto Palm" 
-              className="h-10 w-auto mr-3 text-gray-400"
-            />
-            
+          <p className="text-center">
             <span>Made in Pooler, GA</span>
-            
-            {/* Osprey SVG */}
-            <img 
-              src="/assets/osprey.svg" 
-              alt="Osprey" 
-              className="h-10 w-auto ml-3 text-gray-400"
-            />
           </p>
           
           <div className="mt-4 flex flex-wrap justify-center items-center gap-4">
