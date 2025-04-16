@@ -22,6 +22,9 @@ export const users = pgTable("users", {
   level: integer("level").default(1),
   xp: integer("xp").default(0),
   is_admin: boolean("is_admin").default(false),
+  color_scheme: text("color_scheme").default("default"), // Options: default, ocean, forest, sunset, space
+  theme_mode: text("theme_mode").default("system"), // Options: system, light, dark
+  accent_color: text("accent_color").default("#3B82F6"), // Primary accent color
   google_id: text("google_id").unique(),
   facebook_id: text("facebook_id").unique(),
   github_id: text("github_id").unique(),
@@ -46,6 +49,9 @@ export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
   email: true,
+  color_scheme: true,
+  theme_mode: true,
+  accent_color: true,
   google_id: true,
   facebook_id: true, 
   github_id: true,
@@ -79,6 +85,18 @@ export const ssoLoginSchema = z.object({
   }),
   token: z.string(),
   redirectUrl: z.string().optional(),
+});
+
+export const themePreferencesSchema = z.object({
+  color_scheme: z.enum(["default", "ocean", "forest", "sunset", "space"], {
+    required_error: "Please select a valid color scheme"
+  }),
+  theme_mode: z.enum(["system", "light", "dark"], {
+    required_error: "Please select a valid theme mode"
+  }),
+  accent_color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, {
+    message: "Accent color must be a valid hex color code"
+  })
 });
 
 export const landingContent = pgTable('landing_content', {
@@ -272,6 +290,7 @@ export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type RegistrationForm = z.infer<typeof registrationSchema>;
 export type SSOLoginForm = z.infer<typeof ssoLoginSchema>;
+export type ThemePreferences = z.infer<typeof themePreferencesSchema>;
 
 export type InsertFriendship = z.infer<typeof insertFriendshipSchema>;
 export type Friendship = typeof friendships.$inferSelect;
