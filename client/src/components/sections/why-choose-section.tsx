@@ -1,6 +1,4 @@
 import React from 'react';
-import achievemorBadgeImg from '@assets/achievemor-badge.png';
-import nurdDripLogoImg from '@assets/achievemor-neon-drip-logo.png';
 import teenStudentImg from '@assets/IMG_0128.jpeg';
 
 const WhyChooseSection: React.FC = () => {
@@ -25,32 +23,12 @@ const WhyChooseSection: React.FC = () => {
                 </p>
                 <p className="text-[#3B82F6] font-medium text-sm mt-2">— Alex, 14</p>
               </div>
-              
-              {/* NURD Logo overlay */}
-              <div className="absolute -left-6 -bottom-10 w-32 h-32 z-10">
-                <div className="relative w-full h-full flex items-center justify-center">
-                  <img 
-                    src={nurdDripLogoImg} 
-                    alt="NURD Logo" 
-                    className="w-full h-full object-contain drop-shadow-xl"
-                  />
-                </div>
-              </div>
-              
-              {/* ACHIEVEMOR Badge overlay */}
-              <div className="absolute -right-4 -top-4 w-28 h-28">
-                <img 
-                  src={achievemorBadgeImg} 
-                  alt="ACHIEVEMOR Badge" 
-                  className="w-full h-full object-contain shadow-lg transform hover:scale-105 transition-all duration-300"
-                />
-              </div>
             </div>
           </div>
           
           <div className="md:w-1/2">
             <span className="text-[#3B82F6] font-medium tracking-wider text-sm uppercase">Why Choose NURD?</span>
-            <h2 className="section-title mt-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">Empowering Youth Through Innovative Learning</h2>
+            <h2 className="section-title mt-2 mb-4 text-[#121645]">Empowering Youth Through Innovative Learning</h2>
             <p className="text-lg text-gray-600 mb-4">
               A program where creativity, technology, and personal growth converge to prepare students for future academic and career opportunities.
             </p>
