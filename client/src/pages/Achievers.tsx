@@ -158,10 +158,10 @@ const Achievers: React.FC = () => {
               variants={fadeIn}
               className="max-w-3xl mx-auto text-center mb-8"
             >
-              <h1 className="text-4xl font-bold mb-4">Sign Up for the NURD Initiative</h1>
+              <h1 className="text-4xl font-bold mb-4">Join the NURD Initiative</h1>
               <p className="text-xl opacity-90 mb-6">
-                Register your child for our <span className="font-medium">technology education for children</span> program. 
-                We'll create a custom <span className="font-medium">interactive profile card</span> and provide access to 
+                Our <span className="font-medium">technology education for children</span> program creates custom 
+                <span className="font-medium"> interactive profile cards</span> and provides access to 
                 <span className="font-medium"> youth coding initiatives</span> that foster creativity and innovation.
               </p>
             </motion.div>
@@ -170,226 +170,46 @@ const Achievers: React.FC = () => {
               initial="hidden"
               animate="visible"
               variants={fadeIn}
-              className="max-w-2xl mx-auto bg-white/10 backdrop-blur-md rounded-xl p-8 shadow-lg border border-white/20"
+              className="max-w-2xl mx-auto bg-white/10 backdrop-blur-md rounded-xl p-8 shadow-lg border border-white/20 text-center"
             >
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  <div className="mb-6">
-                    <h2 className="text-xl font-bold mb-4 flex items-center">
-                      <Users2 className="mr-2 h-5 w-5 text-[#3DE053]" />
-                      Parent Details
-                    </h2>
-                    <Separator className="bg-white/20 mb-4" />
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <FormField
-                        control={form.control}
-                        name="parentName"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Parent Name</FormLabel>
-                            <FormControl>
-                              <Input 
-                                placeholder="Enter your full name" 
-                                {...field} 
-                                className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="parentEmail"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Parent Email</FormLabel>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <div className="flex items-center space-x-2">
-                                    <FormControl>
-                                      <Input 
-                                        type="email" 
-                                        placeholder="your.email@example.com" 
-                                        {...field} 
-                                        className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
-                                      />
-                                    </FormControl>
-                                    <HelpCircle className="h-4 w-4 text-gray-400" />
-                                  </div>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>We'll use this email to send program updates and login details</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h2 className="text-xl font-bold mb-4 flex items-center">
-                      <Star className="mr-2 h-5 w-5 text-[#3DE053]" />
-                      Child Details
-                    </h2>
-                    <Separator className="bg-white/20 mb-4" />
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <FormField
-                        control={form.control}
-                        name="childName"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Child's Name</FormLabel>
-                            <FormControl>
-                              <Input 
-                                placeholder="Enter your child's name" 
-                                {...field} 
-                                className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="childAge"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Child's Age</FormLabel>
-                            <FormControl>
-                              <Input 
-                                type="number" 
-                                placeholder="Age" 
-                                min="1" 
-                                max="18" 
-                                {...field} 
-                                className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="childGrade"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              Child's Grade (Optional)
-                              <span className="text-gray-400 text-xs ml-2">Optional</span>
-                            </FormLabel>
-                            <Select 
-                              onValueChange={field.onChange} 
-                              defaultValue={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger className="bg-white/5 border-white/10 text-white">
-                                  <SelectValue placeholder="Select grade" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="pre-k">Pre-K</SelectItem>
-                                <SelectItem value="k">Kindergarten</SelectItem>
-                                {[...Array(12)].map((_, i) => (
-                                  <SelectItem key={i} value={`${i + 1}`}>
-                                    Grade {i + 1}
-                                  </SelectItem>
-                                ))}
-                                <SelectItem value="other">Other</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormDescription className="text-gray-400">
-                              This helps us tailor content to your child's academic level.
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="preferredPath"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              Preferred Learning Path
-                              <span className="text-gray-400 text-xs ml-2">Optional</span>
-                            </FormLabel>
-                            <Select 
-                              onValueChange={field.onChange} 
-                              defaultValue={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger className="bg-white/5 border-white/10 text-white">
-                                  <SelectValue placeholder="Select interest area" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="coding">Coding</SelectItem>
-                                <SelectItem value="design">Design</SelectItem>
-                                <SelectItem value="robotics">Robotics</SelectItem>
-                                <SelectItem value="gaming">Game Development</SelectItem>
-                                <SelectItem value="art">Digital Art</SelectItem>
-                                <SelectItem value="science">Science & Tech</SelectItem>
-                                <SelectItem value="other">Other</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormDescription className="text-gray-400">
-                              This helps us customize your child's learning experience.
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    
-                    <div className="mt-4">
-                      <FormField
-                        control={form.control}
-                        name="parentPhone"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              Parent Phone Number
-                              <span className="text-gray-400 text-xs ml-2">Optional</span>
-                            </FormLabel>
-                            <FormControl>
-                              <Input 
-                                type="tel"
-                                placeholder="(123) 456-7890" 
-                                {...field} 
-                                className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
-                              />
-                            </FormControl>
-                            <FormDescription className="text-gray-400">
-                              For important program updates and notifications.
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-[#3DE053] hover:bg-[#32bd45] text-black font-bold py-3 text-lg"
-                  >
-                    Sign Up for NURD Initiative
-                  </Button>
-                </form>
-              </Form>
+              <h2 className="text-2xl font-bold mb-4 flex items-center justify-center">
+                <Users2 className="mr-2 h-6 w-6 text-[#3DE053]" />
+                Register Your Child
+              </h2>
+              <p className="text-white/80 mb-6">
+                Register your child for the ACHIEVERS program and give them access to a world of technology
+                learning and creative development opportunities.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div className="bg-white/5 p-6 rounded-lg border border-white/10">
+                  <Award className="h-10 w-10 text-[#3DE053] mx-auto mb-3" />
+                  <h3 className="font-bold text-xl mb-2">Custom Profile</h3>
+                  <p className="text-white/70 text-sm">
+                    Your child will receive a custom digital profile card showcasing their achievements
+                  </p>
+                </div>
+                
+                <div className="bg-white/5 p-6 rounded-lg border border-white/10">
+                  <Code className="h-10 w-10 text-[#3DE053] mx-auto mb-3" />
+                  <h3 className="font-bold text-xl mb-2">Coding Journeys</h3>
+                  <p className="text-white/70 text-sm">
+                    Access to age-appropriate coding activities and learning programs
+                  </p>
+                </div>
+              </div>
+              
+              <a href="/achiever-signup">
+                <Button 
+                  className="w-full bg-gradient-to-r from-[#3DE053] to-[#2BF3C0] text-black font-bold py-6 rounded-lg hover:opacity-90 transition text-lg"
+                >
+                  Sign Up Your Child
+                </Button>
+              </a>
+              
+              <p className="mt-4 text-sm text-white/60">
+                Parent/guardian registration required for children under 18
+              </p>
             </motion.div>
           </div>
         </section>
