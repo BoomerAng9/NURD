@@ -9,7 +9,7 @@ import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { PageTransition } from "@/components/animations/page-transition";
 import MagicCursor from "@/components/ui/magic-cursor";
-// Apply Modal removed
+import { ApplyModal } from "@/components/ui/apply-modal";
 import { useCursorInteraction } from "@/hooks/use-cursor-interaction";
 import { UserPlus } from "lucide-react";
 import { GlassNav } from "@/components/ui/glass-nav";
@@ -30,7 +30,7 @@ import Cohorts from "@/pages/Cohorts";
 import AuthPage from "@/pages/auth-page";
 import DiscordConnect from "@/pages/DiscordConnect";
 import AvatarCreator from "@/pages/AvatarCreator";
-// Achievers page removed
+import Achievers from "@/pages/Achievers";
 import UserProgress from "@/pages/UserProgress";
 import AICodeTools from "@/pages/AICodeTools";
 import SkillMarketplace from "@/pages/SkillMarketplace";
@@ -38,7 +38,6 @@ import ModuleDetail from "@/pages/ModuleDetail";
 import AICourseCreator from "@/pages/AICourseCreator";
 import Reinvestment from "@/pages/reinvestment";
 import CreateCourse from "@/pages/create-course";
-import ParentSignup from "@/pages/ParentSignup";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { LayoutDashboard, Send } from "lucide-react";
 
@@ -113,15 +112,15 @@ const TestComponent = () => {
             <span className="font-semibold">AI Code Tools</span>
           </a>
           <a 
-            href="/parent-signup" 
+            href="/achievers" 
             className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-orange-600/20 to-amber-600/20 border-orange-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
-            data-cursor-text="Register your child!"
+            data-cursor-text="Join our ACHIEVERS program!"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-send">
               <path d="m22 2-7 20-4-9-9-4Z"/>
               <path d="M22 2 11 13"/>
             </svg>
-            <span className="font-semibold">Parent Sign Up</span>
+            <span className="font-semibold">ACHIEVERS</span>
           </a>
         </div>
       </div>
@@ -135,6 +134,7 @@ const AppContent = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { user, isLoading: authLoading } = useAuth();
   const [isCursorEnabled, setIsCursorEnabled] = useState(false);
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
 
   useEffect(() => {
     // Load cursor preference from localStorage
@@ -198,16 +198,21 @@ const AppContent = () => {
         </svg>
       </button>
       
-      {/* Apply Now button fixed at bottom right - now links directly to Parent Signup */}
-      <Link href="/parent-signup">
-        <button 
-          className="fixed bottom-4 right-20 z-50 px-4 py-2 bg-primary text-white font-bold rounded-full shadow-lg hover:bg-primary/90 transition-all transform hover:scale-105 flex items-center space-x-2"
-          data-cursor-text="Register your child!"
-        >
-          <UserPlus className="h-5 w-5" />
-          <span>Parent Sign Up</span>
-        </button>
-      </Link>
+      {/* Apply Now button fixed at bottom right */}
+      <button 
+        onClick={() => setIsApplyModalOpen(true)}
+        className="fixed bottom-4 right-20 z-50 px-4 py-2 bg-primary text-white font-bold rounded-full shadow-lg hover:bg-primary/90 transition-all transform hover:scale-105 flex items-center space-x-2"
+        data-cursor-text="Start your journey!"
+      >
+        <UserPlus className="h-5 w-5" />
+        <span>Apply Now</span>
+      </button>
+      
+      {/* Apply modal */}
+      <ApplyModal 
+        isOpen={isApplyModalOpen} 
+        onClose={() => setIsApplyModalOpen(false)} 
+      />
       
       <main className="flex-grow">
         <PageTransition>
@@ -231,8 +236,7 @@ const AppContent = () => {
             <Route path="/avatar" component={AvatarCreator} />
             <Route path="/home" component={Landing} />
             <Route path="/auth" component={AuthPage} />
-            {/* Achievers route removed */}
-            <Route path="/parent-signup" component={ParentSignup} />
+            <Route path="/achievers" component={Achievers} />
             <Route path="/ai-code-tools" component={AICodeTools} />
             <Route path="/progress" component={UserProgress} />
             <Route path="/skill-marketplace" component={SkillMarketplace} />
