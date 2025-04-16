@@ -1,26 +1,18 @@
 import React from 'react';
-import achievemorBadgeImg from '@assets/achievemor-badge.png';
 
 const WhyChooseSection: React.FC = () => {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-10 bg-white">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row gap-12 items-center">
+        <div className="flex flex-col md:flex-row gap-8 items-center">
           <div className="md:w-1/2">
             <div className="relative">
               <div className="bg-white p-4 rounded-xl shadow-lg relative overflow-hidden">
                 <img 
-                  src="/nurd-laptop-student.jpeg" 
-                  alt="NURD - Student learning" 
-                  className="w-full h-auto rounded-lg"
+                  src="/assets/teen-student.jpeg" 
+                  alt="Teen student learning" 
+                  className="w-full h-auto rounded-lg object-cover"
                 />
-                <div className="absolute inset-0 rounded-lg flex items-center justify-center bg-gradient-to-r from-black/40 to-black/10">
-                  <img
-                    src="@assets/teen-student.jpeg"
-                    alt="Teen student learning"
-                    className="w-3/4 h-3/4 object-cover rounded-lg shadow-2xl"
-                  />
-                </div>
               </div>
               
               {/* Testimonial bubble */}
@@ -35,7 +27,7 @@ const WhyChooseSection: React.FC = () => {
               <div className="absolute -left-6 -bottom-10 w-32 h-32 z-10">
                 <div className="relative w-full h-full flex items-center justify-center">
                   <img 
-                    src="@assets/nurd-drip-logo.png" 
+                    src="/assets/nurd-drip-logo.png" 
                     alt="NURD Logo" 
                     className="w-full h-full object-contain drop-shadow-xl"
                   />
@@ -45,7 +37,7 @@ const WhyChooseSection: React.FC = () => {
               {/* ACHIEVEMOR Badge overlay */}
               <div className="absolute -right-4 -top-4 w-28 h-28">
                 <img 
-                  src={achievemorBadgeImg} 
+                  src="/assets/achievemor-badge.png" 
                   alt="ACHIEVEMOR Badge" 
                   className="w-full h-full object-contain shadow-lg transform hover:scale-105 transition-all duration-300"
                 />
@@ -56,11 +48,11 @@ const WhyChooseSection: React.FC = () => {
           <div className="md:w-1/2">
             <span className="text-[#3B82F6] font-medium tracking-wider text-sm uppercase">Why Choose NURD?</span>
             <h2 className="section-title mt-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">Empowering Youth Through Innovative Learning</h2>
-            <p className="text-lg text-gray-600 mb-8">
+            <p className="text-lg text-gray-600 mb-4">
               A program where creativity, technology, and personal growth converge to prepare students for future academic and career opportunities.
             </p>
             
-            <div className="space-y-6">
+            <div className="space-y-4">
               <div className="flex items-start">
                 <div className="w-10 h-10 rounded-full bg-[#22C55E]/10 flex items-center justify-center mt-1 mr-4">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
