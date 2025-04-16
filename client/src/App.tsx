@@ -7,6 +7,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { ColorSchemeProvider } from "@/providers/color-scheme-provider";
 import { PageTransition } from "@/components/animations/page-transition";
 import MagicCursor from "@/components/ui/magic-cursor";
 import { ApplyModal } from "@/components/ui/apply-modal";
@@ -330,8 +331,10 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <ThemeProvider>
-          <AppContent />
-          <Toaster />
+          <ColorSchemeProvider>
+            <AppContent />
+            <Toaster />
+          </ColorSchemeProvider>
         </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>

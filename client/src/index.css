@@ -28,52 +28,76 @@
     --nurd-silver: #F1F5F9;
     
     /* Default theme */
-    --accent-color: #3B82F6;
-    --accent-color-rgb: 59, 130, 246;
-    --secondary-color: #3EC6E0;
-    --secondary-color-rgb: 62, 198, 224;
-    --highlight-color: #6A2FF8;
+    --color-primary: #3760ff;
+    --color-accent: #6638e8;
+    
+    /* Adaptive color scheme variables */
+    --accent-color: var(--color-primary);
+    --accent-color-rgb: 55, 96, 255;
+    --secondary-color: var(--color-accent);
+    --secondary-color-rgb: 102, 56, 232;
+    --highlight-color: var(--color-primary);
     --muted-color: #94A3B8;
+    
+    /* CSS variable for primary color in Tailwind */
+    --primary: 220 100% 66%;
+    --primary-foreground: 0 0% 100%;
   }
 
   /* Color scheme: Ocean */
   [data-color-scheme="ocean"] {
-    --accent-color: #0EA5E9;
-    --accent-color-rgb: 14, 165, 233;
-    --secondary-color: #06B6D4;
-    --secondary-color-rgb: 6, 182, 212;
-    --highlight-color: #2563EB;
+    --accent-color: var(--color-primary);
+    --accent-color-rgb: 8, 145, 178;
+    --secondary-color: var(--color-accent);
+    --secondary-color-rgb: 37, 99, 235;
+    --highlight-color: var(--color-primary);
     --muted-color: #64748B;
+    
+    /* Update Tailwind primary color */
+    --primary: 197 100% 37%;
+    --primary-foreground: 0 0% 100%;
   }
 
   /* Color scheme: Forest */
   [data-color-scheme="forest"] {
-    --accent-color: #22C55E;
-    --accent-color-rgb: 34, 197, 94;
-    --secondary-color: #10B981;
-    --secondary-color-rgb: 16, 185, 129;
-    --highlight-color: #4ADE80;
+    --accent-color: var(--color-primary);
+    --accent-color-rgb: 22, 163, 74;
+    --secondary-color: var(--color-accent);
+    --secondary-color-rgb: 5, 150, 105;
+    --highlight-color: var(--color-primary);
     --muted-color: #84CC16;
+    
+    /* Update Tailwind primary color */
+    --primary: 142 76% 36%;
+    --primary-foreground: 0 0% 100%;
   }
 
   /* Color scheme: Sunset */
   [data-color-scheme="sunset"] {
-    --accent-color: #F97316;
-    --accent-color-rgb: 249, 115, 22;
-    --secondary-color: #FB923C;
-    --secondary-color-rgb: 251, 146, 60;
-    --highlight-color: #FBBF24;
+    --accent-color: var(--color-primary);
+    --accent-color-rgb: 234, 88, 12;
+    --secondary-color: var(--color-accent);
+    --secondary-color-rgb: 220, 38, 38;
+    --highlight-color: var(--color-primary);
     --muted-color: #FDE68A;
+    
+    /* Update Tailwind primary color */
+    --primary: 24 95% 48%;
+    --primary-foreground: 0 0% 100%;
   }
 
   /* Color scheme: Space */
   [data-color-scheme="space"] {
-    --accent-color: #8B5CF6;
-    --accent-color-rgb: 139, 92, 246;
-    --secondary-color: #A78BFA;
-    --secondary-color-rgb: 167, 139, 250;
-    --highlight-color: #C4B5FD;
+    --accent-color: var(--color-primary);
+    --accent-color-rgb: 124, 58, 237;
+    --secondary-color: var(--color-accent);
+    --secondary-color-rgb: 79, 70, 229;
+    --highlight-color: var(--color-primary);
     --muted-color: #7C3AED;
+    
+    /* Update Tailwind primary color */
+    --primary: 265 89% 58%;
+    --primary-foreground: 0 0% 100%;
   }
 
   /* Dark mode adjustments */

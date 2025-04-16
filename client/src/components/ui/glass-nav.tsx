@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
+import { ColorSchemePicker } from '@/components/ui/color-scheme-picker';
 
 interface NavItem {
   name: string;
