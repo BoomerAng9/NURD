@@ -122,6 +122,10 @@ export interface IStorage {
   getSkillExchangeById(id: number): Promise<SkillExchange | undefined>;
   createSkillExchange(exchange: InsertSkillExchange): Promise<SkillExchange>;
   updateSkillExchangeStatus(id: number, status: string): Promise<SkillExchange | undefined>;
+  
+  // Theme preferences methods
+  getUserThemePreferences(userId: number): Promise<{ color_scheme: string, theme_mode: string, accent_color: string } | undefined>;
+  updateUserThemePreferences(userId: number, preferences: { color_scheme?: string, theme_mode?: string, accent_color?: string }): Promise<User>;
 }
 
 // Database storage implementation using Drizzle ORM
@@ -1106,6 +1110,33 @@ export class DatabaseStorage implements IStorage {
     }
     
     return updatedExchange;
+  }
+
+  // Theme preferences methods
+  async getUserThemePreferences(userId: number): Promise<{ color_scheme: string, theme_mode: string, accent_color: string } | undefined> {
+    const [user] = await db
+      .select({
+        color_scheme: users.color_scheme,
+        theme_mode: users.theme_mode,
+        accent_color: users.accent_color
+      })
+      .from(users)
+      .where(eq(users.id, userId));
+      
+    return user || undefined;
+  }
+  
+  async updateUserThemePreferences(userId: number, preferences: { color_scheme?: string, theme_mode?: string, accent_color?: string }): Promise<User> {
+    const [updatedUser] = await db
+      .update(users)
+      .set({
+        ...preferences,
+        updated_at: new Date()
+      })
+      .where(eq(users.id, userId))
+      .returning();
+      
+    return updatedUser;
   }
 }
 

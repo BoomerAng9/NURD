@@ -22,7 +22,7 @@ import {
   createSkillExchange,
   updateSkillExchangeStatus
 } from "./skill_storage";
-import { insertUserSchema } from "@shared/schema";
+import { insertUserSchema, themePreferencesSchema } from "@shared/schema";
 import { 
   insertCourseSchema, 
   insertLessonSchema, 
@@ -475,6 +475,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(200).json(updatedStreak);
     } catch (error) {
       console.error("Error updating streak:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Theme Preferences Routes
+  app.get('/api/users/:userId/theme-preferences', async (req, res) => {
+    try {
+      const userId = parseInt(req.params.userId);
+      const preferences = await storage.getUserThemePreferences(userId);
+      
+      if (!preferences) {
+        return res.status(404).json({ message: "Theme preferences not found" });
+      }
+      
+      return res.status(200).json(preferences);
+    } catch (error) {
+      console.error("Error fetching theme preferences:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post('/api/users/:userId/theme-preferences', async (req, res) => {
+    try {
+      const userId = parseInt(req.params.userId);
+      const preferencesData = themePreferencesSchema.partial().parse(req.body);
+      
+      const updatedUser = await storage.updateUserThemePreferences(userId, preferencesData);
+      
+      // Return only theme preferences
+      const { color_scheme, theme_mode, accent_color } = updatedUser;
+      return res.status(200).json({ color_scheme, theme_mode, accent_color });
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ 
+          message: "Validation error", 
+          errors: error.errors 
+        });
+      }
+      
+      console.error("Error updating theme preferences:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });
