@@ -13,6 +13,7 @@ import achievemorLogoImg from '@assets/achievemor-neon-drip-logo.png';
 import boostBridgeImg from '@assets/IMG_0098.png';
 import okaiLogoImg from '@assets/OKAI logo.png';
 import nurdLogoImg from '@assets/33C74D57-C126-4BBE-A4B4-54F38CDD6AFD.png';
+import stargateLogoImg from '@assets/3C17A24F-9F9E-4BC1-94D6-1FF3F4844FAF.png';
 
 const About: React.FC = () => {
   return (
@@ -67,12 +68,8 @@ const About: React.FC = () => {
                   <div className="relative md:ml-auto md:mr-8 w-full md:w-[85%] z-10">
                     <div className="bg-gradient-to-r from-[#121645] to-[#121645]/90 p-6 rounded-xl text-white shadow-lg transform transition-transform hover:scale-[1.01]">
                       <div className="flex items-center mb-4">
-                        <div className="w-16 h-16 bg-gradient-to-r from-primary to-primary/50 rounded-full flex items-center justify-center mr-4">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="8" x2="12" y2="12"></line>
-                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                          </svg>
+                        <div className="w-16 h-16 flex items-center justify-center mr-4">
+                          <img src={stargateLogoImg} alt="STARGATE Logo" className="h-14 w-auto object-contain" />
                         </div>
                         <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-300">The STARGATE</h3>
                       </div>

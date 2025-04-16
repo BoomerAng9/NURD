@@ -1,4 +1,7 @@
 import React from 'react';
+import achievemorBadgeImg from '@assets/3D77F680-ECBF-4B5A-AD84-C0E8223AC38D.png';
+import nurdDripLogoImg from '@assets/D99F2978-B63A-4C6D-965A-FF2112479490.png';
+import teenStudentImg from '@assets/IMG_0128.jpeg';
 
 const WhyChooseSection: React.FC = () => {
   return (
@@ -9,7 +12,7 @@ const WhyChooseSection: React.FC = () => {
             <div className="relative">
               <div className="bg-white p-4 rounded-xl shadow-lg relative overflow-hidden">
                 <img 
-                  src="/assets/teen-student.jpeg" 
+                  src={teenStudentImg} 
                   alt="Teen student learning" 
                   className="w-full h-auto rounded-lg object-cover"
                 />
@@ -27,7 +30,7 @@ const WhyChooseSection: React.FC = () => {
               <div className="absolute -left-6 -bottom-10 w-32 h-32 z-10">
                 <div className="relative w-full h-full flex items-center justify-center">
                   <img 
-                    src="/assets/nurd-drip-logo.png" 
+                    src={nurdDripLogoImg} 
                     alt="NURD Logo" 
                     className="w-full h-full object-contain drop-shadow-xl"
                   />
@@ -37,7 +40,7 @@ const WhyChooseSection: React.FC = () => {
               {/* ACHIEVEMOR Badge overlay */}
               <div className="absolute -right-4 -top-4 w-28 h-28">
                 <img 
-                  src="/assets/achievemor-badge.png" 
+                  src={achievemorBadgeImg} 
                   alt="ACHIEVEMOR Badge" 
                   className="w-full h-full object-contain shadow-lg transform hover:scale-105 transition-all duration-300"
                 />
