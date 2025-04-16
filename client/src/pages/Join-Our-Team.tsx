@@ -123,6 +123,88 @@ const JoinOurTeam: React.FC = () => {
       
       {/* Main Content */}
       <main className="flex-grow">
+        {/* Apply Section - Moved to top */}
+        <section className="py-10 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={fadeIn}
+              className="max-w-3xl mx-auto text-center mb-8"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold mb-3">Ready to Join Our Team?</h2>
+              <p className="text-lg text-gray-600">
+                Apply now to become a NURD trainer and help shape the next generation of tech innovators.
+              </p>
+            </motion.div>
+            
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.1 }}
+              variants={fadeIn}
+              className="max-w-3xl mx-auto"
+            >
+              <form id="application-form" onSubmit={handleSubmit} className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
+                <h3 className="text-xl font-bold mb-6 text-center">Trainer Application</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div>
+                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                    <Input id="firstName" required />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                    <Input id="lastName" required />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                    <Input id="email" type="email" required />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                    <Input id="phone" required />
+                  </div>
+                </div>
+                
+                <div className="mb-5">
+                  <label htmlFor="expertise" className="block text-sm font-medium text-gray-700 mb-1">Areas of Expertise</label>
+                  <Textarea id="expertise" placeholder="e.g. Web Development, React, Next.js, Game Development" className="min-h-[80px]" required />
+                </div>
+                
+                <div className="mb-5">
+                  <label htmlFor="experience" className="block text-sm font-medium text-gray-700 mb-1">Years of Experience</label>
+                  <Input id="experience" type="number" min="1" required />
+                </div>
+                
+                <div className="mb-5">
+                  <label htmlFor="platforms" className="block text-sm font-medium text-gray-700 mb-1">Platforms Experience</label>
+                  <Input id="platforms" placeholder="e.g. Vercel, Firebase, Replit" required />
+                  <p className="mt-1 text-xs text-gray-500">Please list the platforms you have experience with, separated by commas.</p>
+                </div>
+                
+                <div className="mb-5">
+                  <label htmlFor="portfolio" className="block text-sm font-medium text-gray-700 mb-1">Portfolio or LinkedIn URL</label>
+                  <Input id="portfolio" type="url" placeholder="https://" required />
+                </div>
+                
+                <div className="mb-5">
+                  <label htmlFor="motivation" className="block text-sm font-medium text-gray-700 mb-1">Why do you want to join our team?</label>
+                  <Textarea id="motivation" placeholder="Tell us why you're interested in becoming a NURD trainer" className="min-h-[100px]" required />
+                </div>
+                
+                <Button type="submit" className="w-full bg-[#3DE053] hover:bg-[#32bd45] text-black font-medium py-2">
+                  Submit Application
+                </Button>
+              </form>
+            </motion.div>
+          </div>
+        </section>
+        
         {/* Mission Section */}
         <section className="py-20 bg-white">
           <div className="container mx-auto px-4">
