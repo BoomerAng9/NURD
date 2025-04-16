@@ -1,10 +1,18 @@
 import React from 'react';
+import nurdLogoLaptopImg from '@assets/nurd-logo-laptop.png';
 
 const WhatIsNurdSection: React.FC = () => {
   return (
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="flex justify-center mb-6">
+            <img 
+              src={nurdLogoLaptopImg} 
+              alt="NURD Logo" 
+              className="w-48 h-auto shadow-lg rounded-lg transform hover:scale-[1.05] transition-transform duration-300"
+            />
+          </div>
           <span className="text-purple-600 font-medium tracking-wider text-sm uppercase">What is NURD?</span>
           <h2 className="section-title mt-2 bg-clip-text text-transparent bg-gradient-to-r from-black via-orange-500 to-amber-400">NURD = Naturally Unstoppable Resourceful Dreamers</h2>
           <p className="text-lg text-gray-600">

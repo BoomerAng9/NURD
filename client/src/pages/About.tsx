@@ -9,7 +9,7 @@ import VibeCodingSection from '@/components/sections/vibe-coding-section';
 import ParentsSection from '@/components/sections/parents-section';
 
 // Import images
-import nurdLaptopImg from '@assets/4288A514-4A16-4431-944E-9130EC4BCC2F.png';
+import achievemorLogoImg from '@assets/A196ADAE-A9D1-4CC5-8183-A442053AA511.png';
 import boostBridgeImg from '@assets/IMG_0098.png';
 import okaiLogoImg from '@assets/OKAI logo.png';
 import nurdLogoImg from '@assets/33C74D57-C126-4BBE-A4B4-54F38CDD6AFD.png';
@@ -31,8 +31,8 @@ const About: React.FC = () => {
             <div className="flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="md:w-2/5 order-2 md:order-1">
                 <img 
-                  src={nurdLaptopImg} 
-                  alt="NURD Laptop" 
+                  src={achievemorLogoImg} 
+                  alt="ACHIEVEMOR Logo" 
                   className="rounded-lg shadow-xl transform hover:scale-[1.02] transition-transform duration-300 max-w-full"
                 />
               </div>
