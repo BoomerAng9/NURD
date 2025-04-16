@@ -274,10 +274,10 @@ const Achievers = () => {
                 {Object.entries(programTiers).map(([key, tier]) => (
                   <div 
                     key={key}
-                    className={`border rounded-xl overflow-hidden transition-all duration-300 hover:transform hover:scale-105 
+                    className={`border rounded-xl overflow-hidden transition-all duration-300 hover:transform hover:scale-105 hover:shadow-lg hover:shadow-primary/20
                       ${key === form.getValues("programTier") ? 'ring-4 ring-primary shadow-xl' : ''}
                       ${key === 'premium' 
-                        ? 'shadow-lg ring-2 ring-primary/50 md:scale-105' 
+                        ? 'shadow-lg ring-2 ring-primary/50 md:scale-105 hover:shadow-primary/40' 
                         : 'shadow hover:shadow-xl hover:border-primary/50'}
                     `}
                     onClick={() => {
@@ -286,10 +286,10 @@ const Achievers = () => {
                   >
                     <div className={`p-5 ${
                       key === 'basic' 
-                        ? 'bg-gradient-to-br from-blue-500/20 to-indigo-500/30 text-gray-800 dark:text-white' 
+                        ? 'bg-gradient-to-br from-blue-600/40 to-cyan-500/50 text-gray-800 dark:text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]' 
                         : key === 'plus'
-                          ? 'bg-gradient-to-br from-purple-500/30 to-pink-500/30 text-gray-800 dark:text-white'
-                          : 'bg-gradient-to-br from-primary/30 to-blue-400/30 text-gray-800 dark:text-white'
+                          ? 'bg-gradient-to-br from-violet-600/40 to-fuchsia-500/50 text-gray-800 dark:text-white shadow-[0_0_15px_rgba(139,92,246,0.5)]'
+                          : 'bg-gradient-to-br from-primary/40 to-sky-400/50 text-gray-800 dark:text-white shadow-[0_0_20px_rgba(14,165,233,0.6)]'
                     }`}>
                       <h3 className="text-xl font-bold">{tier.title}</h3>
                       <div className="mt-2 mb-4">
@@ -312,9 +312,13 @@ const Achievers = () => {
                       </ul>
                       <Button 
                         className={`w-full mt-6 transition-all duration-300 hover:scale-105 ${
-                          key === 'premium' ? 'bg-primary hover:bg-primary/90' : 
-                          key === form.getValues("programTier") ? 'bg-primary hover:bg-primary/90' : 
-                          'bg-gray-700 hover:bg-gray-600'
+                          key === 'premium' 
+                            ? 'bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30 hover:shadow-primary/50' : 
+                          key === form.getValues("programTier") 
+                            ? 'bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30 hover:shadow-primary/50' : 
+                            key === 'basic'
+                              ? 'bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-600/30 hover:shadow-blue-500/50'
+                              : 'bg-violet-600 hover:bg-violet-500 shadow-lg shadow-violet-600/30 hover:shadow-violet-500/50'
                         }`}
                         onClick={() => {
                           setActiveTab("signup");
