@@ -1,119 +1,87 @@
-// OpenAI Service for Accessibility Features
-// This service handles AI-powered accessibility enhancements
+// OpenAI Service for AI functionality
+import OpenAI from 'openai';
 
-import { queryClient } from '@/lib/queryClient';
-const API_ENDPOINT = '/api/accessibility';
-
-// Interface for simplified content request
-export interface SimplifyContentRequest {
-  content: string;
-  level: 'easy' | 'medium' | 'advanced';
-  format?: 'short' | 'detailed';
+// Define interfaces for our AI service functions
+export interface CodeSuggestionRequest {
+  prompt: string;
+  language?: string;
+  maxTokens?: number;
 }
 
-// Interface for text-to-speech request
-export interface TextToSpeechRequest {
-  content: string;
-  voice?: 'default' | 'clear' | 'slow';
+export interface CodeExplanationRequest {
+  code: string;
+  language?: string;
 }
 
-// Interface for image description request
-export interface DescribeImageRequest {
-  imageUrl: string;
-  detailLevel?: 'basic' | 'detailed';
+export interface CodeOptimizationRequest {
+  code: string;
+  language: string;
+  focus?: 'performance' | 'readability' | 'security' | 'all';
 }
 
-// Interface for content explanation request
-export interface ExplainContentRequest {
-  content: string;
-  context?: string;
-  type?: 'code' | 'math' | 'concept' | 'general';
-}
-
-// Simplify content to make it more accessible
-export async function simplifyContent(data: SimplifyContentRequest): Promise<{ simplified: string }> {
+// API functions for our OpenAI-powered features
+export async function getCodeSuggestion(request: CodeSuggestionRequest): Promise<string> {
   try {
-    const response = await fetch(`${API_ENDPOINT}/simplify`, {
+    const response = await fetch('/api/ai/code-suggestion', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(request),
     });
 
     if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
+      throw new Error(`Error: ${response.status}`);
     }
 
-    return await response.json();
+    const data = await response.json();
+    return data.suggestion;
   } catch (error) {
-    console.error('Error simplifying content:', error);
+    console.error('Error getting code suggestion:', error);
     throw error;
   }
 }
 
-// Get text-to-speech conversion
-export async function getTextToSpeech(data: TextToSpeechRequest): Promise<{ audioUrl: string }> {
+export async function getCodeExplanation(request: CodeExplanationRequest): Promise<string> {
   try {
-    const response = await fetch(`${API_ENDPOINT}/text-to-speech`, {
+    const response = await fetch('/api/ai/code-explanation', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(request),
     });
 
     if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
+      throw new Error(`Error: ${response.status}`);
     }
 
-    return await response.json();
+    const data = await response.json();
+    return data.explanation;
   } catch (error) {
-    console.error('Error getting text-to-speech:', error);
+    console.error('Error getting code explanation:', error);
     throw error;
   }
 }
 
-// Get AI-generated description of an image
-export async function describeImage(data: DescribeImageRequest): Promise<{ description: string }> {
+export async function getCodeOptimization(request: CodeOptimizationRequest): Promise<string> {
   try {
-    const response = await fetch(`${API_ENDPOINT}/describe-image`, {
+    const response = await fetch('/api/ai/code-optimization', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(request),
     });
 
     if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
+      throw new Error(`Error: ${response.status}`);
     }
 
-    return await response.json();
+    const data = await response.json();
+    return data.optimizedCode;
   } catch (error) {
-    console.error('Error describing image:', error);
-    throw error;
-  }
-}
-
-// Get AI-powered explanation of complex content
-export async function explainContent(data: ExplainContentRequest): Promise<{ explanation: string }> {
-  try {
-    const response = await fetch(`${API_ENDPOINT}/explain`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Error explaining content:', error);
+    console.error('Error getting code optimization:', error);
     throw error;
   }
 }
