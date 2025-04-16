@@ -31,7 +31,6 @@ import AuthPage from "@/pages/auth-page";
 import DiscordConnect from "@/pages/DiscordConnect";
 import AvatarCreator from "@/pages/AvatarCreator";
 import Achievers from "@/pages/Achievers";
-import AchieverSignUp from "@/pages/AchieverSignUp";
 import UserProgress from "@/pages/UserProgress";
 import AICodeTools from "@/pages/AICodeTools";
 import SkillMarketplace from "@/pages/SkillMarketplace";
@@ -238,7 +237,6 @@ const AppContent = () => {
             <Route path="/home" component={Landing} />
             <Route path="/auth" component={AuthPage} />
             <Route path="/achievers" component={Achievers} />
-            <Route path="/achiever-signup" component={AchieverSignUp} />
             <Route path="/ai-code-tools" component={AICodeTools} />
             <Route path="/progress" component={UserProgress} />
             <Route path="/skill-marketplace" component={SkillMarketplace} />

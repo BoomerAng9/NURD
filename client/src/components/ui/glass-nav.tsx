@@ -51,6 +51,13 @@ const navigation: NavItem[] = [
       { name: 'Trainers', path: '/trainers', icon: <Users className="h-4 w-4 mr-2" /> },
       { name: 'Apply to Teach', path: '/apply', icon: <UserPlus className="h-4 w-4 mr-2" /> },
       { name: 'Create Course', path: '/create-course', icon: <FileText className="h-4 w-4 mr-2" /> },
+    ]
+  },
+  { 
+    name: 'Resources', 
+    icon: <Star className="h-4 w-4 mr-2" />,
+    isDropdown: true,
+    children: [
       { name: 'Skills Exchange', path: '/skill-marketplace', icon: <Users2 className="h-4 w-4 mr-2" /> },
       { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
       { name: 'AI Code Tools', path: '/ai-code-tools', icon: <FileText className="h-4 w-4 mr-2" /> },
