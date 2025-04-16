@@ -38,6 +38,7 @@ import ModuleDetail from "@/pages/ModuleDetail";
 import AICourseCreator from "@/pages/AICourseCreator";
 import Reinvestment from "@/pages/reinvestment";
 import CreateCourse from "@/pages/create-course";
+import ParentSignup from "@/pages/ParentSignup";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { LayoutDashboard, Send } from "lucide-react";
 
@@ -237,6 +238,7 @@ const AppContent = () => {
             <Route path="/home" component={Landing} />
             <Route path="/auth" component={AuthPage} />
             <Route path="/achievers" component={Achievers} />
+            <Route path="/parent-signup" component={ParentSignup} />
             <Route path="/ai-code-tools" component={AICodeTools} />
             <Route path="/progress" component={UserProgress} />
             <Route path="/skill-marketplace" component={SkillMarketplace} />

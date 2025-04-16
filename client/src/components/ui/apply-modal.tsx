@@ -37,7 +37,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose }) => {
         
         <div className="space-y-4">
           <button
-            onClick={() => handleOption("/achievers")}
+            onClick={() => handleOption("/parent-signup")}
             className="flex items-center justify-center w-full p-4 rounded-xl bg-gradient-to-r from-orange-500/10 to-amber-500/10 border border-orange-500/30 hover:from-orange-500/20 hover:to-amber-500/20 hover:border-orange-500/40 transform hover:scale-[1.02] transition-all text-gray-800 dark:text-gray-200 font-medium"
             data-cursor-text="Join as a student!"
           >

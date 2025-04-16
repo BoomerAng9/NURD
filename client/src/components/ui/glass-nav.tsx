@@ -64,11 +64,6 @@ const navigation: NavItem[] = [
       { name: 'Reinvestment', path: '/reinvestment', icon: <Heart className="h-4 w-4 mr-2" /> },
     ]
   },
-  { 
-    name: 'ACHIEVERS', 
-    path: '/achievers',
-    icon: <Award className="h-4 w-4 mr-2" />
-  },
 ];
 
 const adminLinks: NavItem[] = [
