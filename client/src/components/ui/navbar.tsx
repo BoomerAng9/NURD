@@ -50,7 +50,15 @@ const Navbar = () => {
             <div className={`font-medium ${
               scrolled ? 'text-[#121645] hover:text-[#6A2FF8]' : 'text-white hover:text-[#3DE053]'
             } transition duration-300 cursor-pointer`}>
-              About
+              About Us
+            </div>
+          </Link>
+          
+          <Link href="/partners">
+            <div className={`font-medium ${
+              scrolled ? 'text-[#121645] hover:text-[#6A2FF8]' : 'text-white hover:text-[#3DE053]'
+            } transition duration-300 cursor-pointer`}>
+              Partners
             </div>
           </Link>
           
@@ -102,7 +110,12 @@ const Navbar = () => {
         <div className="px-4 py-6 space-y-4">
           <Link href="/about">
             <div className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300 cursor-pointer">
-              About
+              About Us
+            </div>
+          </Link>
+          <Link href="/partners">
+            <div className="block font-medium text-[#121645] hover:text-[#6A2FF8] transition-colors duration-300 cursor-pointer">
+              Partners
             </div>
           </Link>
           <Link href="/trainers">
