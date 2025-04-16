@@ -57,7 +57,6 @@ const navigation: NavItem[] = [
     isDropdown: true,
     children: [
       { name: 'Main', path: '/achievers', icon: <Star className="h-4 w-4 mr-2" /> },
-      { name: 'Gallery', path: '/gallery', icon: <GalleryVertical className="h-4 w-4 mr-2" /> },
       { name: 'Skills Exchange', path: '/skill-marketplace', icon: <Users2 className="h-4 w-4 mr-2" /> },
       { name: 'Reinvestment', path: '/reinvestment', icon: <Heart className="h-4 w-4 mr-2" /> },
       { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
