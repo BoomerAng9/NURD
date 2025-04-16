@@ -13,7 +13,7 @@ import achievemorLogoImg from '@assets/achievemor-neon-drip-logo.png';
 import boostBridgeImg from '@assets/IMG_0098.png';
 import okaiLogoImg from '@assets/OKAI logo.png';
 import nurdLogoImg from '@assets/33C74D57-C126-4BBE-A4B4-54F38CDD6AFD.png';
-import stargateLogoImg from '@assets/3C17A24F-9F9E-4BC1-94D6-1FF3F4844FAF.png';
+import stargateLogoImg from '@assets/a70a9d85-6f74-4daf-b48a-eb19ba40833b.jpeg';
 
 const About: React.FC = () => {
   return (
