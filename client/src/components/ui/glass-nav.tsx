@@ -39,7 +39,6 @@ interface NavItem {
 
 // Main navigation structure with dropdowns for better organization
 const navigation: NavItem[] = [
-  { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="h-4 w-4 mr-2" /> },
   { 
     name: 'Learning', 
     icon: <BookOpen className="h-4 w-4 mr-2" />,
@@ -56,7 +55,8 @@ const navigation: NavItem[] = [
     icon: <Award className="h-4 w-4 mr-2" />,
     isDropdown: true,
     children: [
-      { name: 'Main', path: '/achievers', icon: <Star className="h-4 w-4 mr-2" /> },
+      { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="h-4 w-4 mr-2" /> },
+      { name: 'Sign Up', path: '/achievers', icon: <UserPlus className="h-4 w-4 mr-2" /> },
       { name: 'Skills Exchange', path: '/skill-marketplace', icon: <Users2 className="h-4 w-4 mr-2" /> },
       { name: 'Reinvestment', path: '/reinvestment', icon: <Heart className="h-4 w-4 mr-2" /> },
       { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
