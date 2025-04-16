@@ -1,4 +1,5 @@
 import React from 'react';
+import achievemorBadgeImg from '@assets/achievemor-badge.png';
 
 const WhyChooseSection: React.FC = () => {
   return (
@@ -24,7 +25,7 @@ const WhyChooseSection: React.FC = () => {
               </div>
               
               {/* NURD Logo overlay */}
-              <div className="absolute -left-10 -bottom-10 w-28 h-28">
+              <div className="absolute -left-4 -bottom-10 w-28 h-28">
                 <div className="relative w-full h-full">
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="bg-[#F97316] rounded-full w-20 h-20 flex items-center justify-center shadow-lg">
@@ -32,6 +33,15 @@ const WhyChooseSection: React.FC = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+              
+              {/* ACHIEVEMOR Badge overlay */}
+              <div className="absolute -right-4 -top-4 w-28 h-28">
+                <img 
+                  src={achievemorBadgeImg} 
+                  alt="ACHIEVEMOR Badge" 
+                  className="w-full h-full object-contain shadow-lg transform hover:scale-105 transition-all duration-300"
+                />
               </div>
             </div>
           </div>
@@ -53,7 +63,7 @@ const WhyChooseSection: React.FC = () => {
                 <div>
                   <h3 className="font-heading font-bold text-lg text-gray-800">Self-Expression Through Technology</h3>
                   <p className="text-gray-600">
-                    Students learn to use coding and AI tools as mediums for creative expression, building confidence and communication skills.
+                    <span className="font-medium bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-amber-400 to-yellow-300">NURD Student Learning</span> helps students use coding and AI tools as mediums for creative expression, building confidence and communication skills.
                   </p>
                 </div>
               </div>
