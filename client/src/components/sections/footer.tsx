@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'wouter';
 import NurdLogo from '@/components/ui/nurd-logo';
 import { useAuth } from '@/hooks/use-auth';
+import madeInPoolerImg from '../../assets/made-in-pooler.png';
 
 const Footer: React.FC = () => {
   const { user } = useAuth();
@@ -85,16 +86,24 @@ const Footer: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <span className="text-gray-400">Made in Pooler, GA</span>
+                <img 
+                  src={madeInPoolerImg} 
+                  alt="Made in Pooler, GA" 
+                  className="h-12 object-contain"
+                />
               </li>
             </ul>
           </div>
         </div>
         
         <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
-          <p className="text-center">
-            <span>Made in Pooler, GA</span>
-          </p>
+          <div className="flex justify-center">
+            <img 
+              src={madeInPoolerImg} 
+              alt="Made in Pooler, GA" 
+              className="h-16 object-contain"
+            />
+          </div>
           
           <div className="mt-4 flex flex-wrap justify-center items-center gap-4">
             {!user && (

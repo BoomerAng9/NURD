@@ -44,6 +44,8 @@ const CodePlayground = React.lazy(() => import("@/pages/code-playground"));
 import nurdSkateboardImg from "./assets/nurd-skateboard.png";
 // New skateboard image from Pooler
 import nurdSkateboardPoolerImg from "@assets/nurd-skateboard-pooler.png";
+// Made in Pooler image
+import madeInPoolerImg from "./assets/made-in-pooler.png";
 
 // Simple component for initial testing - updated with glass UI
 const TestComponent = () => {
@@ -223,9 +225,13 @@ const AppContent = () => {
                 </span>
               </span>
             </div>
-            <p className="text-gray-500 flex items-center justify-center">
-              <span>Made in Pooler, GA</span>
-            </p>
+            <div className="flex items-center justify-center">
+              <img 
+                src={madeInPoolerImg} 
+                alt="Made in Pooler, GA" 
+                className="h-16 object-contain"
+              />
+            </div>
           </div>
         </footer>
       )}
