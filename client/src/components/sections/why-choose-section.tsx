@@ -1,5 +1,6 @@
 import React from 'react';
-import teenStudentImg from '@assets/IMG_0128.jpeg';
+import nurdLogoImg from '@assets/D99F2978-B63A-4C6D-965A-FF2112479490.png';
+import achievemorLogoImg from '@assets/3D77F680-ECBF-4B5A-AD84-C0E8223AC38D.png';
 
 const WhyChooseSection: React.FC = () => {
   return (
@@ -8,16 +9,43 @@ const WhyChooseSection: React.FC = () => {
         <div className="flex flex-col md:flex-row gap-8 items-center">
           <div className="md:w-1/2">
             <div className="relative">
-              <div className="bg-white p-4 rounded-xl shadow-lg relative overflow-hidden">
-                <img 
-                  src={teenStudentImg} 
-                  alt="Teen student learning" 
-                  className="w-full h-auto rounded-lg object-cover"
-                />
+              {/* Two-panel glass design */}
+              <div className="grid grid-cols-2 gap-4 h-80">
+                {/* Left panel with NURD logo */}
+                <div className="bg-gradient-to-br from-[#121645]/90 to-[#2C2F7C]/80 rounded-xl p-6 backdrop-blur-md shadow-lg flex items-center justify-center relative overflow-hidden">
+                  <div className="absolute inset-0 bg-blue-500/10 backdrop-blur-md"></div>
+                  <img 
+                    src={nurdLogoImg} 
+                    alt="NURD Logo" 
+                    className="w-4/5 h-auto object-contain relative z-10 drop-shadow-xl transform hover:scale-105 transition-all duration-300"
+                  />
+                </div>
+                
+                {/* Right panel */}
+                <div className="bg-gradient-to-br from-[#3B82F6]/80 to-[#8B5CF6]/70 rounded-xl p-6 backdrop-blur-md shadow-lg flex flex-col justify-center relative overflow-hidden">
+                  <div className="absolute inset-0 bg-blue-500/10 backdrop-blur-md"></div>
+                  
+                  {/* ACHIEVEMOR logo in top right corner */}
+                  <div className="absolute top-4 right-4 w-16 h-16">
+                    <img 
+                      src={achievemorLogoImg} 
+                      alt="ACHIEVEMOR Logo" 
+                      className="w-full h-full object-contain drop-shadow-lg"
+                    />
+                  </div>
+                  
+                  <div className="relative z-10 mt-8">
+                    <h3 className="text-xl font-bold text-white mb-3">Build Your Future</h3>
+                    <p className="text-white/90 text-sm">
+                      "NURD gave me the tools to express my ideas through technology and build solutions that matter."
+                    </p>
+                    <p className="text-white/90 text-sm font-medium mt-2">— Pooler Student, 15</p>
+                  </div>
+                </div>
               </div>
               
               {/* Testimonial bubble */}
-              <div className="absolute -right-8 bottom-24 bg-white p-4 rounded-lg shadow-lg max-w-xs">
+              <div className="absolute -right-8 -bottom-6 bg-white p-4 rounded-lg shadow-lg max-w-xs">
                 <p className="italic text-gray-600 text-sm">
                   "NURD gave me the confidence to build my own game. Now I'm teaching my friends how to code!"
                 </p>
