@@ -60,27 +60,70 @@ const TestComponent = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-b from-gray-50 to-gray-100">
       <div className="glass-container max-w-4xl mx-auto text-center p-8 rounded-2xl shadow-xl backdrop-blur-md border border-white/20">
-        <h1 
+        <motion.h1 
           className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-500 to-blue-600 animate-gradient-x mb-3 inline-block cursor-pointer"
           data-cursor-text="Welcome to NURD!"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            type: "spring",
+            stiffness: 300,
+            damping: 20,
+            delay: 0.1
+          }}
         >
           NURD by: ACHIEVEMOR
-        </h1>
-        <p className="text-gray-600 text-xl max-w-2xl mx-auto mb-8">Empowering youth through innovative tech education</p>
+        </motion.h1>
+        <motion.p 
+          className="text-gray-600 text-xl max-w-2xl mx-auto mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            type: "spring",
+            stiffness: 300,
+            damping: 20,
+            delay: 0.3
+          }}
+        >
+          Empowering youth through innovative tech education
+        </motion.p>
         
-        <div className="relative group">
-          <div className="absolute -inset-1 bg-gradient-to-r from-green-400 to-blue-500 rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+        <motion.div 
+          className="relative group"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <motion.div 
+            className="absolute -inset-1 bg-gradient-to-r from-green-400 to-blue-500 rounded-lg blur"
+            initial={{ opacity: 0.25 }}
+            whileHover={{ opacity: 0.75, transition: { duration: 0.3 } }}
+            animate={{ 
+              opacity: [0.25, 0.35, 0.25],
+              scale: [1, 1.02, 1]
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              repeatType: "reverse",
+              ease: "easeInOut"
+            }}
+          />
           <div className="relative p-1 bg-white rounded-lg">
             <div className="p-5 glass-card overflow-hidden rounded-lg">
-              <img 
+              <motion.img 
                 src={madeInPoolerImg} 
                 alt="NURD Made in Pooler, GA" 
-                className="mx-auto max-h-[500px] rounded-lg shadow-lg transform transition-transform duration-500 hover:scale-[1.02] cursor-pointer"
+                className="mx-auto max-h-[500px] rounded-lg shadow-lg cursor-pointer"
                 data-cursor-text="Made in Pooler, GA"
+                whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}
+                initial={{ scale: 1, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                transition={{ type: "spring", damping: 15, stiffness: 300 }}
               />
             </div>
           </div>
-        </div>
+        </motion.div>
         
         <div className="mt-10 flex flex-wrap justify-center gap-5">
           <motion.a 
@@ -197,12 +240,29 @@ const AppContent = () => {
       <GlassNav />
       
       {/* Cursor toggle button */}
-      <button 
+      <motion.button 
         onClick={toggleCursor}
-        className="fixed bottom-4 right-4 z-50 p-2 bg-black/20 hover:bg-black/30 backdrop-blur-md rounded-full transition-all"
+        className="fixed bottom-4 right-4 z-50 p-2 bg-black/20 backdrop-blur-md rounded-full"
+        whileHover={{ 
+          scale: 1.2, 
+          backgroundColor: "rgba(0, 0, 0, 0.3)",
+          rotate: [0, -10, 10, -5, 0],
+          transition: { duration: 0.3 }
+        }}
+        whileTap={{ scale: 0.9 }}
+        animate={{ 
+          boxShadow: isCursorEnabled 
+            ? ["0 0 0 0 rgba(14, 165, 233, 0)", "0 0 0 4px rgba(14, 165, 233, 0.3)", "0 0 0 0 rgba(14, 165, 233, 0)"] 
+            : "none"
+        }}
+        transition={{ 
+          duration: 2,
+          repeat: isCursorEnabled ? Infinity : 0,
+          repeatType: "loop"
+        }}
         title={isCursorEnabled ? "Disable custom cursor" : "Enable custom cursor"}
       >
-        <svg 
+        <motion.svg 
           xmlns="http://www.w3.org/2000/svg" 
           width="20" 
           height="20" 
@@ -213,22 +273,52 @@ const AppContent = () => {
           strokeLinecap="round" 
           strokeLinejoin="round"
           className={isCursorEnabled ? "text-primary" : "text-gray-400"}
+          animate={isCursorEnabled ? { 
+            scale: [1, 1.1, 1],
+          } : {}}
+          transition={{ 
+            duration: 1.5, 
+            repeat: isCursorEnabled ? Infinity : 0,
+            repeatType: "reverse"
+          }}
         >
           <path d="m3 3 7 7"></path>
           <path d="m21 21-7-7"></path>
           <path d="M11 4 7 20l4-1 1 4 4-16-4 1-1-4z"></path>
-        </svg>
-      </button>
+        </motion.svg>
+      </motion.button>
       
       {/* Apply Now button fixed at bottom right */}
-      <button 
+      <motion.button 
         onClick={() => setIsApplyModalOpen(true)}
-        className="fixed bottom-4 right-20 z-50 px-4 py-2 bg-primary text-white font-bold rounded-full shadow-lg hover:bg-primary/90 transition-all transform hover:scale-105 flex items-center space-x-2"
+        className="fixed bottom-4 right-20 z-50 px-4 py-2 bg-primary text-white font-bold rounded-full shadow-lg flex items-center space-x-2"
         data-cursor-text="Start your journey!"
+        whileHover={{ 
+          scale: 1.1,
+          boxShadow: "0 0 15px rgba(14, 165, 233, 0.5)"
+        }}
+        whileTap={{ scale: 0.95 }}
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ 
+          type: "spring",
+          stiffness: 400,
+          damping: 15
+        }}
       >
-        <UserPlus className="h-5 w-5" />
+        <motion.span
+          animate={{ rotate: [0, 10, 0] }}
+          transition={{ 
+            duration: 2, 
+            repeat: Infinity,
+            repeatType: "reverse", 
+            ease: "easeInOut" 
+          }}
+        >
+          <UserPlus className="h-5 w-5" />
+        </motion.span>
         <span>Apply Now</span>
-      </button>
+      </motion.button>
       
       {/* Apply modal */}
       <ApplyModal 
@@ -307,40 +397,84 @@ const AppContent = () => {
       </main>
       
       {!isMobile && (
-        <footer className="py-4 px-6 text-center text-sm">
+        <motion.footer 
+          className="py-4 px-6 text-center text-sm"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
           <div className="flex flex-col items-center justify-center space-y-2">
-            <p className="bg-clip-text text-transparent bg-gradient-to-r from-teal-400 via-green-500 to-blue-600 font-medium">
+            <motion.p 
+              className="bg-clip-text text-transparent bg-gradient-to-r from-teal-400 via-green-500 to-blue-600 font-medium"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+            >
               NURD = Naturally Unstoppable Resourceful Dreamers
-            </p>
+            </motion.p>
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs">
-              <span className="flex items-center">
-                <span className="h-2 w-2 rounded-full bg-gradient-to-r from-teal-400 to-green-500 mr-2"></span>
+              <motion.span 
+                className="flex items-center"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.7, duration: 0.3 }}
+              >
+                <motion.span 
+                  className="h-2 w-2 rounded-full bg-gradient-to-r from-teal-400 to-green-500 mr-2"
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+                ></motion.span>
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-400 via-green-500 to-blue-600 font-medium">
                   Creativity First
                 </span>
-              </span>
-              <span className="flex items-center">
-                <span className="h-2 w-2 rounded-full bg-gradient-to-r from-green-500 to-blue-600 mr-2"></span>
+              </motion.span>
+              <motion.span 
+                className="flex items-center"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.8, duration: 0.3 }}
+              >
+                <motion.span 
+                  className="h-2 w-2 rounded-full bg-gradient-to-r from-green-500 to-blue-600 mr-2"
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, repeatType: "reverse", delay: 0.3 }}
+                ></motion.span>
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-400 via-green-500 to-blue-600 font-medium">
                   AI Collaboration
                 </span>
-              </span>
-              <span className="flex items-center">
-                <span className="h-2 w-2 rounded-full bg-gradient-to-r from-teal-400 to-blue-600 mr-2"></span>
+              </motion.span>
+              <motion.span 
+                className="flex items-center"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.9, duration: 0.3 }}
+              >
+                <motion.span 
+                  className="h-2 w-2 rounded-full bg-gradient-to-r from-teal-400 to-blue-600 mr-2"
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, repeatType: "reverse", delay: 0.6 }}
+                ></motion.span>
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-400 via-green-500 to-blue-600 font-medium">
                   Community Building
                 </span>
-              </span>
+              </motion.span>
             </div>
-            <div className="flex items-center justify-center">
-              <img 
+            <motion.div 
+              className="flex items-center justify-center"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1, duration: 0.4, type: "spring" }}
+            >
+              <motion.img 
                 src={madeInPoolerGreenImg} 
                 alt="Made in Pooler, GA" 
                 className="h-16 object-contain"
+                whileHover={{ scale: 1.05, rotate: [-1, 1, -1, 0] }}
+                transition={{ duration: 0.4 }}
               />
-            </div>
+            </motion.div>
           </div>
-        </footer>
+        </motion.footer>
       )}
     </div>
   );
