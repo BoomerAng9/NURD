@@ -8,12 +8,19 @@ const WhyChooseSection: React.FC = () => {
         <div className="flex flex-col md:flex-row gap-12 items-center">
           <div className="md:w-1/2">
             <div className="relative">
-              <div className="bg-white p-4 rounded-xl shadow-lg">
+              <div className="bg-white p-4 rounded-xl shadow-lg relative overflow-hidden">
                 <img 
                   src="/nurd-laptop-student.jpeg" 
                   alt="NURD - Student learning" 
                   className="w-full h-auto rounded-lg"
                 />
+                <div className="absolute inset-0 rounded-lg flex items-center justify-center bg-gradient-to-r from-black/40 to-black/10">
+                  <img
+                    src="@assets/teen-student.jpeg"
+                    alt="Teen student learning"
+                    className="w-3/4 h-3/4 object-cover rounded-lg shadow-2xl"
+                  />
+                </div>
               </div>
               
               {/* Testimonial bubble */}
@@ -25,13 +32,13 @@ const WhyChooseSection: React.FC = () => {
               </div>
               
               {/* NURD Logo overlay */}
-              <div className="absolute -left-4 -bottom-10 w-28 h-28">
-                <div className="relative w-full h-full">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-[#F97316] rounded-full w-20 h-20 flex items-center justify-center shadow-lg">
-                      <div className="text-[#22C55E] font-accent font-bold text-xl">NURD</div>
-                    </div>
-                  </div>
+              <div className="absolute -left-6 -bottom-10 w-32 h-32 z-10">
+                <div className="relative w-full h-full flex items-center justify-center">
+                  <img 
+                    src="@assets/nurd-drip-logo.png" 
+                    alt="NURD Logo" 
+                    className="w-full h-full object-contain drop-shadow-xl"
+                  />
                 </div>
               </div>
               
@@ -63,7 +70,7 @@ const WhyChooseSection: React.FC = () => {
                 <div>
                   <h3 className="font-heading font-bold text-lg text-gray-800">Self-Expression Through Technology</h3>
                   <p className="text-gray-600">
-                    <span className="font-medium bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-amber-400 to-yellow-300">NURD Student Learning</span> helps students use coding and AI tools as mediums for creative expression, building confidence and communication skills.
+                    <span className="font-medium bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-orange-500">NURD Student Learning</span> helps students use coding and AI tools as mediums for creative expression, building confidence and communication skills.
                   </p>
                 </div>
               </div>
