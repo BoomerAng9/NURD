@@ -9,7 +9,7 @@ import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { PageTransition } from "@/components/animations/page-transition";
 import MagicCursor from "@/components/ui/magic-cursor";
-import { ApplyModal } from "@/components/ui/apply-modal";
+// Apply Modal removed
 import { useCursorInteraction } from "@/hooks/use-cursor-interaction";
 import { UserPlus } from "lucide-react";
 import { GlassNav } from "@/components/ui/glass-nav";
@@ -135,7 +135,6 @@ const AppContent = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { user, isLoading: authLoading } = useAuth();
   const [isCursorEnabled, setIsCursorEnabled] = useState(false);
-  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
 
   useEffect(() => {
     // Load cursor preference from localStorage
@@ -199,21 +198,16 @@ const AppContent = () => {
         </svg>
       </button>
       
-      {/* Apply Now button fixed at bottom right */}
-      <button 
-        onClick={() => setIsApplyModalOpen(true)}
-        className="fixed bottom-4 right-20 z-50 px-4 py-2 bg-primary text-white font-bold rounded-full shadow-lg hover:bg-primary/90 transition-all transform hover:scale-105 flex items-center space-x-2"
-        data-cursor-text="Start your journey!"
-      >
-        <UserPlus className="h-5 w-5" />
-        <span>Apply Now</span>
-      </button>
-      
-      {/* Apply modal */}
-      <ApplyModal 
-        isOpen={isApplyModalOpen} 
-        onClose={() => setIsApplyModalOpen(false)} 
-      />
+      {/* Apply Now button fixed at bottom right - now links directly to Parent Signup */}
+      <Link href="/parent-signup">
+        <button 
+          className="fixed bottom-4 right-20 z-50 px-4 py-2 bg-primary text-white font-bold rounded-full shadow-lg hover:bg-primary/90 transition-all transform hover:scale-105 flex items-center space-x-2"
+          data-cursor-text="Register your child!"
+        >
+          <UserPlus className="h-5 w-5" />
+          <span>Parent Sign Up</span>
+        </button>
+      </Link>
       
       <main className="flex-grow">
         <PageTransition>
