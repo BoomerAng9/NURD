@@ -124,23 +124,23 @@ const TestComponent = () => {
         <div className="flex gap-6">
           {/* Left Stats Panel */}
           <motion.div 
-            className="w-[180px] flex flex-col h-full"
+            className="w-[200px] flex flex-col h-full"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <div className="flex flex-col h-full px-4 py-6 glass-card rounded-lg border border-white/20">
+            <div className="flex flex-col h-full px-4 py-5 glass-card rounded-lg border border-white/20 shadow-lg">
               {/* Top Section - NURDs Joined */}
               <motion.div
-                className="mb-6"
+                className="mb-5"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.3 }}
               >
-                <h3 className="text-sm font-medium text-white/70 mb-2">NURDs Joined</h3>
+                <h3 className="text-sm font-bold text-white/90 mb-2">NURDs Joined</h3>
                 <div className="flex items-center">
                   <motion.div 
-                    className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-400"
+                    className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-400"
                     initial={{ scale: 0.8 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.5 }}
@@ -167,15 +167,15 @@ const TestComponent = () => {
               
               {/* Middle Section - NURDs Created */}
               <motion.div
-                className="mb-6"
+                className="mb-5"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.4 }}
               >
-                <h3 className="text-sm font-medium text-white/70 mb-2">NURDs Created</h3>
+                <h3 className="text-sm font-bold text-white/90 mb-2">NURDs Created</h3>
                 <div className="flex items-center">
                   <motion.div 
-                    className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400"
+                    className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400"
                     initial={{ scale: 0.8 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.5 }}
@@ -208,17 +208,17 @@ const TestComponent = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.5 }}
               >
-                <h3 className="text-sm font-medium text-white/70 mb-3">Upcoming Cohort</h3>
+                <h3 className="text-sm font-bold text-white/90 mb-2">Upcoming Cohort</h3>
                 <div className="space-y-2">
-                  <div className="flex items-center text-white/80">
+                  <div className="flex items-center text-white/90">
                     <Calendar className="h-4 w-4 mr-2 text-primary" />
                     <span className="text-sm">TBD</span>
                   </div>
-                  <div className="flex items-center text-white/80">
+                  <div className="flex items-center text-white/90">
                     <User className="h-4 w-4 mr-2 text-primary" />
                     <span className="text-sm">TBD</span>
                   </div>
-                  <div className="flex items-center text-white/80">
+                  <div className="flex items-center text-white/90">
                     <MapPin className="h-4 w-4 mr-2 text-primary" />
                     <span className="text-sm">TBD</span>
                   </div>
@@ -498,7 +498,7 @@ const AppContent = () => {
             
             {/* Coming Soon placeholder pages */}
             <Route path="/summer-initiative">
-              <ComingSoon title="Summer Initiative" description="Our summer program is coming soon! Check back for details on our exciting summer initiative for 2025." />
+              <ComingSoon title="NURD by: ACHIEVEMOR" description="Our summer program is coming soon! Check back for details on our exciting NURD Initiative for 2025." />
             </Route>
             <Route path="/weekend-workshops">
               <ComingSoon title="Weekend Workshops" description="Hands-on weekend workshops focused on tech and creativity coming soon!" />
