@@ -117,12 +117,6 @@ const JoinOurTeam: React.FC = () => {
             <p className="text-xl opacity-90 mb-8 leading-relaxed">
               We're looking for experienced IT professionals who are passionate about mentoring the next generation of tech innovators.
             </p>
-            <Button 
-              className="bg-[#3DE053] hover:bg-[#32bd45] text-black font-medium px-8 py-6 text-lg"
-              onClick={scrollToApplicationForm}
-            >
-              Apply Now <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
           </motion.div>
         </div>
       </section>
