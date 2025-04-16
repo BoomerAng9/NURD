@@ -270,26 +270,30 @@ const Achievers = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {Object.entries(programTiers).map(([key, tier]) => (
                   <div 
                     key={key}
-                    className={`border rounded-xl overflow-hidden transition-all duration-300 hover:transform hover:scale-105 hover:shadow-lg hover:shadow-primary/20
+                    className={`border rounded-xl overflow-hidden transition-all duration-200 hover:transform hover:scale-105 hover:shadow-lg hover:shadow-primary/20
+                      h-full flex flex-col
                       ${key === form.getValues("programTier") ? 'ring-4 ring-primary shadow-xl' : ''}
                       ${key === 'premium' 
-                        ? 'shadow-lg ring-2 ring-primary/50 md:scale-105 hover:shadow-primary/40' 
+                        ? 'shadow-lg ring-2 ring-primary/50 hover:shadow-primary/40' 
                         : 'shadow hover:shadow-xl hover:border-primary/50'}
                     `}
                     onClick={() => {
+                      // Immediately set the selected tier
                       form.setValue("programTier", key as "basic" | "plus" | "premium");
+                      // Force re-render to show selection
+                      form.trigger("programTier");
                     }}
                   >
                     <div className={`p-5 ${
                       key === 'basic' 
-                        ? 'bg-gradient-to-br from-blue-600/40 to-cyan-500/50 text-gray-800 dark:text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]' 
+                        ? 'bg-gradient-to-br from-blue-600/70 to-cyan-500/80 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]' 
                         : key === 'plus'
-                          ? 'bg-gradient-to-br from-violet-600/40 to-fuchsia-500/50 text-gray-800 dark:text-white shadow-[0_0_15px_rgba(139,92,246,0.5)]'
-                          : 'bg-gradient-to-br from-primary/40 to-sky-400/50 text-gray-800 dark:text-white shadow-[0_0_20px_rgba(14,165,233,0.6)]'
+                          ? 'bg-gradient-to-br from-violet-600/70 to-fuchsia-500/80 text-white shadow-[0_0_15px_rgba(139,92,246,0.5)]'
+                          : 'bg-gradient-to-br from-primary/70 to-sky-400/80 text-white shadow-[0_0_20px_rgba(14,165,233,0.6)]'
                     }`}>
                       <h3 className="text-xl font-bold">{tier.title}</h3>
                       <div className="mt-2 mb-4">
@@ -299,14 +303,18 @@ const Achievers = () => {
                         <Badge className="bg-primary">Most Popular</Badge>
                       )}
                     </div>
-                    <div className="p-5 bg-white dark:bg-gray-800">
-                      <ul className="space-y-3">
+                    <div className="p-5 bg-white dark:bg-gray-800 flex flex-col flex-grow">
+                      <ul className="space-y-3 mb-auto">
                         {tier.features.map((feature, i) => (
                           <li key={i} className="flex items-start">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-primary mr-2 flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`w-5 h-5 mr-2 flex-shrink-0 ${
+                              key === 'basic' ? 'text-blue-500' : 
+                              key === 'plus' ? 'text-violet-500' : 
+                              'text-primary'
+                            }`}>
                               <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
                             </svg>
-                            <span className="text-gray-700 dark:text-gray-200">{feature}</span>
+                            <span className="text-gray-900 dark:text-gray-100 font-medium">{feature}</span>
                           </li>
                         ))}
                       </ul>
@@ -320,7 +328,8 @@ const Achievers = () => {
                               ? 'bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-600/30 hover:shadow-blue-500/50'
                               : 'bg-violet-600 hover:bg-violet-500 shadow-lg shadow-violet-600/30 hover:shadow-violet-500/50'
                         }`}
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent triggering the parent onClick
                           setActiveTab("signup");
                           form.setValue("programTier", key as "basic" | "plus" | "premium");
                         }}
