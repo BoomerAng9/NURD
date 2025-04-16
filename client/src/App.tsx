@@ -30,7 +30,7 @@ import Cohorts from "@/pages/Cohorts";
 import AuthPage from "@/pages/auth-page";
 import DiscordConnect from "@/pages/DiscordConnect";
 import AvatarCreator from "@/pages/AvatarCreator";
-import Achievers from "@/pages/Achievers";
+// Achievers page removed
 import UserProgress from "@/pages/UserProgress";
 import AICodeTools from "@/pages/AICodeTools";
 import SkillMarketplace from "@/pages/SkillMarketplace";
@@ -113,15 +113,15 @@ const TestComponent = () => {
             <span className="font-semibold">AI Code Tools</span>
           </a>
           <a 
-            href="/achievers" 
+            href="/parent-signup" 
             className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-orange-600/20 to-amber-600/20 border-orange-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
-            data-cursor-text="Join our ACHIEVERS program!"
+            data-cursor-text="Register your child!"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-send">
               <path d="m22 2-7 20-4-9-9-4Z"/>
               <path d="M22 2 11 13"/>
             </svg>
-            <span className="font-semibold">ACHIEVERS</span>
+            <span className="font-semibold">Parent Sign Up</span>
           </a>
         </div>
       </div>
@@ -237,7 +237,7 @@ const AppContent = () => {
             <Route path="/avatar" component={AvatarCreator} />
             <Route path="/home" component={Landing} />
             <Route path="/auth" component={AuthPage} />
-            <Route path="/achievers" component={Achievers} />
+            {/* Achievers route removed */}
             <Route path="/parent-signup" component={ParentSignup} />
             <Route path="/ai-code-tools" component={AICodeTools} />
             <Route path="/progress" component={UserProgress} />
