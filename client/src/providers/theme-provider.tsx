@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/use-auth';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, QueryClient } from '@tanstack/react-query';
+import { queryClient } from '@/lib/queryClient';
 
 interface ThemePreferences {
   color_scheme: string;
@@ -45,8 +46,21 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Fetch user theme preferences
   const { isLoading: isLoadingPrefs } = useQuery({
-    queryKey: user ? [`/api/users/${user.id}/theme-preferences`] : null,
+    queryKey: user ? ['user-theme-preferences', user.id] : ['user-theme-preferences'],
     enabled: !!user,
+    queryFn: async () => {
+      if (!user) return defaultTheme;
+      
+      const response = await fetch(`/api/users/${user.id}/theme-preferences`, {
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        return defaultTheme;
+      }
+      
+      return await response.json() as ThemePreferences;
+    },
     onSuccess: (data: ThemePreferences) => {
       if (data) {
         setColorScheme(data.color_scheme);
@@ -54,7 +68,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setAccentColor(data.accent_color);
         setHasInitializedPrefs(true);
       }
-    }
+    },
+    staleTime: Infinity
   });
 
   // Save user theme preferences
@@ -84,6 +99,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         color_scheme: colorScheme,
         theme_mode: themeMode,
         accent_color: accentColor
+      });
+      
+      // Invalidate the query to refresh cached data
+      queryClient.invalidateQueries({ 
+        queryKey: ['user-theme-preferences', user.id]
       });
     }
   }, [colorScheme, themeMode, accentColor, user, hasInitializedPrefs]);

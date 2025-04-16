@@ -3,7 +3,7 @@ import { useLocation } from 'wouter';
 import { motion } from 'framer-motion';
 import Footer from '@/components/sections/footer';
 import ProfileEditor from '@/components/profile/profile-editor';
-import ThemeCustomizer, { ThemeFormValues } from '@/components/profile/theme-customizer';
+import { ThemeEditor } from '@/components/theme/theme-editor';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
