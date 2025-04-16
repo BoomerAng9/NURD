@@ -46,6 +46,8 @@ import nurdSkateboardImg from "./assets/nurd-skateboard.png";
 import nurdSkateboardPoolerImg from "@assets/nurd-skateboard-pooler.png";
 // Made in Pooler image
 import madeInPoolerImg from "./assets/made-in-pooler.png";
+// Made in Pooler green logo
+import madeInPoolerGreenImg from "./assets/made-in-pooler-green.png";
 
 // Simple component for initial testing - updated with glass UI
 const TestComponent = () => {
@@ -227,7 +229,7 @@ const AppContent = () => {
             </div>
             <div className="flex items-center justify-center">
               <img 
-                src={madeInPoolerImg} 
+                src={madeInPoolerGreenImg} 
                 alt="Made in Pooler, GA" 
                 className="h-16 object-contain"
               />
