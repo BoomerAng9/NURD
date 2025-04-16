@@ -258,3 +258,158 @@ export const bounce: Variants = {
     }
   }
 };
+
+/**
+ * Button hover animation
+ */
+export const buttonHover = {
+  initial: { scale: 1 },
+  hover: { 
+    scale: 1.05,
+    y: -4,
+    transition: { 
+      duration: 0.2,
+      ease: "easeOut"
+    }
+  },
+  tap: { 
+    scale: 0.98,
+    transition: { 
+      duration: 0.1,
+      ease: "easeIn"
+    }
+  }
+};
+
+/**
+ * Card animation with hover effects
+ */
+export const cardAnimation = {
+  initial: { scale: 1 },
+  hover: { 
+    scale: 1.03,
+    y: -5,
+    boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+    transition: { 
+      duration: 0.3,
+      ease: "easeOut"
+    }
+  },
+  tap: { 
+    scale: 0.98,
+    transition: { 
+      duration: 0.15,
+      ease: "easeIn"
+    }
+  }
+};
+
+/**
+ * Section entrance animation for scroll reveal
+ */
+export const sectionEntrance = {
+  hidden: { 
+    opacity: 0, 
+    y: 30 
+  },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut"
+    }
+  }
+};
+
+/**
+ * Modal animation
+ */
+export const modalAnimation = {
+  hidden: { 
+    opacity: 0, 
+    scale: 0.9,
+    y: 20
+  },
+  visible: { 
+    opacity: 1, 
+    scale: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      damping: 25,
+      stiffness: 300
+    }
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    transition: {
+      duration: 0.2,
+      ease: "easeIn"
+    }
+  }
+};
+
+/**
+ * Tab switching animation
+ */
+export const tabSwitchAnimation = {
+  hidden: { 
+    opacity: 0,
+    x: 20
+  },
+  visible: { 
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.3,
+      ease: "easeOut"
+    }
+  },
+  exit: {
+    opacity: 0,
+    x: -20,
+    transition: {
+      duration: 0.2,
+      ease: "easeIn"
+    }
+  }
+};
+
+/**
+ * List item staggered animation
+ */
+export const listItemAnimation = {
+  hidden: { 
+    opacity: 0,
+    y: 10
+  },
+  visible: (i = 0) => ({ 
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.05,
+      duration: 0.3,
+      ease: "easeOut"
+    }
+  })
+};
+
+/**
+ * Ripple effect animation for button clicks
+ */
+export const rippleEffect = {
+  initial: { 
+    scale: 0,
+    opacity: 0.5,
+  },
+  animate: { 
+    scale: 1.5,
+    opacity: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut"
+    }
+  }
+};
