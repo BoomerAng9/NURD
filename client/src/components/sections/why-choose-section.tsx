@@ -1,6 +1,6 @@
 import React from 'react';
-import achievemorBadgeImg from '@assets/3D77F680-ECBF-4B5A-AD84-C0E8223AC38D.png';
-import nurdDripLogoImg from '@assets/D99F2978-B63A-4C6D-965A-FF2112479490.png';
+import achievemorBadgeImg from '@assets/achievemor-badge.png';
+import nurdDripLogoImg from '@assets/achievemor-neon-drip-logo.png';
 import teenStudentImg from '@assets/IMG_0128.jpeg';
 
 const WhyChooseSection: React.FC = () => {

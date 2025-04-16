@@ -1,5 +1,5 @@
 import React from 'react';
-import nurdLogoLaptopImg from '@assets/nurd-logo-laptop.png';
+import nurdLogoLaptopImg from '@assets/nurd-laptop.png';
 
 const WhatIsNurdSection: React.FC = () => {
   return (
