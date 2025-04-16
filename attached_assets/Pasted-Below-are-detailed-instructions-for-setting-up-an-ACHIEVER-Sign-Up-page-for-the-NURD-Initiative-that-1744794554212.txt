@@ -1,0 +1,58 @@
+Below are detailed instructions for setting up an ACHIEVER Sign Up page for the NURD Initiative that parents will use to register their kids. These instructions cover both the overall page and a pop-up confirmation/modal that shows after form submission.
+
+Overall Page Instructions
+Page Location & Purpose
+Placement: Add the Sign Up page at the very top of the ACHIEVERS tab.
+Objective: Allow parents to register their children for the NURD Initiative by entering required details in a clearly formatted sign-up form.
+Form Content & Fields
+Header & Intro Text:
+Title the page “Sign Up for the NURD Initiative”.
+Include a brief description informing parents about the initiative and what to expect (i.e., generating a custom profile card for their child, confirmation email, and additional next steps).
+Parent Details Section:
+Fields required:
+Parent Name
+Parent Email
+Child Details Section:
+Fields required:
+Child Name
+Child Age
+Child Grade (this can be optional if not applicable)
+Submission Controls:
+Include a clear “Sign Up” or “Submit” button.
+Optionally, include inline instructions or placeholders inside the input fields that guide the user on what to enter.
+Field Customization
+Ensure that each field can be added or removed based on the parent’s needs (e.g., if a parent does not wish to enter a field, they can choose to clear or hide it).
+Consider using dynamic instructions or tooltips that help parents understand what each field means.
+Validation & Feedback
+Include basic form validation (for example, verifying that the parent’s email follows correct email format and that required fields are not empty).
+Provide immediate feedback if any validation fails so that users can correct errors before submission.
+Pop-Up / Modal Confirmation Instructions
+Trigger Point:
+Configure the pop-up to appear immediately after the form is successfully submitted (i.e., when all validations pass).
+It should also include a means for the parent to dismiss or close the pop-up (a “Close” button).
+Pop-Up Content:
+Title/Heading:
+Use a friendly headline such as “Registration Successful!” or “Welcome to the NURD Initiative!”
+Body Copy:
+Thank the parent for signing up.
+Explain the next steps, which might include:
+A confirmation email will be sent detailing further instructions.
+Their child’s custom NURD profile card will be generated shortly.
+A reminder to visit the ACHIEVERS tab for more information.
+Use bullet points for clarity if needed.
+Call to Action:
+A clear option such as “Close” or “Go to Dashboard” that lets the parent either dismiss the modal or navigate to a different area of the application.
+Design Considerations:
+The pop-up should overlay the sign-up page in a visually distinct style (e.g., semi-transparent dark background with a central, well-styled white dialog box).
+Ensure that the pop-up is mobile-friendly and accessible.
+Integration & Implementation Steps
+Mapping the Form to the Top of ACHIEVERS Tab:
+Update your application’s navigation or landing layout for the ACHIEVERS section.
+Add a link or embed the sign-up form directly at the top so that it is immediately visible to parents visiting that tab.
+Mapping the Pop-Up to the Sign-Up Page:
+Configure your page logic so that when the form submission is confirmed (after passing validation checks), the pop-up modal is triggered.
+Map the modal’s “close” or action button to clear the modal from view, returning the user to the sign-up page or redirecting them to a follow-up page (such as a dashboard or profile view).
+Testing & UX Review:
+Run user tests with parent participants to ensure the process is simple and that instructions are clear.
+Verify that both the sign-up form and pop-up work seamlessly on various screen sizes and devices.
+These instructions provide a blueprint for creating the ACHIEVER Sign Up page and integrated pop-up modal within your Replit application for the NURD Initiative.

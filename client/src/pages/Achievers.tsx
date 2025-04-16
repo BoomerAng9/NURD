@@ -67,6 +67,8 @@ const signUpFormSchema = z.object({
     message: "Please enter a valid age between 1-18."
   }),
   childGrade: z.string().optional(),
+  preferredPath: z.string().optional(),
+  parentPhone: z.string().optional(),
 });
 
 type SignUpFormValues = z.infer<typeof signUpFormSchema>;
@@ -83,7 +85,9 @@ const Achievers: React.FC = () => {
       parentEmail: "",
       childName: "",
       childAge: "",
-      childGrade: ""
+      childGrade: "",
+      preferredPath: "",
+      parentPhone: ""
     },
   });
   
@@ -312,6 +316,69 @@ const Achievers: React.FC = () => {
                           </FormItem>
                         )}
                       />
+                      
+                      <FormField
+                        control={form.control}
+                        name="preferredPath"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              Preferred Learning Path
+                              <span className="text-gray-400 text-xs ml-2">Optional</span>
+                            </FormLabel>
+                            <Select 
+                              onValueChange={field.onChange} 
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                                  <SelectValue placeholder="Select interest area" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="coding">Coding</SelectItem>
+                                <SelectItem value="design">Design</SelectItem>
+                                <SelectItem value="robotics">Robotics</SelectItem>
+                                <SelectItem value="gaming">Game Development</SelectItem>
+                                <SelectItem value="art">Digital Art</SelectItem>
+                                <SelectItem value="science">Science & Tech</SelectItem>
+                                <SelectItem value="other">Other</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormDescription className="text-gray-400">
+                              This helps us customize your child's learning experience.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <div className="mt-4">
+                      <FormField
+                        control={form.control}
+                        name="parentPhone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              Parent Phone Number
+                              <span className="text-gray-400 text-xs ml-2">Optional</span>
+                            </FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="tel"
+                                placeholder="(123) 456-7890" 
+                                {...field} 
+                                className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
+                              />
+                            </FormControl>
+                            <FormDescription className="text-gray-400">
+                              For important program updates and notifications.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
                   </div>
                   
@@ -484,10 +551,10 @@ const Achievers: React.FC = () => {
             <DialogHeader>
               <DialogTitle className="text-center text-2xl flex items-center justify-center">
                 <CheckCheck className="h-6 w-6 text-green-500 mr-2" />
-                Registration Successful!
+                Welcome to the NURD Initiative!
               </DialogTitle>
               <DialogDescription className="text-center pt-4">
-                Thank you for signing up for the NURD Initiative!
+                Thank you for registering your child for the NURD Initiative!
               </DialogDescription>
             </DialogHeader>
             <div className="bg-gray-50 p-6 rounded-lg border border-gray-100 my-4">
@@ -497,13 +564,13 @@ const Achievers: React.FC = () => {
                   <div className="flex-shrink-0 h-5 w-5 rounded-full bg-green-100 flex items-center justify-center mr-2 mt-0.5">
                     <span className="text-green-600 text-xs">✓</span>
                   </div>
-                  <p>Check your email for a confirmation with login details.</p>
+                  <p>A confirmation email will be sent to you with detailed instructions for getting started.</p>
                 </li>
                 <li className="flex items-start">
                   <div className="flex-shrink-0 h-5 w-5 rounded-full bg-green-100 flex items-center justify-center mr-2 mt-0.5">
                     <span className="text-green-600 text-xs">✓</span>
                   </div>
-                  <p>Your child's NURD profile card will be generated shortly.</p>
+                  <p>Your child's custom NURD profile card will be generated shortly and sent to your email.</p>
                 </li>
                 <li className="flex items-start">
                   <div className="flex-shrink-0 h-5 w-5 rounded-full bg-green-100 flex items-center justify-center mr-2 mt-0.5">
