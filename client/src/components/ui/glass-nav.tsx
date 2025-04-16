@@ -374,6 +374,11 @@ export const GlassNav: React.FC = () => {
               );
             })}
             
+            {/* Color Scheme Picker */}
+            <div className="ml-2">
+              <ColorSchemePicker />
+            </div>
+            
             <Link href="/settings">
               <div className="ml-2 p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors cursor-pointer">
                 <Settings className="h-5 w-5 text-primary" />
@@ -527,6 +532,22 @@ export const GlassNav: React.FC = () => {
               </Link>
             );
           })}
+          
+          {/* Theme picker in mobile menu */}
+          <div className="block px-3 py-2 rounded-md text-base font-medium text-foreground/70 cursor-pointer">
+            <div className="flex items-center justify-between">
+              <span className="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 mr-2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 2a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path>
+                </svg>
+                Theme
+              </span>
+              <div className="flex space-x-1">
+                <ColorSchemePicker />
+              </div>
+            </div>
+          </div>
           
           <Link href="/settings">
             <div 
