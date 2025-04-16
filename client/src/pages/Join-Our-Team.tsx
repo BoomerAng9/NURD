@@ -504,72 +504,7 @@ const JoinOurTeam: React.FC = () => {
           </div>
         </section>
         
-        {/* Apply Section */}
-        <section className="py-10 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <motion.div 
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={fadeIn}
-              className="max-w-3xl mx-auto text-center mb-8"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold mb-3">Ready to Join Our Team?</h2>
-              <p className="text-lg text-gray-600">
-                Apply now to become a NURD trainer and help shape the next generation of tech innovators.
-              </p>
-            </motion.div>
-            
-            <motion.div 
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.1 }}
-              variants={fadeIn}
-              className="max-w-3xl mx-auto"
-            >
-              <form id="application-form" onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                  <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-                    <Input id="firstName" placeholder="Your first name" required />
-                  </div>
-                  <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-                    <Input id="lastName" placeholder="Your last name" required />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                    <Input id="email" type="email" placeholder="you@example.com" required />
-                  </div>
-                  <div>
-                    <label htmlFor="experience" className="block text-sm font-medium text-gray-700 mb-1">Years of Experience</label>
-                    <Input id="experience" type="number" min="1" placeholder="2" required />
-                  </div>
-                </div>
-                
-                <div className="mb-5">
-                  <label htmlFor="platforms" className="block text-sm font-medium text-gray-700 mb-1">Platforms You're Familiar With</label>
-                  <Input id="platforms" placeholder="e.g. Vercel, Firebase, Replit" required />
-                  <p className="mt-1 text-xs text-gray-500">Please list the platforms you have experience with, separated by commas.</p>
-                </div>
-                
-                <div className="mb-5">
-                  <label htmlFor="portfolio" className="block text-sm font-medium text-gray-700 mb-1">Portfolio or LinkedIn URL</label>
-                  <Input id="portfolio" type="url" placeholder="https://" required />
-                </div>
-                
-                <div className="mb-5">
-                  <label htmlFor="motivation" className="block text-sm font-medium text-gray-700 mb-1">Why do you want to join our team?</label>
-                  <Textarea id="motivation" placeholder="Tell us why you're interested in becoming a NURD trainer" className="min-h-[100px]" required />
-                </div>
-                
-                <Button type="submit" className="w-full bg-[#3DE053] hover:bg-[#32bd45] text-black font-medium py-2">
-                  Submit Application
-                </Button>
-              </form>
-            </motion.div>
-          </div>
-        </section>
+
       </main>
       
 

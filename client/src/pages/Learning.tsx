@@ -76,11 +76,36 @@ const Learning: React.FC = () => {
       {/* Main Content */}
       <main className="flex-grow py-16">
         <div className="container mx-auto px-4">
+          {/* Create AI Course Section - Moved to Top */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-xl p-8 mb-12 backdrop-blur-sm border border-purple-500/30"
+          >
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <div className="mb-6 md:mb-0 md:mr-8">
+                <h2 className="text-2xl font-bold mb-4">Create Your Own AI-Generated Course</h2>
+                <p className="mb-6 max-w-2xl text-gray-700 dark:text-gray-300">
+                  Design personalized learning experiences with our AI course generator. 
+                  Generate comprehensive course materials for any topic in seconds. 
+                  Perfect for educators, mentors, and self-learners!
+                </p>
+              </div>
+              <Link href="/learning/create">
+                <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-6 rounded-xl shadow-lg">
+                  <Sparkles className="mr-2 h-5 w-5" />
+                  Create AI Course
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
+          
           {/* Motivation Message */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.3 }}
             className="bg-[#13172a] text-white rounded-xl p-8 mb-12 relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-[#3DE053]/20 to-transparent" />
@@ -107,10 +132,10 @@ const Learning: React.FC = () => {
           >
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-2xl font-bold">Learning Modules</h2>
-              <Link href="/learning/create">
-                <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white">
-                  <Sparkles className="mr-2 h-4 w-4" />
-                  Create AI Course
+              <Link href="/apply">
+                <Button variant="outline" className="text-primary border-primary/30 hover:bg-primary/10">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Apply to Teach
                 </Button>
               </Link>
             </div>
