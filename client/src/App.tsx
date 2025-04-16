@@ -62,8 +62,8 @@ const TestComponent = () => {
           <div className="relative p-1 bg-white rounded-lg">
             <div className="p-5 glass-card overflow-hidden rounded-lg">
               <img 
-                src={nurdSkateboardPoolerImg} 
-                alt="NURD Skateboarding in Pooler" 
+                src={madeInPoolerImg} 
+                alt="NURD Made in Pooler, GA" 
                 className="mx-auto max-h-[500px] rounded-lg shadow-lg transform transition-transform duration-500 hover:scale-[1.02]"
               />
             </div>
