@@ -146,7 +146,29 @@ const Achievers: React.FC = () => {
         keywords={seoKeywords}
         canonical="/achievers"
       />
-      <Navbar />
+      <div className="sticky top-0 z-50 w-full">
+        <div className="flex h-16 items-center justify-between bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm px-4 md:px-6 border-b border-gray-200 dark:border-gray-800">
+          <div className="flex items-center">
+            <a href="/" className="flex items-center">
+              <NurdLogo variant="default" color="primary" />
+            </a>
+          </div>
+          <div className="flex items-center gap-4">
+            <a 
+              href="/" 
+              className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors"
+            >
+              Home
+            </a>
+            <a 
+              href="/about" 
+              className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors"
+            >
+              About
+            </a>
+          </div>
+        </div>
+      </div>
       
       <main className="flex-grow pt-16">
         {/* Sign Up Section */}
@@ -405,7 +427,7 @@ const Achievers: React.FC = () => {
               className="max-w-3xl mx-auto text-center mb-12"
             >
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                What Makes an <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">ACHIEVER</span>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">What Makes an ACHIEVER</span>
               </h2>
               <p className="text-lg text-gray-600">
                 The NURD Initiative empowers young minds through our <span className="font-medium text-gray-700">technology education for children</span> programs. 
