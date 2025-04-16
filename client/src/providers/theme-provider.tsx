@@ -44,33 +44,43 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [accentColor, setAccentColor] = useState<string>(defaultTheme.accent_color);
   const [hasInitializedPrefs, setHasInitializedPrefs] = useState(false);
 
-  // Fetch user theme preferences
-  const { isLoading: isLoadingPrefs } = useQuery({
-    queryKey: user ? ['user-theme-preferences', user.id] : ['user-theme-preferences'],
-    enabled: !!user,
-    queryFn: async () => {
-      if (!user) return defaultTheme;
+  // Track loading state for theme preferences
+  const [isLoadingPrefs, setIsLoadingPrefs] = useState(false);
+
+  // Fetch theme preferences on mount and when user changes
+  useEffect(() => {
+    const fetchThemePreferences = async () => {
+      if (!user) return;
       
-      const response = await fetch(`/api/users/${user.id}/theme-preferences`, {
-        credentials: 'include'
-      });
-      
-      if (!response.ok) {
-        return defaultTheme;
+      setIsLoadingPrefs(true);
+      try {
+        const response = await fetch(`/api/users/${user.id}/theme-preferences`, {
+          credentials: 'include'
+        });
+        
+        if (!response.ok) {
+          console.log('Using default theme preferences');
+          return;
+        }
+        
+        const data = await response.json() as ThemePreferences;
+        if (data) {
+          setColorScheme(data.color_scheme);
+          setThemeMode(data.theme_mode);
+          setAccentColor(data.accent_color);
+          setHasInitializedPrefs(true);
+        }
+      } catch (error) {
+        console.error('Error fetching theme preferences:', error);
+      } finally {
+        setIsLoadingPrefs(false);
       }
-      
-      return await response.json() as ThemePreferences;
-    },
-    onSuccess: (data: ThemePreferences) => {
-      if (data) {
-        setColorScheme(data.color_scheme);
-        setThemeMode(data.theme_mode);
-        setAccentColor(data.accent_color);
-        setHasInitializedPrefs(true);
-      }
-    },
-    staleTime: Infinity
-  });
+    };
+
+    if (user && !hasInitializedPrefs) {
+      fetchThemePreferences();
+    }
+  }, [user, hasInitializedPrefs]);
 
   // Save user theme preferences
   const { mutate: savePreferences } = useMutation({
@@ -120,11 +130,26 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       root.classList.toggle('dark', themeMode === 'dark');
     }
 
-    // Apply color scheme by adding CSS variables
+    // Apply color scheme
+    root.setAttribute('data-color-scheme', colorScheme);
+    
+    // Apply custom accent color if provided
     root.style.setProperty('--accent-color', accentColor);
     
-    // Add the color scheme class
-    root.setAttribute('data-color-scheme', colorScheme);
+    // Convert hex to RGB for gradient background
+    const hexToRgb = (hex: string): { r: number, g: number, b: number } | null => {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : null;
+    };
+    
+    const rgb = hexToRgb(accentColor);
+    if (rgb) {
+      root.style.setProperty('--accent-color-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
+    }
     
     // Listen for system theme changes if in system mode
     if (themeMode === 'system') {
