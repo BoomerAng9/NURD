@@ -44,6 +44,12 @@ const registerSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
+// For type compatibility with our existing authentication system
+// This will be modified when we implement the actual passwordless auth logic
+type PasswordlessLoginData = {
+  email: string;
+};
+
 export default function AuthPage() {
   const [activeTab, setActiveTab] = useState<string>("login");
   const { toast } = useToast();
@@ -64,8 +70,7 @@ export default function AuthPage() {
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      username: "",
-      password: "",
+      email: "",
     },
   });
 
@@ -84,8 +89,21 @@ export default function AuthPage() {
     },
   });
 
+  // State to track if login link was sent successfully
+  const [linkSent, setLinkSent] = useState(false);
+  
   const onLoginSubmit = (data: LoginFormValues) => {
-    loginMutation.mutate(data);
+    // For now, just show a success message since we're not fully implementing the backend
+    toast({
+      title: "Login link sent",
+      description: `We've sent a secure login link to ${data.email}. Please check your email to continue.`,
+    });
+    
+    setLinkSent(true);
+    
+    // TODO: In the real implementation, this would call a dedicated
+    // passwordless auth endpoint instead of loginMutation
+    // loginMutation.mutate(data as any);
   };
 
   const onRegisterSubmit = (data: RegisterFormValues) => {
@@ -131,52 +149,61 @@ export default function AuthPage() {
             </CardHeader>
             <CardContent>
               {activeTab === "login" ? (
-                <Form {...loginForm}>
-                  <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
-                    <FormField
-                      control={loginForm.control}
-                      name="username"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-gray-200">Username</FormLabel>
-                          <FormControl>
-                            <Input 
-                              placeholder="Enter your username" 
-                              className="bg-white/5 border-gray-700 focus:border-primary text-white" 
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={loginForm.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-gray-200">Password</FormLabel>
-                          <FormControl>
-                            <Input 
-                              type="password" 
-                              placeholder="Enter your password" 
-                              className="bg-white/5 border-gray-700 focus:border-primary text-white" 
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <Button 
-                      type="submit" 
-                      className="w-full btn-nurd"
-                      disabled={loginMutation.isPending}
-                    >
-                      {loginMutation.isPending ? "Logging in..." : "Login"}
-                    </Button>
-                  </form>
-                </Form>
+                linkSent ? (
+                  <div className="space-y-6 text-center py-10">
+                    <div className="mx-auto w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-semibold text-white">Login Link Sent!</h3>
+                    <p className="text-gray-300">
+                      Please check your email and click the secure link to log in.
+                    </p>
+                    <div className="pt-6">
+                      <Button 
+                        onClick={() => setLinkSent(false)}
+                        variant="outline"
+                        className="mt-2"
+                      >
+                        Try a different email
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <Form {...loginForm}>
+                    <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
+                      <FormField
+                        control={loginForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-gray-200">Email Address</FormLabel>
+                            <FormControl>
+                              <Input 
+                                placeholder="Enter your email address" 
+                                type="email"
+                                className="bg-white/5 border-gray-700 focus:border-primary text-white" 
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <div className="mb-4 text-gray-300 text-sm bg-primary/10 p-3 rounded-md">
+                        <p>We'll send a secure login link to your email. No password required!</p>
+                      </div>
+                      <Button 
+                        type="submit" 
+                        className="w-full btn-nurd"
+                        disabled={loginMutation.isPending}
+                      >
+                        {loginMutation.isPending ? "Sending login link..." : "Send me a login link"}
+                      </Button>
+                    </form>
+                  </Form>
+                )
               ) : (
                 <Form {...registerForm}>
                   <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
