@@ -51,9 +51,6 @@ const navigation: NavItem[] = [
       { name: 'Trainers', path: '/trainers', icon: <Users className="h-4 w-4 mr-2" /> },
       { name: 'Apply to Teach', path: '/apply', icon: <UserPlus className="h-4 w-4 mr-2" /> },
       { name: 'Create Course', path: '/create-course', icon: <FileText className="h-4 w-4 mr-2" /> },
-      { name: 'Skills Exchange', path: '/skill-marketplace', icon: <Users2 className="h-4 w-4 mr-2" /> },
-      { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
-      { name: 'AI Code Tools', path: '/ai-code-tools', icon: <FileText className="h-4 w-4 mr-2" /> },
     ]
   },
   { 
@@ -63,6 +60,9 @@ const navigation: NavItem[] = [
     children: [
       { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="h-4 w-4 mr-2" /> },
       { name: 'Sign Up', path: '/achievers', icon: <UserPlus className="h-4 w-4 mr-2" /> },
+      { name: 'Skills Exchange', path: '/skill-marketplace', icon: <Users2 className="h-4 w-4 mr-2" /> },
+      { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
+      { name: 'AI Code Tools', path: '/ai-code-tools', icon: <FileText className="h-4 w-4 mr-2" /> },
       { name: 'Reinvestment', path: '/reinvestment', icon: <Heart className="h-4 w-4 mr-2" /> },
     ]
   },
