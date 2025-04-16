@@ -1,5 +1,6 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { Switch, Route, Link } from "wouter";
+import { motion } from "framer-motion";
 import { ProtectedRoute } from "@/lib/protected-route";
 import { AdminProtectedRoute } from "@/lib/admin-protected-route";
 import { queryClient } from "./lib/queryClient";
@@ -82,47 +83,67 @@ const TestComponent = () => {
         </div>
         
         <div className="mt-10 flex flex-wrap justify-center gap-5">
-          <a 
+          <motion.a 
             href="/auth" 
-            className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 border-blue-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
+            className="glass-button flex items-center space-x-2 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 border-blue-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
             data-cursor-text="Sign in or create an account"
+            whileHover={{ y: -4, scale: 1.05, transition: { duration: 0.2 } }}
+            whileTap={{ scale: 0.98 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
           >
             <LayoutDashboard className="h-5 w-5" />
             <span className="font-semibold">Login / Register</span>
-          </a>
-          <a 
+          </motion.a>
+          <motion.a 
             href="/code-playground" 
-            className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-green-600/20 to-teal-600/20 border-green-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
+            className="glass-button flex items-center space-x-2 bg-gradient-to-r from-green-600/20 to-teal-600/20 border-green-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
             data-cursor-text="Try our interactive code editor"
+            whileHover={{ y: -4, scale: 1.05, transition: { duration: 0.2 } }}
+            whileTap={{ scale: 0.98 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-code">
               <polyline points="16 18 22 12 16 6"></polyline>
               <polyline points="8 6 2 12 8 18"></polyline>
             </svg>
             <span className="font-semibold">Code Playground</span>
-          </a>
-          <a 
+          </motion.a>
+          <motion.a 
             href="/ai-code-tools" 
-            className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-purple-700/30 to-pink-700/30 border-purple-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
+            className="glass-button flex items-center space-x-2 bg-gradient-to-r from-purple-700/30 to-pink-700/30 border-purple-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
             data-cursor-text="AI-powered coding tools"
+            whileHover={{ y: -4, scale: 1.05, transition: { duration: 0.2 } }}
+            whileTap={{ scale: 0.98 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path>
               <path d="M7 7h.01"></path>
             </svg>
             <span className="font-semibold">AI Code Tools</span>
-          </a>
-          <a 
+          </motion.a>
+          <motion.a 
             href="/achievers" 
-            className="glass-button transform hover:scale-105 transition-all flex items-center space-x-2 bg-gradient-to-r from-orange-600/20 to-amber-600/20 border-orange-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
+            className="glass-button flex items-center space-x-2 bg-gradient-to-r from-orange-600/20 to-amber-600/20 border-orange-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
             data-cursor-text="Join our ACHIEVERS program!"
+            whileHover={{ y: -4, scale: 1.05, transition: { duration: 0.2 } }}
+            whileTap={{ scale: 0.98 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-send">
               <path d="m22 2-7 20-4-9-9-4Z"/>
               <path d="M22 2 11 13"/>
             </svg>
             <span className="font-semibold">ACHIEVERS</span>
-          </a>
+          </motion.a>
         </div>
       </div>
     </div>
