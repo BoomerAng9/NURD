@@ -223,11 +223,11 @@ const AppContent = () => {
             </div>
             <div className="text-gray-500 flex items-center justify-center mt-2">
               {/* Made in PLR SVG with palm trees and ospreys */}
-              <div className="flex items-center transition-transform hover:scale-105">
+              <div className="flex items-center transition-all duration-300 hover:scale-105 bg-black rounded-lg p-2 shadow-md">
                 <img 
-                  src="/assets/made-in-plr.svg" 
+                  src="/assets/made-in-plr-2.svg" 
                   alt="Made in Pooler, GA" 
-                  className="h-12 w-auto"
+                  className="h-16 w-auto"
                 />
               </div>
             </div>
