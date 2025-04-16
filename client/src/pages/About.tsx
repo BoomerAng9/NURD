@@ -123,7 +123,7 @@ const About: React.FC = () => {
                     <div className="bg-gradient-to-r from-[#121645] to-[#121645]/90 p-6 rounded-xl text-white shadow-lg transform transition-transform hover:scale-[1.01]">
                       <div className="flex items-center mb-4">
                         <div className="w-16 h-16 flex items-center justify-center mr-4">
-                          <img src="@assets/33C74D57-C126-4BBE-A4B4-54F38CDD6AFD.png" alt="NURD Logo" className="h-14 w-auto object-contain" />
+                          <img src={nurdLogoImg} alt="NURD Logo" className="h-14 w-auto object-contain" />
                         </div>
                         <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-300">The NURD Initiative</h3>
                       </div>
