@@ -222,21 +222,14 @@ const AppContent = () => {
               </span>
             </div>
             <p className="text-gray-500 flex items-center justify-center">
-              {/* Palmetto Palm Tree SVG */}
+              {/* Made in PLR SVG with palm trees and ospreys */}
               <img 
-                src="/assets/pooler_palm.svg" 
-                alt="Palmetto Palm" 
-                className="h-8 w-auto mr-3"
+                src="/assets/made-in-plr.svg" 
+                alt="Made in Pooler, GA" 
+                className="h-12 w-auto mr-2"
               />
               
-              <span>Made in Pooler, GA</span>
-              
-              {/* Osprey SVG */}
-              <img 
-                src="/assets/osprey.svg" 
-                alt="Osprey" 
-                className="h-8 w-auto ml-3"
-              />
+              <span>Pooler, GA</span>
             </p>
           </div>
         </footer>
