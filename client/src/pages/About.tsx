@@ -22,11 +22,22 @@ const About: React.FC = () => {
         {/* About Header Section */}
         <section className="py-16 bg-gradient-to-br from-[#121645] to-[#121645]/90 text-white">
           <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">About ACHIEVEMOR</h1>
-              <p className="text-xl leading-relaxed text-white">
-                Driving innovation through expertise, creativity, and emerging technology implementation.
-              </p>
+            <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="md:w-2/5 order-2 md:order-1">
+                <img 
+                  src="/attached_assets/4288A514-4A16-4431-944E-9130EC4BCC2F.png" 
+                  alt="NURD Laptop" 
+                  className="rounded-lg shadow-xl transform hover:scale-[1.02] transition-transform duration-300 max-w-full"
+                />
+              </div>
+              <div className="md:w-3/5 order-1 md:order-2">
+                <div className="text-center md:text-left">
+                  <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">About ACHIEVEMOR</h1>
+                  <p className="text-xl leading-relaxed text-white">
+                    Driving innovation through expertise, creativity, and emerging technology implementation.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>

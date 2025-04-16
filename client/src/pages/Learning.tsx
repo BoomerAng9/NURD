@@ -81,12 +81,12 @@ const Learning: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-xl p-8 mb-12 backdrop-blur-sm border border-purple-500/30"
+            className="bg-gradient-to-r from-purple-800 to-blue-800 rounded-xl p-8 mb-12 backdrop-blur-sm border border-purple-500/30"
           >
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="mb-6 md:mb-0 md:mr-8">
-                <h2 className="text-2xl font-bold mb-4">Create Your Own AI-Generated Course</h2>
-                <p className="mb-6 max-w-2xl text-gray-700 dark:text-gray-300">
+                <h2 className="text-2xl font-bold mb-4 text-white">Create Your Own AI-Generated Course</h2>
+                <p className="mb-6 max-w-2xl text-white">
                   Design personalized learning experiences with our AI course generator. 
                   Generate comprehensive course materials for any topic in seconds. 
                   Perfect for educators, mentors, and self-learners!
