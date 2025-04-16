@@ -9,7 +9,12 @@ import {
   FileText,
   X,
   HelpCircle,
-  Info
+  Info,
+  Code,
+  Zap,
+  Laptop,
+  Gamepad,
+  Rocket
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -51,6 +56,7 @@ import * as z from 'zod';
 import { useToast } from '@/hooks/use-toast';
 import Navbar from '@/components/ui/navbar';
 import Footer from '@/components/sections/footer';
+import MetaData from '@/components/seo/meta-data';
 
 // Form schema with validation
 const signUpFormSchema = z.object({
@@ -123,8 +129,19 @@ const Achievers: React.FC = () => {
     }
   };
 
+  // SEO keywords and description based on the provided keywords
+  const seoTitle = "NURD Initiative | Technology Education for Children | ACHIEVERS Program";
+  const seoDescription = "The NURD Initiative offers coding for kids, STEAM learning programs, and youth coding initiatives. Our gamified learning platform includes interactive profile cards, digital badges, and creative coding projects to empower future innovators.";
+  const seoKeywords = "coding for kids, technology education for children, STEAM learning programs, youth coding initiatives, kid-friendly coding camps, interactive profile card maker, digital trading card platform, gamified learning experience, virtual achievement cards, digital badge system, future innovators, next-gen digital learning, futuristic tech program, creative coding for youth, innovative tech education, NURD Initiative, ACHIEVERS program";
+
   return (
     <div className="min-h-screen flex flex-col">
+      <MetaData 
+        title={seoTitle}
+        description={seoDescription}
+        keywords={seoKeywords}
+        canonical="/achievers"
+      />
       <Navbar />
       
       <main className="flex-grow pt-16">
@@ -139,8 +156,9 @@ const Achievers: React.FC = () => {
             >
               <h1 className="text-4xl font-bold mb-4">Sign Up for the NURD Initiative</h1>
               <p className="text-xl opacity-90 mb-6">
-                Register your child for our innovative tech learning program. After registration, 
-                we'll generate a custom profile card for your child and send you a confirmation email with next steps.
+                Register your child for our <span className="font-medium">technology education for children</span> program. 
+                We'll create a custom <span className="font-medium">interactive profile card</span> and provide access to 
+                <span className="font-medium"> youth coding initiatives</span> that foster creativity and innovation.
               </p>
             </motion.div>
             
@@ -323,8 +341,9 @@ const Achievers: React.FC = () => {
                 What Makes an <span className="text-primary">ACHIEVER</span>
               </h2>
               <p className="text-lg text-gray-600">
-                The NURD Initiative empowers young minds with technology skills, 
-                creative thinking, and collaborative opportunities.
+                The NURD Initiative empowers young minds through our <span className="font-medium">technology education for children</span> programs. 
+                We blend <span className="font-medium">STEAM learning</span> with <span className="font-medium">creative coding</span> to 
+                nurture the <span className="font-medium">future innovators</span> of tomorrow.
               </p>
             </motion.div>
             
@@ -342,9 +361,10 @@ const Achievers: React.FC = () => {
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
                   <Award className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold mb-3">Skill Recognition</h3>
+                <h3 className="text-xl font-bold mb-3">Digital Badge System</h3>
                 <p className="text-gray-600">
-                  Earn badges and certificates as you complete modules and demonstrate new skills.
+                  Earn <span className="font-medium">virtual achievement cards</span> and digital badges as you complete 
+                  our <span className="font-medium">coding for kids</span> modules and demonstrate new tech skills.
                 </p>
               </motion.div>
               
@@ -355,9 +375,10 @@ const Achievers: React.FC = () => {
                 <div className="w-16 h-16 rounded-full bg-purple-500/10 flex items-center justify-center mb-4">
                   <Calendar className="h-8 w-8 text-purple-500" />
                 </div>
-                <h3 className="text-xl font-bold mb-3">Structured Learning</h3>
+                <h3 className="text-xl font-bold mb-3">STEAM Learning Programs</h3>
                 <p className="text-gray-600">
-                  Follow a personalized learning path with age-appropriate content and challenges.
+                  Experience our <span className="font-medium">gamified learning experience</span> with personalized paths 
+                  and age-appropriate <span className="font-medium">technology education for children</span>.
                 </p>
               </motion.div>
               
@@ -368,9 +389,11 @@ const Achievers: React.FC = () => {
                 <div className="w-16 h-16 rounded-full bg-amber-500/10 flex items-center justify-center mb-4">
                   <FileText className="h-8 w-8 text-amber-500" />
                 </div>
-                <h3 className="text-xl font-bold mb-3">Progress Tracking</h3>
+                <h3 className="text-xl font-bold mb-3">Future Innovators</h3>
                 <p className="text-gray-600">
-                  Both parents and children can monitor learning progress and celebrate achievements.
+                  Our <span className="font-medium">creative coding for youth</span> approach nurtures 
+                  <span className="font-medium"> next-gen digital learning</span> skills through interactive 
+                  <span className="font-medium"> kid-friendly coding camps</span>.
                 </p>
               </motion.div>
             </motion.div>
