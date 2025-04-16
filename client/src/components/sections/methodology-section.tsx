@@ -4,7 +4,7 @@ const MethodologySection: React.FC = () => {
   return (
     <section id="methodology" className="py-20 bg-gray-900 text-white relative overflow-hidden">
       <div className="absolute inset-0 z-0 opacity-10">
-        <div className="absolute top-0 left-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#121645] to-black bg-cover bg-center"></div>
       </div>
       
       <div className="container mx-auto px-4 relative z-10">
