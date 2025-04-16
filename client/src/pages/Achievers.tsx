@@ -404,8 +404,8 @@ const Achievers: React.FC = () => {
               variants={fadeIn}
               className="max-w-3xl mx-auto text-center mb-12"
             >
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                What Makes an <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">ACHIEVER</span>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
+                What Makes an ACHIEVER
               </h2>
               <p className="text-lg text-gray-600">
                 The NURD Initiative empowers young minds through our <span className="font-medium text-gray-700">technology education for children</span> programs. 
