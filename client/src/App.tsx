@@ -14,6 +14,7 @@ import { PageTransition } from "@/components/animations/page-transition";
 import MagicCursor from "@/components/ui/magic-cursor";
 import { ApplyModal } from "@/components/ui/apply-modal";
 import { useCursorInteraction } from "@/hooks/use-cursor-interaction";
+import Favicon from "@/components/ui/Favicon";
 import { UserPlus, Calendar, User, MapPin } from "lucide-react";
 import { GlassNav } from "@/components/ui/glass-nav";
 import { ComingSoon } from "@/components/ui/coming-soon";
