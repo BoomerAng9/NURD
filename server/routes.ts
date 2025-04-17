@@ -155,6 +155,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
   
+  // Analytics Routes
+  app.get('/api/analytics/platform-stats', getPlatformStats);
+  app.get('/api/analytics/user-growth', getUserGrowthStats);
+  app.get('/api/analytics/user/:userId/activity', getUserActivityStats);
+  app.get('/api/analytics/marketplace', getSkillMarketplaceStats);
+  app.get('/api/analytics/user-preferences', getUserPreferenceStats);
+  app.get('/api/analytics/users', getAllUsers);
+  
   // File Upload Route
   app.post('/api/upload', upload.single('file'), (req, res) => {
     try {

@@ -31,13 +31,41 @@ import {
   Megaphone, 
   ShieldAlert,
   BookOpenCheck,
-  PenSquare
+  PenSquare,
+  TrendingUp,
+  Activity,
+  UserPlus,
+  RefreshCw,
+  UserCheck,
+  Palette,
+  BarChart2,
+  PieChart,
+  LineChart,
+  Loader2
 } from 'lucide-react';
 import {
   FuturisticContainer,
   FadeIn,
   ScaleIn
 } from '@/components/animations/futuristic-transitions';
+import { 
+  Table, 
+  TableBody, 
+  TableCaption, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from '@/components/ui/table';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 
 const AdminDashboard: React.FC = () => {
   const [location, setLocation] = useLocation();
@@ -45,6 +73,9 @@ const AdminDashboard: React.FC = () => {
   const { user } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [userGrowthPeriod, setUserGrowthPeriod] = useState('month');
+  const [currentUserPage, setCurrentUserPage] = useState(1);
 
   // Check if user is admin
   useEffect(() => {
@@ -75,9 +106,39 @@ const AdminDashboard: React.FC = () => {
   }, [user, setLocation, toast]);
 
   // Fetch landing content data
-  const { data: landingContent, isLoading } = useQuery<LandingContent[]>({
+  const { data: landingContent, isLoading: isLoadingContent } = useQuery<LandingContent[]>({
     queryKey: ['/api/landing-content'],
     enabled: isAdmin
+  });
+
+  // Fetch platform stats
+  const { data: platformStats, isLoading: isLoadingStats } = useQuery({
+    queryKey: ['/api/analytics/platform-stats'],
+    enabled: isAdmin && activeTab === 'dashboard'
+  });
+
+  // Fetch user growth data
+  const { data: userGrowth, isLoading: isLoadingGrowth } = useQuery({
+    queryKey: ['/api/analytics/user-growth', userGrowthPeriod],
+    enabled: isAdmin && (activeTab === 'dashboard' || activeTab === 'users'),
+  });
+
+  // Fetch marketplace stats
+  const { data: marketplaceStats, isLoading: isLoadingMarketplace } = useQuery({
+    queryKey: ['/api/analytics/marketplace'],
+    enabled: isAdmin && activeTab === 'marketplace',
+  });
+
+  // Fetch user preferences stats
+  const { data: userPreferenceStats, isLoading: isLoadingPreferences } = useQuery({
+    queryKey: ['/api/analytics/user-preferences'],
+    enabled: isAdmin && activeTab === 'theme',
+  });
+
+  // Fetch all users with pagination
+  const { data: allUsers, isLoading: isLoadingUsers } = useQuery({
+    queryKey: ['/api/analytics/users', currentUserPage],
+    enabled: isAdmin && activeTab === 'users',
   });
 
   // Mutation for saving landing content

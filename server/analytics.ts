@@ -14,6 +14,19 @@ import {
   user_preferences
 } from '@shared/schema';
 
+// Define types for our chart data
+interface ChartData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+  }[];
+}
+
+interface QueryResultRow {
+  [key: string]: any;
+}
+
 /**
  * Get overall platform statistics
  * For admin dashboard overview
@@ -142,10 +155,14 @@ export async function getUserGrowthStats(req: Request, res: Response) {
     };
     
     // Process the registration data
-    registrationData.forEach((row: any) => {
-      result.labels.unshift(row.period);
-      result.datasets[0].data.unshift(parseInt(row.new_users));
-    });
+    if (Array.isArray(registrationData)) {
+      registrationData.forEach((row: QueryResultRow) => {
+        if (row && typeof row.period === 'string' && row.new_users !== undefined) {
+          result.labels.unshift(row.period);
+          result.datasets[0].data.unshift(parseInt(row.new_users));
+        }
+      });
+    }
     
     return res.json({
       periodType: periodLabel,
