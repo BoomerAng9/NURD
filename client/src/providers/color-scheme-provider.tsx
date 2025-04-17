@@ -85,10 +85,8 @@ const schemes = [
 ];
 
 export const ColorSchemeProvider: React.FC<ColorSchemeProviderProps> = ({ children }) => {
-  // Initialize with local state only
-  const userPrefsContext = null;
-  const hasUserPrefs = false;
-  const userPrefs = null;
+  // We don't need these anymore as we're using local state
+  // User preferences are handled separately through UserPreferencesProvider
   
   // Initialize color scheme from preferences, localStorage, or default
   const [localColorScheme, setLocalColorScheme] = useState<ColorScheme>(() => {

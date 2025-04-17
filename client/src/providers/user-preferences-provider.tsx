@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ColorScheme } from '@/providers/color-scheme-provider';
+import { applyUserPreferences, detectSystemPreferences } from '@/lib/preference-utils';
 
-interface UserPreferences {
+export interface UserPreferences {
   colorScheme: ColorScheme;
   fontSize: 'small' | 'medium' | 'large';
   reducedMotion: boolean;
@@ -69,6 +70,10 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
   useEffect(() => {
     if (!isLoading) {
       localStorage.setItem('userPreferences', JSON.stringify(preferences));
+      
+      // Apply preferences to the document
+      applyUserPreferences(preferences);
+      console.log('Applied user preferences:', preferences);
     }
   }, [preferences, isLoading]);
 
@@ -93,22 +98,13 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
   const autoDetectPreferences = () => {
     if (!preferences.autoDetect) return;
     
-    // Detect preferred color scheme
-    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    // Could set a specific dark/light color scheme here based on preference
-    
-    // Detect reduced motion preference
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    
-    // Detect contrast preference (if supported)
-    const prefersHighContrast = window.matchMedia('(prefers-contrast: more)').matches;
+    // Use our utility function to detect system preferences
+    const detectedPreferences = detectSystemPreferences();
     
     setPreferences(prev => ({
       ...prev,
-      reducedMotion: prefersReducedMotion,
-      highContrast: prefersHighContrast,
-      // Don't automatically change color scheme here, as we allow manual selection
-      // If we want to auto-detect, we would add: colorScheme: prefersDarkScheme ? 'dark' : 'light',
+      ...detectedPreferences,
+      // We're not auto-detecting colorScheme to allow for user customization
     }));
   };
 
