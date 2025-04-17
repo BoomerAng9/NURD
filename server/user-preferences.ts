@@ -163,7 +163,7 @@ export async function updateUserPreferences(req: RequestWithUser, res: Response)
 /**
  * Reset user preferences to defaults
  */
-export async function resetUserPreferences(req: Request, res: Response) {
+export async function resetUserPreferences(req: RequestWithUser, res: Response) {
   try {
     // Get user ID from session
     const userId = req.session?.user?.id;
@@ -226,7 +226,7 @@ export async function resetUserPreferences(req: Request, res: Response) {
  * Auto-detect user preferences based on system settings (handled client-side)
  * This API receives the detected preferences and saves them
  */
-export async function autoDetectUserPreferences(req: Request, res: Response) {
+export async function autoDetectUserPreferences(req: RequestWithUser, res: Response) {
   try {
     // Get user ID from session
     const userId = req.session?.user?.id;

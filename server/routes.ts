@@ -501,6 +501,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User Preferences Routes
+  app.get('/api/user/preferences', getUserPreferences);
+  app.put('/api/user/preferences', updateUserPreferences);
+  app.post('/api/user/preferences/reset', resetUserPreferences);
+  app.post('/api/user/preferences/detect', autoDetectUserPreferences);
+
   // Theme Preferences Routes
   app.get('/api/users/:userId/theme-preferences', async (req, res) => {
     try {
