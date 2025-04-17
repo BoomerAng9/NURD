@@ -149,16 +149,21 @@ export default function VIBE() {
       try {
         const models = await getAvailableModels();
         setAvailableModels(models);
-        // Set default model to the first one
-        if (models.length > 0) {
-          setSelectedModel(models[0]);
-        }
+        
+        // Always set a default model
+        setSelectedModel(models.length > 0 ? models[0] : 'gpt-3.5-turbo');
       } catch (error) {
         console.error('Failed to load models:', error);
+        
+        // Provide fallback models if API fails
+        const fallbackModels = ['gpt-3.5-turbo', 'claude-instant-1', 'mistral-tiny'];
+        setAvailableModels(fallbackModels);
+        setSelectedModel('gpt-3.5-turbo');
+        
         toast({
-          title: 'Error loading models',
-          description: 'Could not load available models. Please try again later.',
-          variant: 'destructive',
+          title: 'Using default models',
+          description: 'Could not connect to model service. Using default models instead.',
+          variant: 'default',
         });
       }
     }

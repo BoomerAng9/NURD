@@ -142,6 +142,17 @@ export async function getCodeCompletionWithAskCodi({
 }
 
 /**
+ * Default models to use when API request fails
+ */
+const DEFAULT_MODELS = [
+  'gpt-3.5-turbo',
+  'claude-instant-1',
+  'mistral-tiny',
+  'gemini-pro',
+  'llama-2'
+];
+
+/**
  * Get available AskCodi models
  */
 export async function getAvailableModels(): Promise<string[]> {
@@ -149,14 +160,15 @@ export async function getAvailableModels(): Promise<string[]> {
     const response = await fetch('/api/askcodi/models');
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to get available models');
+      console.warn('AskCodi models API failed, using default models');
+      return DEFAULT_MODELS;
     }
 
     const data = await response.json();
-    return data.models;
+    return data.models.length > 0 ? data.models : DEFAULT_MODELS;
   } catch (error) {
     console.error('Error fetching AskCodi models:', error);
-    throw error;
+    // Return default models instead of throwing error
+    return DEFAULT_MODELS;
   }
 }
