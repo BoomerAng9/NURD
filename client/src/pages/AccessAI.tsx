@@ -243,9 +243,8 @@ console.log(greet("Future Developer"));
                 
                 <div className="h-[400px] border-b border-border/30">
                   <CodeEditor 
-                    code={code} 
-                    setCode={setCode} 
-                    language="javascript"
+                    onCodeChange={setCode}
+                    initialLanguage="javascript"
                   />
                 </div>
                 
@@ -285,10 +284,10 @@ console.log(greet("Future Developer"));
               <div className="space-y-6">
                 <div className={cn(
                   "rounded-lg border border-border/50 p-6 text-center bg-card/70 backdrop-blur-sm", 
-                  colorScheme === 'NURD Blue' ? "bg-gradient-to-br from-blue-500/10 to-cyan-500/5" : 
-                  colorScheme === 'Ocean Waves' ? "bg-gradient-to-br from-teal-500/10 to-blue-500/5" :
-                  colorScheme === 'Forest Canopy' ? "bg-gradient-to-br from-green-500/10 to-emerald-500/5" :
-                  colorScheme === 'Sunset Glow' ? "bg-gradient-to-br from-orange-500/10 to-red-500/5" :
+                  colorScheme === 'default' ? "bg-gradient-to-br from-blue-500/10 to-cyan-500/5" : 
+                  colorScheme === 'ocean' ? "bg-gradient-to-br from-teal-500/10 to-blue-500/5" :
+                  colorScheme === 'forest' ? "bg-gradient-to-br from-green-500/10 to-emerald-500/5" :
+                  colorScheme === 'sunset' ? "bg-gradient-to-br from-orange-500/10 to-red-500/5" :
                   "bg-gradient-to-br from-purple-500/10 to-indigo-500/5"
                 )}>
                   <img 
@@ -309,10 +308,10 @@ console.log(greet("Future Developer"));
                 
                 <div className={cn(
                   "rounded-lg border border-border/50 p-6 text-center bg-card/70 backdrop-blur-sm",
-                  colorScheme === 'NURD Blue' ? "bg-gradient-to-br from-blue-500/10 to-purple-500/5" : 
-                  colorScheme === 'Ocean Waves' ? "bg-gradient-to-br from-blue-500/10 to-teal-500/5" :
-                  colorScheme === 'Forest Canopy' ? "bg-gradient-to-br from-emerald-500/10 to-green-500/5" :
-                  colorScheme === 'Sunset Glow' ? "bg-gradient-to-br from-red-500/10 to-amber-500/5" :
+                  colorScheme === 'default' ? "bg-gradient-to-br from-blue-500/10 to-purple-500/5" : 
+                  colorScheme === 'ocean' ? "bg-gradient-to-br from-blue-500/10 to-teal-500/5" :
+                  colorScheme === 'forest' ? "bg-gradient-to-br from-emerald-500/10 to-green-500/5" :
+                  colorScheme === 'sunset' ? "bg-gradient-to-br from-red-500/10 to-amber-500/5" :
                   "bg-gradient-to-br from-indigo-500/10 to-purple-500/5"
                 )}>
                   <img 

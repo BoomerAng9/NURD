@@ -209,29 +209,31 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
       <div className="p-4 bg-gray-800 border-b border-gray-700 flex justify-between items-center">
         <h3 className="text-white font-medium">NURD Code Playground</h3>
         <div className="flex space-x-2">
-          <TabsList>
-            <TabsTrigger 
-              value="javascript" 
-              onClick={() => setLanguage('javascript')}
-              className={language === 'javascript' ? 'bg-blue-600 text-white' : ''}
-            >
-              JavaScript
-            </TabsTrigger>
-            <TabsTrigger 
-              value="python" 
-              onClick={() => setLanguage('python')}
-              className={language === 'python' ? 'bg-blue-600 text-white' : ''}
-            >
-              Python
-            </TabsTrigger>
-            <TabsTrigger 
-              value="html" 
-              onClick={() => setLanguage('html')}
-              className={language === 'html' ? 'bg-blue-600 text-white' : ''}
-            >
-              HTML
-            </TabsTrigger>
-          </TabsList>
+          <Tabs defaultValue="javascript">
+            <TabsList>
+              <TabsTrigger 
+                value="javascript" 
+                onClick={() => setLanguage('javascript')}
+                className={language === 'javascript' ? 'bg-blue-600 text-white' : ''}
+              >
+                JavaScript
+              </TabsTrigger>
+              <TabsTrigger 
+                value="python" 
+                onClick={() => setLanguage('python')}
+                className={language === 'python' ? 'bg-blue-600 text-white' : ''}
+              >
+                Python
+              </TabsTrigger>
+              <TabsTrigger 
+                value="html" 
+                onClick={() => setLanguage('html')}
+                className={language === 'html' ? 'bg-blue-600 text-white' : ''}
+              >
+                HTML
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
       </div>
       
