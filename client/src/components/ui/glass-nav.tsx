@@ -46,6 +46,7 @@ interface NavItem {
 const navigation: NavItem[] = [
   { name: 'About Us', path: '/about', icon: <Info className="h-4 w-4 mr-2" /> },
   { name: 'ACHIEVERS', path: '/achievers', icon: <Award className="h-4 w-4 mr-2" /> },
+  { name: 'Access AI', path: '/access-ai', icon: <Sparkles className="h-4 w-4 mr-2" /> },
   { 
     name: 'Partners', 
     icon: <Handshake className="h-4 w-4 mr-2" />,
@@ -65,6 +66,7 @@ const navigation: NavItem[] = [
       { name: 'Skills Exchange', path: '/skill-marketplace', icon: <Users2 className="h-4 w-4 mr-2" /> },
       { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
       { name: 'AI Code Tools', path: '/ai-code-tools', icon: <FileText className="h-4 w-4 mr-2" /> },
+      { name: 'AskCodi IDE', path: '/askcodi-ide', icon: <Wand2 className="h-4 w-4 mr-2" /> },
       { name: 'Reinvestment', path: '/reinvestment', icon: <Heart className="h-4 w-4 mr-2" /> },
     ]
   },
