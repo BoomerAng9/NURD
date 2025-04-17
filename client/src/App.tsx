@@ -45,8 +45,9 @@ import CreateCourse from "@/pages/create-course";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { LayoutDashboard, Send } from "lucide-react";
 
-// Lazy load code playground
+// Lazy load code playground and AskCodi IDE
 const CodePlayground = React.lazy(() => import("@/pages/code-playground"));
+const AskCodiIDEPage = React.lazy(() => import("@/pages/AskCodiIDE"));
 
 // Import NURD skateboard image
 import nurdSkateboardImg from "./assets/nurd-skateboard.png";
@@ -298,6 +299,23 @@ const TestComponent = () => {
             </svg>
             <span className="font-semibold">Code Playground</span>
           </motion.a>
+          
+          <motion.a 
+            href="/askcodi-ide" 
+            className="glass-button flex items-center space-x-2 bg-gradient-to-r from-cyan-600/20 to-purple-600/20 border-cyan-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
+            data-cursor-text="Advanced AI-powered coding environment"
+            whileHover={{ y: -4, scale: 1.05, transition: { duration: 0.2 } }}
+            whileTap={{ scale: 0.98 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.35 }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2c1.4 0 2.8 1.1 2.9 2.4a2.5 2.5 0 0 0 3.5 2 3 3 0 0 1 3.9 3.9 2.5 2.5 0 0 0 2 3.5 2.9 2.9 0 0 1 0 5.8 2.5 2.5 0 0 0-2 3.5 3 3 0 0 1-3.9 3.9 2.5 2.5 0 0 0-3.5 2 2.9 2.9 0 0 1-5.8 0 2.5 2.5 0 0 0-3.5-2 3 3 0 0 1-3.9-3.9 2.5 2.5 0 0 0-2-3.5 2.9 2.9 0 0 1 0-5.8 2.5 2.5 0 0 0 2-3.5 3 3 0 0 1 3.9-3.9 2.5 2.5 0 0 0 3.5-2A2.9 2.9 0 0 1 12 2"></path>
+              <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path>
+            </svg>
+            <span className="font-semibold">AskCodi IDE</span>
+          </motion.a>
           <motion.a 
             href="/ai-code-tools" 
             className="glass-button flex items-center space-x-2 bg-gradient-to-r from-purple-700/30 to-pink-700/30 border-purple-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
@@ -533,6 +551,12 @@ const AppContent = () => {
             <Route path="/code-playground">
               <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
                 <CodePlayground />
+              </Suspense>
+            </Route>
+            
+            <Route path="/askcodi-ide">
+              <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+                <AskCodiIDEPage />
               </Suspense>
             </Route>
             
