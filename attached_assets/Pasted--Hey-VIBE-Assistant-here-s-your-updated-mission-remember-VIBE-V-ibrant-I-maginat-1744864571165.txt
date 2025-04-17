@@ -1,0 +1,77 @@
+**Hey VIBE Assistant, here’s your updated mission – remember, VIBE = **  
+> **V**ibrant **I**magination **B**uild **E**nvironment  
+
+---
+
+### 1. Core Purpose  
+- **Bridge** absolute beginners (parents & kids) into AI coding.  
+- **Guide** them step‑by‑step: how to prompt the AI, save snippets, and build with confidence.  
+- **Unify** all tools on our platform into one cohesive experience.
+
+---
+
+### 2. Portal Launch & Responsiveness  
+- When a user clicks **“VIBE Portal”**, open your IDE in a **new browser tab** (desktop/tablet).  
+- Ensure the IDE UI is **fully responsive**: editor, chat sidebar, and menus adapt to screen size.
+
+---
+
+### 3. Solo & Collaborative Modes  
+
+#### Solo Mode  
+- **Tour Overlay** on first launch: very brief (3–4 tooltips) showing where to type, run code, and save.  
+- **Prompt Coach** in the corner: friendly tips like  
+  > “Want shorter responses? Try removing extra words!”  
+
+#### Collaborative Mode  
+- **Invite Flow:**  
+  1. User clicks **“Invite”** → generates a shareable room link.  
+  2. Friends click link → join the same VIBE session.  
+- **Shared Playground:**  
+  - A single live‑sync code buffer (powered via WebSocket + CRDT).  
+  - **Presence indicators** (avatars or initials) show who’s editing.  
+- **Built‑in Chat Panel:**  
+  - Text chat + **image/video** attachments.  
+  - Messages and media stored via our Media API.
+
+---
+
+### 4. Microsoft Teams Integration for Trainers  
+- **SSO:** Trainers “Sign in with Teams” via OAuth (Microsoft Graph).  
+- **Meeting Link:**  
+  - After sign‑in, use Graph API to **create/fetch** the Teams meeting URL.  
+  - Show a **“Join Class”** button inside VIBE that either:  
+    - Embeds the meeting in an iframe (if allowed), or  
+    - Opens the Teams app/tab via the join link.  
+
+---
+
+### 5. API & Data Flow  
+- **Auth Service:** Issue JWTs for VIBE + Teams users.  
+- **Collab API:**  
+  - `POST /sessions` → create or join room  
+  - WebSocket `/sync` → broadcast code & cursor updates  
+- **Media API:**  
+  - `POST /media` → upload attachments  
+  - `GET /media/:id` → fetch for chat preview  
+- **Teams API:**  
+  - `POST /teams/createMeeting` → returns join URL  
+
+---
+
+### 6. Onboarding & UX Tips  
+- **Keep copy simple:** use kid‑friendly language (“Click here to ask a question!”).  
+- **Encourage exploration:** short badges (“You ran your first code!”).  
+- **Error recovery:** gentle guidance if code fails (“Oops! Try adding a semicolon.”).
+
+---
+
+### 7. Testing & Validation  
+- **Mobile & Tablet:** verify UI scales at 320 px – 1024 px widths.  
+- **Collab Sync:** simulate two users editing – no conflicts.  
+- **Teams Flow:** test with real Teams accounts & embedded calls.  
+- **Accessibility:** ensure all buttons & chat labels have clear alt text.
+
+---
+
+Keep **Vibrant Imagination** at the heart of every feature. You’re not just an IDE—you’re the **Build Environment** that turns ideas into code, together.

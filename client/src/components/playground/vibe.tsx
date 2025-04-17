@@ -11,10 +11,11 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Loader2, Sparkles, Code, Edit, Settings, Wand2, 
   HelpCircle, Star, Book, LightbulbIcon, Award, Rocket,
-  Info, MessageCircle, Send, Flame
+  Info, MessageCircle, Send, Flame, Users
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { getCodeGenerationWithAskCodi, getCodeExplanationWithAskCodi, getCodeCompletionWithAskCodi, getAvailableModels } from '@/services/askcodi-service';
+import CollaborationPanel from './collaboration-panel';
 
 // Helper tooltip component for friendly contextual guidance
 const HelpTooltip = ({ message, children }: { message: string, children: React.ReactNode }) => {
