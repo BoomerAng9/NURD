@@ -555,11 +555,11 @@ export default function VIBE() {
                 <CardTitle className="text-2xl bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
                   <div className="flex items-center gap-2">
                     <Sparkles className="h-6 w-6 text-purple-500" />
-                    V.I.B.E. (Vibe Interactive Build Environment)
+                    V.I.B.E. (Vibrant Imagination Build Environment)
                   </div>
                 </CardTitle>
                 <CardDescription>
-                  Your AI coding buddy! Type simple instructions to create, explain, or finish code. Perfect for students learning to code with AI.
+                  Bridging beginners into AI coding! Create, explain, and build with confidence through guided prompts and collaborative tools.
                 </CardDescription>
               </div>
               <div className="flex flex-col md:flex-row gap-3">

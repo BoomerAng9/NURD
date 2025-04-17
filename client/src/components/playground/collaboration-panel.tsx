@@ -13,7 +13,8 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { 
-  Users, Link, Copy, MessageSquare, Send, UserPlus, Check, ExternalLink, Globe
+  Users, Link, Copy, MessageSquare, Send, UserPlus, Check, ExternalLink, Globe,
+  Video, FileImage, FileUp, VideoIcon, Paperclip
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { 
@@ -85,6 +86,15 @@ export default function CollaborationPanel({ code, onCodeChange }: Collaboration
     isActive: boolean;
     lastActive: string;
   }>>([]);
+  
+  // Microsoft Teams integration
+  const [showTeamsDialog, setShowTeamsDialog] = useState(false);
+  const [teamsSignedIn, setTeamsSignedIn] = useState(false);
+  const [teamsMeetingUrl, setTeamsMeetingUrl] = useState('');
+  
+  // Media attachment handling
+  const [showMediaUpload, setShowMediaUpload] = useState(false);
+  const [mediaType, setMediaType] = useState<'image' | 'video' | null>(null);
 
   // Check URL for session parameter on load
   useEffect(() => {
@@ -326,6 +336,16 @@ export default function CollaborationPanel({ code, onCodeChange }: Collaboration
               <Button 
                 variant="outline" 
                 size="sm" 
+                className="border-purple-500/30 text-purple-500 hover:bg-purple-500/10 hover:text-purple-400 h-8 text-xs"
+                onClick={() => setShowTeamsDialog(true)}
+              >
+                <Video className="h-3.5 w-3.5 mr-1.5" />
+                Join Class
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="sm" 
                 className="border-red-500/30 text-red-500 hover:bg-red-500/10 hover:text-red-400 h-8 text-xs"
                 onClick={handleLeaveSession}
               >
@@ -381,21 +401,32 @@ export default function CollaborationPanel({ code, onCodeChange }: Collaboration
               )}
             </div>
             <div className="flex items-center p-2 border-t border-muted">
-              <Input
-                className="text-xs"
-                placeholder="Type a message..."
-                value={chatMessage}
-                onChange={(e) => setChatMessage(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-              />
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={handleSendMessage}
-                className="ml-2"
-              >
-                <Send className="h-4 w-4" />
-              </Button>
+              <div className="flex flex-1 items-center">
+                <Input
+                  className="text-xs"
+                  placeholder="Type a message..."
+                  value={chatMessage}
+                  onChange={(e) => setChatMessage(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => setShowMediaUpload(true)}
+                  className="ml-2"
+                  title="Attach media"
+                >
+                  <Paperclip className="h-4 w-4" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={handleSendMessage}
+                  className="ml-1"
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -521,6 +552,185 @@ export default function CollaborationPanel({ code, onCodeChange }: Collaboration
             <Button onClick={handleJoinSession}>
               <Users className="mr-2 h-4 w-4" />
               Join Session
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Microsoft Teams Integration Dialog */}
+      <Dialog open={showTeamsDialog} onOpenChange={setShowTeamsDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Microsoft Teams Integration</DialogTitle>
+            <DialogDescription>
+              Sign in with Microsoft Teams to create or join a class meeting.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-2">
+            {!teamsSignedIn ? (
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Connect with Microsoft Teams to create or join virtual classrooms for collaborative learning.
+                </p>
+                <Button 
+                  className="w-full" 
+                  variant="outline"
+                  onClick={() => {
+                    // Simulate Teams sign-in
+                    setTeamsSignedIn(true);
+                    setTeamsMeetingUrl("https://teams.microsoft.com/l/meetup-join/example");
+                    toast({
+                      title: "Teams Sign-in Simulated",
+                      description: "This would connect to Microsoft Graph API in a real implementation",
+                    });
+                  }}
+                >
+                  <Video className="mr-2 h-4 w-4" />
+                  Sign in with Microsoft Teams
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="p-3 bg-green-500/10 border border-green-500/30 rounded-md text-sm text-green-400">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Check className="h-4 w-4" />
+                    <span className="font-medium">Connected to Microsoft Teams</span>
+                  </div>
+                  <p className="text-xs text-green-300/80">
+                    You can now create or join a class meeting.
+                  </p>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium leading-none">Meeting URL</label>
+                  <div className="flex items-center gap-2">
+                    <Input 
+                      value={teamsMeetingUrl} 
+                      readOnly 
+                      className="flex-1"
+                    />
+                    <Button 
+                      size="icon" 
+                      variant="outline" 
+                      onClick={() => {
+                        navigator.clipboard.writeText(teamsMeetingUrl);
+                        toast({
+                          title: "Meeting URL copied",
+                          description: "Share this with students to join the class",
+                        });
+                      }}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                
+                <Button 
+                  className="w-full"
+                  onClick={() => {
+                    // Would open Teams in a new tab or in an iframe
+                    window.open(teamsMeetingUrl, '_blank');
+                  }}
+                >
+                  <Video className="mr-2 h-4 w-4" />
+                  Join Class Meeting
+                </Button>
+              </div>
+            )}
+          </div>
+          
+          <DialogFooter className="sm:justify-end">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowTeamsDialog(false)}
+            >
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Media Upload Dialog */}
+      <Dialog open={showMediaUpload} onOpenChange={setShowMediaUpload}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add Media to Chat</DialogTitle>
+            <DialogDescription>
+              Share images or videos with your collaboration partners.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-2">
+            <div className="grid grid-cols-2 gap-4">
+              <Button 
+                variant="outline"
+                className="flex flex-col items-center justify-center h-24 border-dashed"
+                onClick={() => setMediaType('image')}
+              >
+                <FileImage className="h-10 w-10 text-blue-400 mb-2" />
+                <span className="text-xs">Upload Image</span>
+              </Button>
+              
+              <Button 
+                variant="outline"
+                className="flex flex-col items-center justify-center h-24 border-dashed"
+                onClick={() => setMediaType('video')}
+              >
+                <VideoIcon className="h-10 w-10 text-purple-400 mb-2" />
+                <span className="text-xs">Upload Video</span>
+              </Button>
+            </div>
+            
+            {mediaType && (
+              <div className="space-y-2 mt-4">
+                <label className="text-sm font-medium leading-none">
+                  Selected: {mediaType === 'image' ? 'Image' : 'Video'} Upload
+                </label>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center">
+                  <FileUp className="h-8 w-8 text-gray-400 mb-2" />
+                  <p className="text-xs text-center text-muted-foreground">
+                    Drag and drop a {mediaType} here, or click to browse
+                  </p>
+                  <Input
+                    type="file"
+                    className="hidden"
+                    accept={mediaType === 'image' ? 'image/*' : 'video/*'}
+                    onChange={() => {
+                      // In a real implementation, this would upload the file
+                      toast({
+                        title: `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} selected`,
+                        description: "This would upload the file to the collaboration session in a real implementation",
+                      });
+                      setShowMediaUpload(false);
+                    }}
+                  />
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="mt-4"
+                    onClick={() => {
+                      // Simulate successful upload
+                      toast({
+                        title: `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} shared`,
+                        description: "Media has been shared in the chat",
+                      });
+                      setShowMediaUpload(false);
+                    }}
+                  >
+                    Select {mediaType === 'image' ? 'Image' : 'Video'}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <DialogFooter className="sm:justify-end">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowMediaUpload(false)}
+            >
+              Cancel
             </Button>
           </DialogFooter>
         </DialogContent>
