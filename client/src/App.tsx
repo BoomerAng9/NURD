@@ -443,7 +443,7 @@ const AppContent = () => {
       {/* Apply Now button fixed at bottom right */}
       <motion.button 
         onClick={() => setIsApplyModalOpen(true)}
-        className="fixed bottom-4 right-20 z-50 px-4 py-2 bg-primary text-white font-bold rounded-full shadow-lg flex items-center space-x-2"
+        className="fixed bottom-20 md:bottom-4 right-20 z-50 px-4 py-2 bg-primary text-white font-bold rounded-full shadow-lg flex items-center space-x-2"
         data-cursor-text="Start your journey!"
         whileHover={{ 
           scale: 1.1,
@@ -559,6 +559,7 @@ const AppContent = () => {
         </PageTransition>
       </main>
       
+      {/* Desktop Footer */}
       {!isMobile && (
         <motion.footer 
           className="py-4 px-6 text-center text-sm"
@@ -649,6 +650,55 @@ const AppContent = () => {
               <RefreshCw className="h-3 w-3 mr-1 group-hover:text-primary group-hover:animate-spin" />
               <span>Version {VERSION.number} <span className="hidden sm:inline-block">({VERSION.name})</span></span>
             </motion.div>
+          </div>
+        </motion.footer>
+      )}
+      
+      {/* Mobile Footer - Very compact */}
+      {isMobile && (
+        <motion.footer 
+          className="fixed bottom-0 left-0 right-0 py-1 px-2 text-center text-xs bg-background/80 backdrop-blur-md border-t border-border/30 z-40"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.3 }}
+        >
+          <div className="flex items-center justify-between">
+            <motion.div 
+              className="flex items-center justify-center"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6, duration: 0.3 }}
+            >
+              <img 
+                src={madeInPoolerGreenImg} 
+                alt="Made in Pooler, GA" 
+                className="h-10 object-contain"
+              />
+            </motion.div>
+            
+            <div className="flex flex-col items-end">
+              <motion.p 
+                className="bg-clip-text text-transparent bg-gradient-to-r from-teal-400 via-green-500 to-blue-600 font-medium text-2xs"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.7, duration: 0.3 }}
+              >
+                NURD = Naturally Unstoppable Resourceful Dreamers
+              </motion.p>
+              
+              {/* Version indicator */}
+              <motion.div
+                className="flex items-center justify-center text-2xs text-muted-foreground/70 cursor-pointer group mt-1"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8, duration: 0.3 }}
+                onClick={() => window.location.reload()}
+                title="Click to refresh application"
+              >
+                <RefreshCw className="h-2 w-2 mr-1 group-hover:text-primary group-hover:animate-spin" />
+                <span>v{VERSION.number}</span>
+              </motion.div>
+            </div>
           </div>
         </motion.footer>
       )}
