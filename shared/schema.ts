@@ -22,6 +22,7 @@ export const users = pgTable("users", {
   level: integer("level").default(1),
   xp: integer("xp").default(0),
   is_admin: boolean("is_admin").default(false),
+  is_freelancer: boolean("is_freelancer").default(false),
   color_scheme: text("color_scheme").default("default"), // Options: default, ocean, forest, sunset, space
   theme_mode: text("theme_mode").default("system"), // Options: system, light, dark
   accent_color: text("accent_color").default("#3B82F6"), // Primary accent color
@@ -35,6 +36,18 @@ export const users = pgTable("users", {
   reset_password_token: text("reset_password_token"),
   reset_password_expires: timestamp("reset_password_expires"),
   last_login: timestamp("last_login"),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+});
+
+// New table for user accessibility preferences
+export const user_preferences = pgTable("user_preferences", {
+  id: serial("id").primaryKey(),
+  user_id: integer("user_id").references(() => users.id, { onDelete: 'cascade' }).notNull().unique(),
+  font_size: text("font_size").default("medium").notNull(), // small, medium, large
+  high_contrast: boolean("high_contrast").default(false).notNull(),
+  reduced_motion: boolean("reduced_motion").default(false).notNull(),
+  language: text("language").default("en"), // en, es, fr
   created_at: timestamp("created_at").defaultNow(),
   updated_at: timestamp("updated_at").defaultNow(),
 });
@@ -97,6 +110,16 @@ export const themePreferencesSchema = z.object({
   accent_color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, {
     message: "Accent color must be a valid hex color code"
   })
+});
+
+export const userPreferencesSchema = z.object({
+  fontSize: z.enum(["small", "medium", "large"], {
+    required_error: "Please select a valid font size"
+  }),
+  highContrast: z.boolean(),
+  reducedMotion: z.boolean(),
+  // Optional language preference - can be expanded in future
+  language: z.enum(["en", "es", "fr"]).optional()
 });
 
 export const landingContent = pgTable('landing_content', {
@@ -191,14 +214,22 @@ export const skill_exchanges = pgTable('skill_exchanges', {
 });
 
 // Define relationships
-export const userRelations = relations(users, ({ many }) => ({
+export const userRelations = relations(users, ({ many, one }) => ({
   sentFriendships: many(friendships, { relationName: 'userSentFriendships' }),
   receivedFriendships: many(friendships, { relationName: 'userReceivedFriendships' }),
   bridges: many(bridges),
+  preferences: one(user_preferences),
   skillOfferings: many(skill_offerings),
   skillRequests: many(skill_requests),
   skillExchangesAsOfferer: many(skill_exchanges, { relationName: 'userOfferedExchanges' }),
   skillExchangesAsRequester: many(skill_exchanges, { relationName: 'userRequestedExchanges' })
+}));
+
+export const userPreferencesRelations = relations(user_preferences, ({ one }) => ({
+  user: one(users, {
+    fields: [user_preferences.user_id],
+    references: [users.id]
+  })
 }));
 
 export const friendshipsRelations = relations(friendships, ({ one }) => ({
@@ -335,3 +366,14 @@ export type SkillRequest = typeof skill_requests.$inferSelect;
 
 export type InsertSkillExchange = z.infer<typeof insertSkillExchangeSchema>;
 export type SkillExchange = typeof skill_exchanges.$inferSelect;
+
+// User preferences schema and types
+export const insertUserPreferencesSchema = createInsertSchema(user_preferences).omit({
+  id: true,
+  created_at: true,
+  updated_at: true
+});
+
+export type InsertUserPreferences = z.infer<typeof insertUserPreferencesSchema>;
+export type UserPreferences = typeof user_preferences.$inferSelect;
+export type UserPreferencesSettings = z.infer<typeof userPreferencesSchema>;

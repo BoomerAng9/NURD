@@ -1,9 +1,9 @@
+/* Import custom preference styles */
+@import './styles/preferences.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Import custom preference styles */
-@import './styles/preferences.css';
 
 @layer base {
   * {
