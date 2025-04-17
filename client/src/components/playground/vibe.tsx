@@ -949,7 +949,7 @@ export default function VIBE() {
             className="bg-gradient-to-r from-orange-500 to-red-500 rounded-full px-3 py-1 text-white text-xs flex items-center gap-2 shadow-lg mt-2"
             title="Your coding streak"
           >
-            <Flame className="h-3.5 w-3.5" />
+            <Award className="h-3.5 w-3.5 text-orange-300" />
             <span>{consecutiveDays} Day Streak!</span>
           </div>
         )}
