@@ -25,9 +25,35 @@ export const applyUserPreferences = (preferences: UserPreferences) => {
   // Apply reduced motion if enabled
   if (preferences.reducedMotion) {
     document.documentElement.classList.add('reduced-motion');
+    
+    // Also set the prefers-reduced-motion media query
+    const style = document.createElement('style');
+    style.id = 'reduced-motion-style';
+    style.textContent = '* { animation: none !important; transition: none !important; }';
+    
+    // Remove existing style if it exists
+    const existingStyle = document.getElementById('reduced-motion-style');
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+    
+    // Add the style to the head
+    document.head.appendChild(style);
   } else {
     document.documentElement.classList.remove('reduced-motion');
+    
+    // Remove the style element if it exists
+    const existingStyle = document.getElementById('reduced-motion-style');
+    if (existingStyle) {
+      existingStyle.remove();
+    }
   }
+  
+  console.log('Applied preferences styling:', {
+    fontSize: preferences.fontSize,
+    highContrast: preferences.highContrast,
+    reducedMotion: preferences.reducedMotion
+  });
 };
 
 // Get CSS variables for a given color scheme

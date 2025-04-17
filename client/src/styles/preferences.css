@@ -1,0 +1,137 @@
+/* User preference styles */
+
+/* Font size */
+:root {
+  /* Default font size base */
+  --user-font-size: 1rem;
+}
+
+/* Apply font size to text elements */
+body {
+  font-size: var(--user-font-size);
+}
+
+/* High contrast mode */
+.high-contrast {
+  --contrast-text: 1;
+  --contrast-border: 1;
+}
+
+.high-contrast * {
+  /* Increase contrast for text elements */
+  color: rgba(var(--foreground-rgb), var(--contrast-text, 0.95)) !important;
+  border-color: rgba(var(--foreground-rgb), var(--contrast-border, 0.4)) !important;
+}
+
+.high-contrast .bg-card,
+.high-contrast .bg-background,
+.high-contrast .bg-muted {
+  /* Solid backgrounds for better contrast */
+  background-opacity: 1 !important;
+  backdrop-filter: none !important;
+}
+
+.high-contrast a:focus,
+.high-contrast button:focus,
+.high-contrast input:focus,
+.high-contrast select:focus,
+.high-contrast textarea:focus {
+  /* Higher contrast focus rings */
+  outline: 3px solid var(--color-primary) !important;
+  outline-offset: 2px !important;
+}
+
+/* Reduced motion */
+.reduced-motion * {
+  /* Disable animations and transitions */
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+}
+
+/* Color scheme overrides */
+[data-color-scheme="default"] {
+  --color-primary: #3760ff;
+  --color-accent: #6638e8;
+}
+
+[data-color-scheme="ocean"] {
+  --color-primary: #0891b2;
+  --color-accent: #2563eb;
+}
+
+[data-color-scheme="forest"] {
+  --color-primary: #16a34a;
+  --color-accent: #059669;
+}
+
+[data-color-scheme="sunset"] {
+  --color-primary: #ea580c;
+  --color-accent: #dc2626;
+}
+
+[data-color-scheme="space"] {
+  --color-primary: #7c3aed;
+  --color-accent: #4f46e5;
+}
+
+/* Utility classes for dynamic theming */
+.text-accent {
+  color: var(--color-accent);
+}
+
+.bg-accent-gradient {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+}
+
+.border-accent {
+  border-color: var(--color-accent);
+}
+
+/* Content styles based on font size */
+.content-container {
+  line-height: 1.6;
+}
+
+.content-container h1 {
+  font-size: calc(var(--user-font-size) * 2);
+}
+
+.content-container h2 {
+  font-size: calc(var(--user-font-size) * 1.5);
+}
+
+.content-container h3 {
+  font-size: calc(var(--user-font-size) * 1.25);
+}
+
+.content-container p {
+  font-size: var(--user-font-size);
+}
+
+.content-container small {
+  font-size: calc(var(--user-font-size) * 0.875);
+}
+
+/* Transition animations for regular mode (disabled in reduced motion) */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+:not(.reduced-motion) .animate-fade {
+  animation: fadeIn 0.3s ease-out;
+}
+
+:not(.reduced-motion) .animate-slide {
+  animation: slideIn 0.3s ease-out;
+}
