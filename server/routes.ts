@@ -50,6 +50,14 @@ import {
   createSkillExchange,
   updateSkillExchangeStatus
 } from "./skill_storage";
+import {
+  getPlatformStats,
+  getUserGrowthStats,
+  getUserActivityStats,
+  getSkillMarketplaceStats,
+  getUserPreferenceStats,
+  getAllUsers
+} from "./analytics";
 import { insertUserSchema, themePreferencesSchema } from "@shared/schema";
 import { 
   insertCourseSchema, 
