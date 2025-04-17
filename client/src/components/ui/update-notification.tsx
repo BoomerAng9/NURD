@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, RefreshCw, InfoIcon } from 'lucide-react';
-import { VERSION, isNewVersion, markVersionAsSeen } from '@/version';
+import { VERSION, isNewVersion, markVersionAsSeen, isNewerVersion } from '@/version';
 
 /**
  * Component to notify users about new deployments and app updates
@@ -28,21 +28,6 @@ const UpdateNotification: React.FC = () => {
       return () => clearTimeout(timer);
     }
   }, [appVersion]);
-
-  // Function to compare semantic versions (x.y.z format)
-  const isNewerVersion = (newVersion: string, oldVersion: string): boolean => {
-    if (newVersion === oldVersion) return false;
-    
-    const newParts = newVersion.split('.').map(Number);
-    const oldParts = oldVersion.split('.').map(Number);
-    
-    for (let i = 0; i < newParts.length; i++) {
-      if (newParts[i] > (oldParts[i] || 0)) return true;
-      if (newParts[i] < (oldParts[i] || 0)) return false;
-    }
-    
-    return false;
-  };
 
   const handleDismiss = () => {
     // Mark this version as seen when dismissed

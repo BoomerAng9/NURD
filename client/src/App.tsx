@@ -387,7 +387,7 @@ const AppContent = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col max-w-[100vw] overflow-x-hidden">
+    <div className="min-h-screen flex flex-col max-w-[100vw] overflow-x-hidden pb-14">
       {isCursorEnabled && <MagicCursor />}
       <GlassNav />
       
@@ -657,7 +657,7 @@ const AppContent = () => {
       {/* Mobile Footer - Very compact */}
       {isMobile && (
         <motion.footer 
-          className="fixed bottom-0 left-0 right-0 py-1 px-2 text-center text-xs bg-background/80 backdrop-blur-md border-t border-border/30 z-40"
+          className="fixed bottom-0 left-0 right-0 py-1 px-2 text-center text-xs bg-background/90 backdrop-blur-sm border-t border-border/30 z-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.3 }}
