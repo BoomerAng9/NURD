@@ -21,6 +21,12 @@ import {
   createSubscription,
   createCustomer
 } from "./payment-processing";
+import {
+  getUserPreferences,
+  updateUserPreferences,
+  resetUserPreferences,
+  autoDetectUserPreferences
+} from "./user-preferences";
 import { 
   getSkillCategories, 
   getSkillCategoryById, 
