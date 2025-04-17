@@ -10,11 +10,20 @@ import { Label } from '@/components/ui/label';
 import { CheckIcon, PaletteIcon, Settings2, SlidersHorizontal, EyeIcon, MousePointerClick, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { toast } from '@/hooks/use-toast';
 
 export const UserPreferencesPanel = () => {
-  const { preferences, updatePreference, resetPreferences, autoDetectPreferences } = useUserPreferences();
+  const { 
+    preferences, 
+    updatePreference, 
+    resetPreferences, 
+    autoDetectPreferences,
+    isAuthenticated,
+    syncWithServer 
+  } = useUserPreferences();
   const { colorScheme, setColorScheme, availableSchemes } = useColorScheme();
   const [isOpen, setIsOpen] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
   
   // Font size conversion (small/medium/large to pixels or rem for preview)
   const fontSizes = {
@@ -233,6 +242,48 @@ export const UserPreferencesPanel = () => {
               </Button>
             </div>
             
+            {isAuthenticated && (
+              <div className="pt-4 border-t">
+                <h3 className="text-lg font-medium mb-2">Account Synchronization</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Save preferences to your account for use across devices
+                </p>
+                
+                <Button 
+                  onClick={async () => {
+                    setIsSyncing(true);
+                    try {
+                      await syncWithServer();
+                      toast({
+                        title: "Preferences Synced",
+                        description: "Your preferences have been saved to your account",
+                      });
+                    } catch (error) {
+                      toast({
+                        title: "Sync Failed",
+                        description: "Unable to save preferences to your account",
+                        variant: "destructive",
+                      });
+                    } finally {
+                      setIsSyncing(false);
+                    }
+                  }}
+                  variant="outline"
+                  className="w-full mb-2"
+                  disabled={isSyncing}
+                >
+                  {isSyncing ? (
+                    <>Syncing...</>
+                  ) : (
+                    <>
+                      <span className="inline-block h-4 w-4 mr-2 text-green-500">↑↓</span> 
+                      Sync Preferences Now
+                    </>
+                  )}
+                </Button>
+              </div>
+            )}
+
             <div className="pt-4 border-t">
               <h3 className="text-lg font-medium mb-2">Reset Preferences</h3>
               <p className="text-sm text-muted-foreground mb-4">
