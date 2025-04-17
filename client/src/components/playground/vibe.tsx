@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Loader2, Sparkles, Code, Edit, Settings, Wand2, 
   HelpCircle, Star, Book, LightbulbIcon, Award, Rocket,
-  Info, MessageCircle, Send
+  Info, MessageCircle, Send, Flame
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { getCodeGenerationWithAskCodi, getCodeExplanationWithAskCodi, getCodeCompletionWithAskCodi, getAvailableModels } from '@/services/askcodi-service';
@@ -43,6 +43,74 @@ const HelpTooltip = ({ message, children }: { message: string, children: React.R
   );
 };
 
+// Learning milestone emojis with descriptions
+interface LearningMilestone {
+  id: string;
+  name: string;
+  emoji: string;
+  description: string;
+  xp: number;
+}
+
+const learningMilestones: LearningMilestone[] = [
+  { 
+    id: 'first_code_generation', 
+    name: 'Code Creator', 
+    emoji: '✨', 
+    description: 'Created your first code with AI!', 
+    xp: 10 
+  },
+  { 
+    id: 'first_explanation', 
+    name: 'Code Detective', 
+    emoji: '🔍', 
+    description: 'Got your first code explanation!', 
+    xp: 10 
+  },
+  { 
+    id: 'first_completion', 
+    name: 'Code Completer', 
+    emoji: '🧩', 
+    description: 'Finished your first code snippet!', 
+    xp: 10 
+  },
+  { 
+    id: 'change_model', 
+    name: 'AI Explorer', 
+    emoji: '🤖', 
+    description: 'Tried different AI models!', 
+    xp: 5 
+  },
+  { 
+    id: 'try_all_tools', 
+    name: 'Tool Master', 
+    emoji: '🛠️', 
+    description: 'Tried all available coding tools!', 
+    xp: 15 
+  },
+  { 
+    id: 'creativity_play', 
+    name: 'Creativity Wizard', 
+    emoji: '🧙‍♂️', 
+    description: 'Experimented with creativity levels!', 
+    xp: 5 
+  },
+  { 
+    id: 'copy_result', 
+    name: 'Code Collector', 
+    emoji: '📋', 
+    description: 'Saved code for your projects!', 
+    xp: 5 
+  },
+  { 
+    id: 'consecutive_days', 
+    name: 'Coding Streak', 
+    emoji: '🔥', 
+    description: 'Used V.I.B.E. multiple days in a row!', 
+    xp: 20 
+  },
+];
+
 export default function VIBE() {
   const [tab, setTab] = useState('generate');
   const [code, setCode] = useState('');
@@ -60,6 +128,14 @@ export default function VIBE() {
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [onboardingStep, setOnboardingStep] = useState(0);
   const [userAchievements, setUserAchievements] = useState<string[]>([]);
+  
+  // Learning milestone state
+  const [totalXP, setTotalXP] = useState(0);
+  const [showMilestone, setShowMilestone] = useState(false);
+  const [currentMilestone, setCurrentMilestone] = useState<LearningMilestone | null>(null);
+  const [usedTabs, setUsedTabs] = useState<string[]>([]);
+  const [lastVisitDate, setLastVisitDate] = useState<string | null>(null);
+  const [consecutiveDays, setConsecutiveDays] = useState(0);
   
   // AI assistant messages
   const [showAssistant, setShowAssistant] = useState(false);
@@ -90,14 +166,6 @@ export default function VIBE() {
     loadModels();
   }, []);
   
-  const handleTemperatureChange = (value: number[]) => {
-    setTemperature(value[0]);
-  };
-
-  const handleModelChange = (value: string) => {
-    setSelectedModel(value);
-  };
-
   const handleLanguageChange = (value: string) => {
     setLanguage(value);
   };
@@ -111,6 +179,146 @@ export default function VIBE() {
     setResult('');
   };
 
+  // Track user milestones
+  useEffect(() => {
+    // Load saved data from localStorage
+    const loadUserData = () => {
+      try {
+        const savedAchievements = localStorage.getItem('vibeAchievements');
+        const savedXP = localStorage.getItem('vibeTotalXP');
+        const savedUsedTabs = localStorage.getItem('vibeUsedTabs');
+        const savedLastVisit = localStorage.getItem('vibeLastVisit');
+        const savedConsecutiveDays = localStorage.getItem('vibeConsecutiveDays');
+        
+        if (savedAchievements) {
+          setUserAchievements(JSON.parse(savedAchievements));
+        }
+        
+        if (savedXP) {
+          setTotalXP(parseInt(savedXP, 10));
+        }
+        
+        if (savedUsedTabs) {
+          setUsedTabs(JSON.parse(savedUsedTabs));
+        }
+        
+        if (savedLastVisit) {
+          setLastVisitDate(savedLastVisit);
+        }
+        
+        if (savedConsecutiveDays) {
+          setConsecutiveDays(parseInt(savedConsecutiveDays, 10));
+        }
+      } catch (error) {
+        console.error('Error loading user data:', error);
+      }
+    };
+    
+    loadUserData();
+    
+    // Check for consecutive days streak
+    const today = new Date().toDateString();
+    if (lastVisitDate) {
+      const lastDate = new Date(lastVisitDate);
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      
+      if (lastDate.toDateString() === yesterday.toDateString()) {
+        // User visited yesterday, increment streak
+        const newConsecutiveDays = consecutiveDays + 1;
+        setConsecutiveDays(newConsecutiveDays);
+        localStorage.setItem('vibeConsecutiveDays', newConsecutiveDays.toString());
+        
+        // Check if we should award streak milestone
+        if (newConsecutiveDays >= 2 && !userAchievements.includes('consecutive_days')) {
+          unlockMilestone('consecutive_days');
+        }
+      } else if (lastDate.toDateString() !== today) {
+        // Reset streak if not yesterday and not today
+        if (lastDate.toDateString() !== today) {
+          setConsecutiveDays(1);
+          localStorage.setItem('vibeConsecutiveDays', '1');
+        }
+      }
+    }
+    
+    // Update last visit to today
+    setLastVisitDate(today);
+    localStorage.setItem('vibeLastVisit', today);
+  }, []);
+  
+  // Track tab changes for "try all tools" milestone
+  useEffect(() => {
+    if (!usedTabs.includes(tab)) {
+      const newUsedTabs = [...usedTabs, tab];
+      setUsedTabs(newUsedTabs);
+      localStorage.setItem('vibeUsedTabs', JSON.stringify(newUsedTabs));
+      
+      // If user has tried all tabs
+      if (newUsedTabs.length >= 3 && !userAchievements.includes('try_all_tools')) {
+        unlockMilestone('try_all_tools');
+      }
+    }
+  }, [tab]);
+  
+  // Track temperature changes for "creativity wizard" milestone
+  const handleTemperatureChange = (value: number[]) => {
+    setTemperature(value[0]);
+    
+    // If user has adjusted the temperature and doesn't have the achievement yet
+    if (!userAchievements.includes('creativity_play')) {
+      unlockMilestone('creativity_play');
+    }
+  };
+  
+  // Track model changes for "AI explorer" milestone
+  const handleModelChange = (value: string) => {
+    if (selectedModel !== '' && selectedModel !== value && !userAchievements.includes('change_model')) {
+      unlockMilestone('change_model');
+    }
+    setSelectedModel(value);
+  };
+  
+  // Function to unlock a milestone with celebration
+  const unlockMilestone = (milestoneId: string) => {
+    const milestone = learningMilestones.find(m => m.id === milestoneId);
+    
+    if (!milestone || userAchievements.includes(milestoneId)) return;
+    
+    // Add to achievements
+    const newAchievements = [...userAchievements, milestoneId];
+    setUserAchievements(newAchievements);
+    localStorage.setItem('vibeAchievements', JSON.stringify(newAchievements));
+    
+    // Add XP
+    const newTotalXP = totalXP + milestone.xp;
+    setTotalXP(newTotalXP);
+    localStorage.setItem('vibeTotalXP', newTotalXP.toString());
+    
+    // Show milestone celebration
+    setCurrentMilestone(milestone);
+    setShowMilestone(true);
+    
+    // Hide after 4 seconds
+    setTimeout(() => {
+      setShowMilestone(false);
+    }, 4000);
+    
+    // Also add a message to the assistant
+    addAssistantMessage(`Awesome job! You just earned the "${milestone.name}" achievement! ${milestone.emoji}`, 'encouragement');
+  };
+  
+  // Helper to add assistant messages
+  const addAssistantMessage = (message: string, type: 'tip' | 'encouragement' | 'help') => {
+    setAssistantMessages([...assistantMessages, { message, type }]);
+    
+    // If assistant is not open, show it
+    if (!showAssistant) {
+      setShowAssistant(true);
+    }
+  };
+
+  // Function to track clipboard copy
   const copyResult = () => {
     if (result) {
       navigator.clipboard.writeText(result);
@@ -118,44 +326,33 @@ export default function VIBE() {
         title: 'Copied to clipboard',
         description: 'Result has been copied to clipboard',
       });
+      
+      // Unlock milestone if first time
+      if (!userAchievements.includes('copy_result')) {
+        unlockMilestone('copy_result');
+      }
     }
   };
 
   // Check if user has completed an action to earn an achievement
   const checkForAchievements = (action: string) => {
-    const newAchievements = [...userAchievements];
-    
     switch(action) {
       case 'generate':
-        if (!userAchievements.includes('first_generation')) {
-          newAchievements.push('first_generation');
-          toast({
-            title: '🏆 Achievement Unlocked!',
-            description: 'You created your first code generation!',
-          });
+        if (!userAchievements.includes('first_code_generation')) {
+          unlockMilestone('first_code_generation');
         }
         break;
       case 'explain':
         if (!userAchievements.includes('first_explanation')) {
-          newAchievements.push('first_explanation');
-          toast({
-            title: '🏆 Achievement Unlocked!',
-            description: 'You got your first code explanation!',
-          });
+          unlockMilestone('first_explanation');
         }
         break;
       case 'complete':
         if (!userAchievements.includes('first_completion')) {
-          newAchievements.push('first_completion');
-          toast({
-            title: '🏆 Achievement Unlocked!',
-            description: 'You completed your first code snippet!',
-          });
+          unlockMilestone('first_completion');
         }
         break;
     }
-    
-    setUserAchievements(newAchievements);
   };
 
   // Onboarding steps
@@ -736,6 +933,113 @@ export default function VIBE() {
           </Button>
         </div>
       </div>
+      
+      {/* XP and Stats Display */}
+      <div className="fixed top-4 right-4 z-40">
+        <div 
+          className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full px-3 py-1 text-white text-xs flex items-center gap-2 shadow-lg"
+          title="Your coding experience points"
+        >
+          <Award className="h-3.5 w-3.5" />
+          <span>{totalXP} XP</span>
+        </div>
+        
+        {consecutiveDays > 1 && (
+          <div 
+            className="bg-gradient-to-r from-orange-500 to-red-500 rounded-full px-3 py-1 text-white text-xs flex items-center gap-2 shadow-lg mt-2"
+            title="Your coding streak"
+          >
+            <Flame className="h-3.5 w-3.5" />
+            <span>{consecutiveDays} Day Streak!</span>
+          </div>
+        )}
+      </div>
+      
+      {/* Milestone Celebration Animation */}
+      {showMilestone && currentMilestone && (
+        <motion.div 
+          className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <motion.div
+            initial={{ scale: 0.5, y: 50, opacity: 0 }}
+            animate={{ 
+              scale: [0.5, 1.2, 1],
+              y: [50, -20, 0],
+              opacity: [0, 1, 1]
+            }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-lg border border-purple-500/30 rounded-2xl p-6 shadow-xl text-center flex flex-col items-center gap-4 max-w-md"
+          >
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: [0.8, 1.3, 1], opacity: [0, 1, 1] }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="text-5xl"
+            >
+              {currentMilestone.emoji}
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.4 }}
+            >
+              <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 mb-1">
+                Achievement Unlocked!
+              </h3>
+              <h4 className="text-lg font-semibold text-white mb-2">
+                {currentMilestone.name}
+              </h4>
+              <p className="text-gray-300 text-sm">
+                {currentMilestone.description}
+              </p>
+              
+              <div className="mt-4 bg-purple-500/20 rounded-full px-3 py-1 text-purple-300 text-xs inline-flex items-center gap-1.5">
+                <Award className="h-3.5 w-3.5" />
+                +{currentMilestone.xp} XP
+              </div>
+            </motion.div>
+          </motion.div>
+          
+          {/* Confetti Animation */}
+          <motion.div 
+            className="absolute inset-0 pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 0] }}
+            transition={{ delay: 0.2, duration: 2.5 }}
+          >
+            {Array.from({ length: 50 }).map((_, idx) => (
+              <motion.div
+                key={idx}
+                className={`absolute w-2 h-2 rounded-full ${
+                  idx % 5 === 0 ? 'bg-blue-500' :
+                  idx % 5 === 1 ? 'bg-purple-500' :
+                  idx % 5 === 2 ? 'bg-pink-500' :
+                  idx % 5 === 3 ? 'bg-yellow-500' :
+                  'bg-green-500'
+                }`}
+                initial={{ 
+                  x: `calc(50% + ${Math.random() * 10 - 5}px)`, 
+                  y: `calc(40% + ${Math.random() * 10 - 5}px)`,
+                  opacity: 1
+                }}
+                animate={{ 
+                  x: `calc(${Math.random() * 100}% - ${Math.random() * 200}px)`,
+                  y: `calc(${Math.random() * 100}% - ${Math.random() * 200}px)`,
+                  opacity: 0
+                }}
+                transition={{ 
+                  duration: 1.5 + Math.random(),
+                  delay: Math.random() * 0.5
+                }}
+              />
+            ))}
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }
