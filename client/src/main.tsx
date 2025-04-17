@@ -8,9 +8,22 @@ fontLinks.rel = 'stylesheet';
 fontLinks.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&display=swap';
 document.head.appendChild(fontLinks);
 
+// Add favicon links
+const faviconIco = document.createElement('link');
+faviconIco.rel = 'icon';
+faviconIco.type = 'image/x-icon';
+faviconIco.href = '/favicon.ico';
+document.head.appendChild(faviconIco);
+
+const faviconPng = document.createElement('link');
+faviconPng.rel = 'icon';
+faviconPng.type = 'image/png';
+faviconPng.href = '/favicon.png';
+document.head.appendChild(faviconPng);
+
 // Add title
 const title = document.createElement('title');
-title.textContent = 'NURD Summer Initiative';
+title.textContent = 'NURD by ACHIEVEMOR';
 document.head.appendChild(title);
 
 // Add meta theme color for dark mode
