@@ -67,7 +67,7 @@ export const getData = async <T>(endpoint: string, params?: Record<string, strin
   }
 };
 
-// AI Code Tools API
+// AI Code Tools API (OpenAI)
 export const aiCodeTools = {
   generateCodeSuggestion: (prompt: string, language?: string, maxTokens?: number) => 
     postData<{ suggestion: string }>('/ai/code-suggestion', { prompt, language, maxTokens }),
@@ -77,6 +77,20 @@ export const aiCodeTools = {
   
   optimizeCode: (code: string, language: string, focus?: 'performance' | 'readability' | 'security' | 'all') => 
     postData<{ optimizedCode: string }>('/ai/code-optimization', { code, language, focus })
+};
+
+// AskCodi API
+export const askCodiTools = {
+  generateCode: (prompt: string, model?: string, maxTokens?: number, temperature?: number) => 
+    postData<{ code: string }>('/askcodi/generate', { prompt, model, maxTokens, temperature }),
+  
+  explainCode: (code: string, language?: string, model?: string) => 
+    postData<{ explanation: string }>('/askcodi/explain', { code, language, model }),
+  
+  completeCode: (code: string, language: string, model?: string, maxTokens?: number, temperature?: number) => 
+    postData<{ completion: string }>('/askcodi/complete', { code, language, model, maxTokens, temperature }),
+  
+  getModels: () => getData<{ models: string[] }>('/askcodi/models')
 };
 
 // Payment API
@@ -93,5 +107,6 @@ export const payments = {
 
 export default {
   aiCodeTools,
+  askCodiTools,
   payments
 };

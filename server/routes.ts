@@ -10,6 +10,12 @@ import {
   explainCode,
   optimizeCode 
 } from "./ai-code-tools";
+import {
+  generateCode,
+  explainCodeWithAskCodi,
+  completeCode,
+  getModels
+} from "./askcodi-service";
 import { 
   createPaymentIntent,
   createSubscription,
@@ -956,6 +962,12 @@ Follow these guidelines:
   app.post('/api/ai/code-suggestion', generateCodeSuggestion);
   app.post('/api/ai/code-explanation', explainCode);
   app.post('/api/ai/code-optimization', optimizeCode);
+  
+  // AskCodi API Endpoints
+  app.post('/api/askcodi/generate', generateCode);
+  app.post('/api/askcodi/explain', explainCodeWithAskCodi);
+  app.post('/api/askcodi/complete', completeCode);
+  app.get('/api/askcodi/models', getModels);
   
   // Payment Processing Endpoints
   app.post('/api/payments/create-payment-intent', createPaymentIntent);
