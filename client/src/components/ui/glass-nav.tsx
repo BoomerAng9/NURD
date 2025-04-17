@@ -386,9 +386,10 @@ export const GlassNav: React.FC = () => {
               );
             })}
             
-            {/* Color Scheme Picker */}
-            <div className="ml-2">
+            {/* Color Scheme Picker and User Preferences */}
+            <div className="ml-2 flex items-center space-x-2">
               <ColorSchemePicker />
+              <UserPreferencesPanel />
             </div>
             
             <Link href="/settings">
@@ -557,6 +558,7 @@ export const GlassNav: React.FC = () => {
               </span>
               <div className="flex space-x-1">
                 <ColorSchemePicker />
+                <UserPreferencesPanel />
               </div>
             </div>
           </div>

@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useUserPreferences } from './user-preferences-provider';
 
 // Define the available color schemes
 export type ColorScheme = 'default' | 'ocean' | 'forest' | 'sunset' | 'space';
@@ -86,12 +85,10 @@ const schemes = [
 ];
 
 export const ColorSchemeProvider: React.FC<ColorSchemeProviderProps> = ({ children }) => {
-  // Access user preferences if available, otherwise use local state
-  const userPrefsContext = useContext(React.createContext(null));
-  const hasUserPrefs = userPrefsContext !== null;
-  
-  // If we have user preferences, use them; otherwise use local state
-  const userPrefs = hasUserPrefs ? useUserPreferences() : null;
+  // Initialize with local state only
+  const userPrefsContext = null;
+  const hasUserPrefs = false;
+  const userPrefs = null;
   
   // Initialize color scheme from preferences, localStorage, or default
   const [localColorScheme, setLocalColorScheme] = useState<ColorScheme>(() => {
@@ -102,18 +99,14 @@ export const ColorSchemeProvider: React.FC<ColorSchemeProviderProps> = ({ childr
     return 'default';
   });
 
-  // Use user preferences if available, otherwise use local state
-  const colorScheme = userPrefs ? userPrefs.preferences.colorScheme : localColorScheme;
+  // Always use local state since we're not using UserPreferencesProvider directly here
+  const colorScheme = localColorScheme;
   
-  // Update the color scheme in user preferences or local state
+  // Update color scheme in local state only
   const setColorScheme = (scheme: ColorScheme) => {
-    if (userPrefs) {
-      userPrefs.updatePreference('colorScheme', scheme);
-    } else {
-      setLocalColorScheme(scheme);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('nurd-color-scheme', scheme);
-      }
+    setLocalColorScheme(scheme);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('nurd-color-scheme', scheme);
     }
   };
 

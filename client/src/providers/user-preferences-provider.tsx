@@ -1,8 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useAuth } from '@/hooks/use-auth';
-import { ColorScheme } from './color-scheme-provider';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { ColorScheme } from '@/providers/color-scheme-provider';
 
-// Define the shape of user preferences
 interface UserPreferences {
   colorScheme: ColorScheme;
   fontSize: 'small' | 'medium' | 'large';
@@ -11,16 +9,14 @@ interface UserPreferences {
   autoDetect: boolean;
 }
 
-// Default user preferences
 const defaultPreferences: UserPreferences = {
   colorScheme: 'default',
   fontSize: 'medium',
   reducedMotion: false,
   highContrast: false,
-  autoDetect: true
+  autoDetect: true,
 };
 
-// Interface for the context
 interface UserPreferencesContextType {
   preferences: UserPreferences;
   updatePreference: <K extends keyof UserPreferences>(key: K, value: UserPreferences[K]) => void;
@@ -29,137 +25,101 @@ interface UserPreferencesContextType {
   autoDetectPreferences: () => void;
 }
 
-// Create the context
-const UserPreferencesContext = createContext<UserPreferencesContextType>({
-  preferences: defaultPreferences,
-  updatePreference: () => {},
-  resetPreferences: () => {},
-  isLoading: false,
-  autoDetectPreferences: () => {}
-});
+const UserPreferencesContext = createContext<UserPreferencesContextType | undefined>(undefined);
 
-// Props for the provider component
 interface UserPreferencesProviderProps {
   children: React.ReactNode;
 }
 
-// The preferences provider component
 export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = ({ children }) => {
-  const { user } = useAuth();
   const [preferences, setPreferences] = useState<UserPreferences>(defaultPreferences);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load preferences from localStorage or API when component mounts or user changes
+  // Load preferences from localStorage on mount
   useEffect(() => {
-    const loadPreferences = async () => {
-      setIsLoading(true);
-      
-      try {
-        // If user is logged in, try to fetch preferences from API
-        if (user) {
-          // This would be replaced with an actual API call in production
-          // const response = await fetch(`/api/user-preferences/${user.id}`);
-          // if (response.ok) {
-          //   const data = await response.json();
-          //   setPreferences(data);
-          //   return;
-          // }
+    const loadPreferences = () => {
+      const savedPreferences = localStorage.getItem('userPreferences');
+      if (savedPreferences) {
+        try {
+          const parsed = JSON.parse(savedPreferences);
+          setPreferences(prev => ({
+            ...prev,
+            ...parsed
+          }));
+        } catch (error) {
+          console.error('Failed to parse user preferences:', error);
+          // If parsing fails, reset to defaults
+          localStorage.removeItem('userPreferences');
         }
-        
-        // Fallback to localStorage if no user or API fetch fails
-        const storedPrefs = localStorage.getItem('nurd-user-preferences');
-        if (storedPrefs) {
-          try {
-            const parsedPrefs = JSON.parse(storedPrefs);
-            // Validate the parsed preferences structure
-            if (typeof parsedPrefs === 'object' && parsedPrefs !== null) {
-              // Merge with default preferences to handle missing properties
-              setPreferences({
-                ...defaultPreferences,
-                ...parsedPrefs
-              });
-            }
-          } catch (e) {
-            console.error('Failed to parse stored preferences', e);
-            setPreferences(defaultPreferences);
-          }
-        }
-      } finally {
-        setIsLoading(false);
       }
+      
+      // Auto-detect on first load if enabled
+      if (preferences.autoDetect) {
+        autoDetectPreferences();
+      }
+      
+      setIsLoading(false);
     };
 
     loadPreferences();
-  }, [user]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // Save preferences whenever they change
+  // Save preferences to localStorage whenever they change
   useEffect(() => {
     if (!isLoading) {
-      // Save to localStorage
-      localStorage.setItem('nurd-user-preferences', JSON.stringify(preferences));
-      
-      // If user is logged in, save to API
-      if (user) {
-        // This would be replaced with an actual API call in production
-        // fetch(`/api/user-preferences/${user.id}`, {
-        //   method: 'PUT',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(preferences)
-        // });
-      }
+      localStorage.setItem('userPreferences', JSON.stringify(preferences));
     }
-  }, [preferences, isLoading, user]);
+  }, [preferences, isLoading]);
 
-  // Update a single preference
+  // Update a single preference value
   const updatePreference = <K extends keyof UserPreferences>(
     key: K, 
     value: UserPreferences[K]
   ) => {
     setPreferences(prev => ({
       ...prev,
-      [key]: value
+      [key]: value,
     }));
   };
 
-  // Reset preferences to defaults
+  // Reset all preferences to defaults
   const resetPreferences = () => {
     setPreferences(defaultPreferences);
+    localStorage.removeItem('userPreferences');
   };
 
-  // Auto-detect preferences based on system settings
+  // Auto-detect preferences from system/browser settings
   const autoDetectPreferences = () => {
-    const newPrefs = { ...preferences };
+    if (!preferences.autoDetect) return;
     
     // Detect preferred color scheme
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      // If dark mode is preferred, use a darker color scheme
-      newPrefs.colorScheme = 'space';
-    } else {
-      // If light mode is preferred, use a lighter color scheme
-      newPrefs.colorScheme = 'default';
-    }
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    // Could set a specific dark/light color scheme here based on preference
     
     // Detect reduced motion preference
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      newPrefs.reducedMotion = true;
-    }
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     
-    // Detect contrast preference
-    if (window.matchMedia('(prefers-contrast: more)').matches) {
-      newPrefs.highContrast = true;
-    }
+    // Detect contrast preference (if supported)
+    const prefersHighContrast = window.matchMedia('(prefers-contrast: more)').matches;
     
-    setPreferences(newPrefs);
+    setPreferences(prev => ({
+      ...prev,
+      reducedMotion: prefersReducedMotion,
+      highContrast: prefersHighContrast,
+      // Don't automatically change color scheme here, as we allow manual selection
+      // If we want to auto-detect, we would add: colorScheme: prefersDarkScheme ? 'dark' : 'light',
+    }));
   };
 
   return (
-    <UserPreferencesContext.Provider
-      value={{
-        preferences,
-        updatePreference,
-        resetPreferences,
+    <UserPreferencesContext.Provider 
+      value={{ 
+        preferences, 
+        updatePreference, 
+        resetPreferences, 
         isLoading,
-        autoDetectPreferences
+        autoDetectPreferences,
       }}
     >
       {children}
@@ -167,13 +127,10 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
   );
 };
 
-// Custom hook to use the user preferences context
 export const useUserPreferences = () => {
   const context = useContext(UserPreferencesContext);
-  
   if (context === undefined) {
     throw new Error('useUserPreferences must be used within a UserPreferencesProvider');
   }
-  
   return context;
 };
