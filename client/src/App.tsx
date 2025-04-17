@@ -15,7 +15,9 @@ import MagicCursor from "@/components/ui/magic-cursor";
 import { ApplyModal } from "@/components/ui/apply-modal";
 import { useCursorInteraction } from "@/hooks/use-cursor-interaction";
 import Favicon from "@/components/ui/Favicon";
-import { UserPlus, Calendar, User, MapPin } from "lucide-react";
+import UpdateNotification from "@/components/ui/update-notification";
+import { VERSION } from "@/version";
+import { UserPlus, Calendar, User, MapPin, RefreshCw } from "lucide-react";
 import { GlassNav } from "@/components/ui/glass-nav";
 import { ComingSoon } from "@/components/ui/coming-soon";
 import NotFound from "@/pages/not-found";
@@ -634,6 +636,19 @@ const AppContent = () => {
                 transition={{ duration: 0.4 }}
               />
             </motion.div>
+            
+            {/* Version indicator */}
+            <motion.div
+              className="flex items-center justify-center mt-2 text-xs text-muted-foreground/70 cursor-pointer group"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2, duration: 0.4 }}
+              onClick={() => window.location.reload()}
+              title="Click to refresh application"
+            >
+              <RefreshCw className="h-3 w-3 mr-1 group-hover:text-primary group-hover:animate-spin" />
+              <span>Version {VERSION.number} <span className="hidden sm:inline-block">({VERSION.name})</span></span>
+            </motion.div>
           </div>
         </motion.footer>
       )}
@@ -651,6 +666,7 @@ function App() {
             <ColorSchemeProvider>
               <Favicon />
               <AppContent />
+              <UpdateNotification />
               <Toaster />
             </ColorSchemeProvider>
           </UserPreferencesProvider>
