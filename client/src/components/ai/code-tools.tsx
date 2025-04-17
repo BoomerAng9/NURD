@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,9 +6,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Loader2, Code, Lightbulb, Zap } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Loader2, Code, Lightbulb, Zap, ServerCrash } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getCodeSuggestion, getCodeExplanation, getCodeOptimization } from '../../services/openai-service';
+import { 
+  getCodeGenerationWithAskCodi, 
+  getCodeExplanationWithAskCodi, 
+  getCodeCompletionWithAskCodi,
+  getAvailableModels
+} from '../../services/askcodi-service';
 
 const languages = [
   { value: 'javascript', label: 'JavaScript' },
@@ -31,6 +38,12 @@ export default function CodeTools() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('generate');
   
+  // API Selection state
+  const [useAskCodi, setUseAskCodi] = useState(false);
+  const [askCodiModels, setAskCodiModels] = useState<string[]>([]);
+  const [selectedModel, setSelectedModel] = useState('default');
+  const [isLoadingModels, setIsLoadingModels] = useState(false);
+  
   // Generate Code state
   const [promptInput, setPromptInput] = useState('');
   const [generatedCode, setGeneratedCode] = useState('');
@@ -49,6 +62,36 @@ export default function CodeTools() {
   const [optimizationLanguage, setOptimizationLanguage] = useState('javascript');
   const [optimizationFocus, setOptimizationFocus] = useState('all');
   const [isOptimizing, setIsOptimizing] = useState(false);
+  
+  // Temperature and token settings
+  const [temperature, setTemperature] = useState(0.7);
+  const [maxTokens, setMaxTokens] = useState(500);
+  
+  // Fetch AskCodi models on component mount
+  useEffect(() => {
+    async function fetchAskCodiModels() {
+      if (useAskCodi) {
+        setIsLoadingModels(true);
+        try {
+          const models = await getAvailableModels();
+          setAskCodiModels(models.length > 0 ? models : ['default']);
+          setIsLoadingModels(false);
+        } catch (error) {
+          console.error('Error fetching AskCodi models:', error);
+          setAskCodiModels(['default']);
+          setIsLoadingModels(false);
+          
+          toast({
+            title: "Couldn't fetch models",
+            description: "Using default model instead.",
+            variant: "destructive"
+          });
+        }
+      }
+    }
+    
+    fetchAskCodiModels();
+  }, [useAskCodi, toast]);
 
   // Handle code generation
   const handleGenerateCode = async () => {
@@ -64,16 +107,29 @@ export default function CodeTools() {
     setIsGenerating(true);
     
     try {
-      const suggestion = await getCodeSuggestion({
-        prompt: promptInput,
-        language: generationLanguage,
-      });
+      let suggestion = '';
+      
+      if (useAskCodi) {
+        // Use AskCodi API
+        suggestion = await getCodeGenerationWithAskCodi({
+          prompt: promptInput,
+          model: selectedModel,
+          maxTokens: maxTokens,
+          temperature: temperature
+        });
+      } else {
+        // Use OpenAI API
+        suggestion = await getCodeSuggestion({
+          prompt: promptInput,
+          language: generationLanguage,
+        });
+      }
       
       setGeneratedCode(suggestion);
       
       toast({
         title: "Code generated successfully",
-        description: "Your code has been generated based on the provided prompt.",
+        description: `Your code has been generated using ${useAskCodi ? 'AskCodi' : 'OpenAI'} API.`,
         variant: "default"
       });
     } catch (error) {
@@ -102,16 +158,28 @@ export default function CodeTools() {
     setIsExplaining(true);
     
     try {
-      const explanation = await getCodeExplanation({
-        code: codeToExplain,
-        language: explanationLanguage,
-      });
+      let explanation = '';
+      
+      if (useAskCodi) {
+        // Use AskCodi API
+        explanation = await getCodeExplanationWithAskCodi({
+          code: codeToExplain,
+          language: explanationLanguage,
+          model: selectedModel
+        });
+      } else {
+        // Use OpenAI API
+        explanation = await getCodeExplanation({
+          code: codeToExplain,
+          language: explanationLanguage,
+        });
+      }
       
       setCodeExplanation(explanation);
       
       toast({
         title: "Explanation generated",
-        description: "Your code has been explained successfully.",
+        description: `Your code has been explained using ${useAskCodi ? 'AskCodi' : 'OpenAI'} API.`,
         variant: "default"
       });
     } catch (error) {
@@ -140,17 +208,31 @@ export default function CodeTools() {
     setIsOptimizing(true);
     
     try {
-      const optimization = await getCodeOptimization({
-        code: codeToOptimize,
-        language: optimizationLanguage,
-        focus: optimizationFocus as 'performance' | 'readability' | 'security' | 'all',
-      });
+      let optimization = '';
+      
+      if (useAskCodi) {
+        // Use AskCodi API for completion with optimization prompt
+        optimization = await getCodeCompletionWithAskCodi({
+          code: `// Optimize the following code with focus on ${optimizationFocus}:\n${codeToOptimize}`,
+          language: optimizationLanguage,
+          model: selectedModel,
+          maxTokens: maxTokens,
+          temperature: temperature
+        });
+      } else {
+        // Use OpenAI API
+        optimization = await getCodeOptimization({
+          code: codeToOptimize,
+          language: optimizationLanguage,
+          focus: optimizationFocus as 'performance' | 'readability' | 'security' | 'all',
+        });
+      }
       
       setOptimizedCode(optimization);
       
       toast({
         title: "Code optimized",
-        description: "Your code has been optimized successfully.",
+        description: `Your code has been optimized using ${useAskCodi ? 'AskCodi' : 'OpenAI'} API.`,
         variant: "default"
       });
     } catch (error) {
@@ -171,8 +253,73 @@ export default function CodeTools() {
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-[#121645] mb-2">AI Code Tools</h1>
           <p className="text-gray-600">
-            Leverage AI to generate, explain, and optimize your code. Powered by OpenAI's GPT-3.5.
+            Leverage AI to generate, explain, and optimize your code. Powered by OpenAI's GPT-3.5 and AskCodi.
           </p>
+          
+          <div className="mt-4 p-4 border rounded-lg bg-gray-50">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <Switch 
+                    id="api-toggle" 
+                    checked={useAskCodi} 
+                    onCheckedChange={setUseAskCodi}
+                  />
+                  <Label htmlFor="api-toggle" className="font-medium">
+                    {useAskCodi ? 'Using AskCodi API' : 'Using OpenAI API'}
+                  </Label>
+                </div>
+                
+                {isLoadingModels && (
+                  <div className="flex items-center text-sm text-blue-600">
+                    <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                    Loading models...
+                  </div>
+                )}
+              </div>
+              
+              {useAskCodi && (
+                <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+                  <div className="flex-1 min-w-[200px]">
+                    <Label htmlFor="model-select" className="text-sm mb-1 block">AskCodi Model</Label>
+                    <Select value={selectedModel} onValueChange={setSelectedModel} disabled={isLoadingModels}>
+                      <SelectTrigger id="model-select" className="w-full">
+                        <SelectValue placeholder="Select model" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {askCodiModels.length > 0 ? (
+                          askCodiModels.map((model) => (
+                            <SelectItem key={model} value={model}>{model}</SelectItem>
+                          ))
+                        ) : (
+                          <SelectItem value="default">Default</SelectItem>
+                        )}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="flex-1">
+                    <Label htmlFor="temperature-select" className="text-sm mb-1 block">Temperature</Label>
+                    <Select
+                      value={temperature.toString()} 
+                      onValueChange={(val) => setTemperature(parseFloat(val))}
+                    >
+                      <SelectTrigger id="temperature-select" className="w-full">
+                        <SelectValue placeholder="Select temperature" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="0.3">0.3 (More precise)</SelectItem>
+                        <SelectItem value="0.5">0.5</SelectItem>
+                        <SelectItem value="0.7">0.7 (Balanced)</SelectItem>
+                        <SelectItem value="0.9">0.9</SelectItem>
+                        <SelectItem value="1.0">1.0 (More creative)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
         
         <Tabs defaultValue="generate" value={activeTab} onValueChange={setActiveTab} className="w-full">
