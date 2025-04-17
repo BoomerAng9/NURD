@@ -588,6 +588,18 @@ export default function VIBE() {
           </CardHeader>
 
           <CardContent>
+            {/* Collaboration Panel */}
+            <CollaborationPanel 
+              code={tab === 'generate' ? prompt : code} 
+              onCodeChange={(newCode) => {
+                if (tab === 'generate') {
+                  setPrompt(newCode);
+                } else {
+                  setCode(newCode);
+                }
+              }} 
+            />
+            
             <Tabs value={tab} onValueChange={setTab} className="w-full">
               <TabsList className="grid grid-cols-3 mb-4">
                 <TabsTrigger value="generate" className="flex items-center gap-2">
