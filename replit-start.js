@@ -3,10 +3,14 @@
  * This prioritizes opening port 5000 (required by Replit) and then starts the actual application
  */
 
-const { execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
-const http = require('http');
+import { execSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import http from 'http';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 console.log('Starting NURD Initiative application in Replit environment...');
 
