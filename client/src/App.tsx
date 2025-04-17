@@ -661,6 +661,7 @@ function App() {
         <ThemeProvider>
           <UserPreferencesProvider>
             <ColorSchemeProvider>
+              <Favicon />
               <AppContent />
               <Toaster />
             </ColorSchemeProvider>

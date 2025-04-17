@@ -1,25 +1,23 @@
 import { useEffect } from 'react';
+import nurdSkateboardPoolerImg from '@assets/nurd-skateboard-pooler.png';
 
 /**
- * Component to dynamically set favicon for the application
+ * Component to dynamically set favicon and title for the application
  */
 const Favicon = () => {
   useEffect(() => {
+    // Set document title
+    document.title = 'NURD by ACHIEVEMOR';
+    
     // Clear any existing favicon links
     const existingFavicons = document.querySelectorAll('link[rel="icon"]');
     existingFavicons.forEach(favicon => favicon.remove());
     
-    // Create favicon links
-    const faviconIco = document.createElement('link');
-    faviconIco.rel = 'icon';
-    faviconIco.type = 'image/x-icon';
-    faviconIco.href = '/favicon.ico';
-    document.head.appendChild(faviconIco);
-
+    // Create favicon links using direct import
     const faviconPng = document.createElement('link');
     faviconPng.rel = 'icon';
     faviconPng.type = 'image/png';
-    faviconPng.href = '/favicon.png';
+    faviconPng.href = nurdSkateboardPoolerImg;
     document.head.appendChild(faviconPng);
     
     // Clean up when component unmounts
