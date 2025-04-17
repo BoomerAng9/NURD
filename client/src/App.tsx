@@ -387,14 +387,14 @@ const AppContent = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col max-w-[100vw] overflow-x-hidden">
       {isCursorEnabled && <MagicCursor />}
       <GlassNav />
       
       {/* Cursor toggle button */}
       <motion.button 
         onClick={toggleCursor}
-        className="fixed bottom-4 right-4 z-50 p-2 bg-black/20 backdrop-blur-md rounded-full"
+        className="fixed bottom-20 md:bottom-4 right-4 z-50 p-2 bg-black/20 backdrop-blur-md rounded-full"
         whileHover={{ 
           scale: 1.2, 
           backgroundColor: "rgba(0, 0, 0, 0.3)",
@@ -478,7 +478,7 @@ const AppContent = () => {
         onClose={() => setIsApplyModalOpen(false)} 
       />
       
-      <main className="flex-grow">
+      <main className="flex-grow w-full max-w-[100vw] overflow-x-hidden px-2 sm:px-4">
         <PageTransition>
           <Switch>
             <Route path="/" component={TestComponent} />

@@ -9,10 +9,17 @@ import { VERSION, isNewVersion, markVersionAsSeen } from '@/version';
 const UpdateNotification: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [appVersion, setAppVersion] = useState(VERSION.number);
 
   useEffect(() => {
-    // Check if this is a new version
-    if (isNewVersion()) {
+    // Get the version from localStorage or use default if not present
+    const lastSeenVersion = localStorage.getItem('nurd-last-seen-version') || '0.0.0';
+    
+    // Compare version numbers semantically
+    const isNewer = isNewerVersion(VERSION.number, lastSeenVersion);
+    
+    // Only show notification if this is a newer version
+    if (isNewer) {
       // Show the notification with a slight delay
       const timer = setTimeout(() => {
         setIsVisible(true);
@@ -20,7 +27,22 @@ const UpdateNotification: React.FC = () => {
       
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [appVersion]);
+
+  // Function to compare semantic versions (x.y.z format)
+  const isNewerVersion = (newVersion: string, oldVersion: string): boolean => {
+    if (newVersion === oldVersion) return false;
+    
+    const newParts = newVersion.split('.').map(Number);
+    const oldParts = oldVersion.split('.').map(Number);
+    
+    for (let i = 0; i < newParts.length; i++) {
+      if (newParts[i] > (oldParts[i] || 0)) return true;
+      if (newParts[i] < (oldParts[i] || 0)) return false;
+    }
+    
+    return false;
+  };
 
   const handleDismiss = () => {
     // Mark this version as seen when dismissed
@@ -29,6 +51,9 @@ const UpdateNotification: React.FC = () => {
   };
 
   const handleRefresh = () => {
+    // Mark version as seen first
+    markVersionAsSeen();
+    
     // Refresh the page to ensure all updates are applied
     window.location.reload();
   };
@@ -41,7 +66,7 @@ const UpdateNotification: React.FC = () => {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          className="fixed bottom-24 right-4 z-50 w-72 md:w-96 bg-card shadow-lg rounded-lg border border-border overflow-hidden"
+          className="fixed md:bottom-24 bottom-20 md:right-4 md:left-auto left-4 right-4 md:w-96 z-50 bg-card shadow-lg rounded-lg border border-border overflow-hidden"
           initial={{ opacity: 0, y: 50, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, scale: 0.9, y: 20 }}

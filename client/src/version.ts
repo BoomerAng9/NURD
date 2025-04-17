@@ -42,12 +42,32 @@ export const VERSION_HISTORY = [
 ];
 
 /**
+ * Compare version numbers semantically (x.y.z format)
+ * @param newVersion - New version to compare
+ * @param oldVersion - Old version to compare against
+ * @returns True if newVersion is newer than oldVersion
+ */
+export function isNewerVersion(newVersion: string, oldVersion: string): boolean {
+  if (newVersion === oldVersion) return false;
+  
+  const newParts = newVersion.split('.').map(Number);
+  const oldParts = oldVersion.split('.').map(Number);
+  
+  for (let i = 0; i < newParts.length; i++) {
+    if (newParts[i] > (oldParts[i] || 0)) return true;
+    if (newParts[i] < (oldParts[i] || 0)) return false;
+  }
+  
+  return false;
+}
+
+/**
  * Check if the version has been updated
  * @returns True if this is a new version the user hasn't seen
  */
 export function isNewVersion(): boolean {
-  const lastSeenVersion = localStorage.getItem('nurd-last-seen-version');
-  return !lastSeenVersion || lastSeenVersion !== VERSION.number;
+  const lastSeenVersion = localStorage.getItem('nurd-last-seen-version') || '0.0.0';
+  return isNewerVersion(VERSION.number, lastSeenVersion);
 }
 
 /**
