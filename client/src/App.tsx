@@ -47,9 +47,9 @@ import AccessAI from "@/pages/AccessAI";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { LayoutDashboard, Send } from "lucide-react";
 
-// Lazy load code playground and AskCodi IDE
+// Lazy load code playground and V.I.B.E. (Vibe Interactive Build Environment)
 const CodePlayground = React.lazy(() => import("@/pages/code-playground"));
-const AskCodiIDEPage = React.lazy(() => import("@/pages/AskCodiIDE"));
+const VIBEPage = React.lazy(() => import("@/pages/VIBE"));
 
 // Import NURD skateboard image
 import nurdSkateboardImg from "./assets/nurd-skateboard.png";
@@ -303,7 +303,7 @@ const TestComponent = () => {
           </motion.a>
           
           <motion.a 
-            href="/askcodi-ide" 
+            href="/vibe" 
             className="glass-button flex items-center space-x-2 bg-gradient-to-r from-cyan-600/20 to-purple-600/20 border-cyan-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
             data-cursor-text="Advanced AI-powered coding environment"
             whileHover={{ y: -4, scale: 1.05, transition: { duration: 0.2 } }}
@@ -316,7 +316,7 @@ const TestComponent = () => {
               <path d="M12 2c1.4 0 2.8 1.1 2.9 2.4a2.5 2.5 0 0 0 3.5 2 3 3 0 0 1 3.9 3.9 2.5 2.5 0 0 0 2 3.5 2.9 2.9 0 0 1 0 5.8 2.5 2.5 0 0 0-2 3.5 3 3 0 0 1-3.9 3.9 2.5 2.5 0 0 0-3.5 2 2.9 2.9 0 0 1-5.8 0 2.5 2.5 0 0 0-3.5-2 3 3 0 0 1-3.9-3.9 2.5 2.5 0 0 0-2-3.5 2.9 2.9 0 0 1 0-5.8 2.5 2.5 0 0 0 2-3.5 3 3 0 0 1 3.9-3.9 2.5 2.5 0 0 0 3.5-2A2.9 2.9 0 0 1 12 2"></path>
               <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path>
             </svg>
-            <span className="font-semibold">AskCodi IDE</span>
+            <span className="font-semibold">V.I.B.E.</span>
           </motion.a>
           <motion.a 
             href="/ai-code-tools" 
@@ -557,9 +557,9 @@ const AppContent = () => {
               </Suspense>
             </Route>
             
-            <Route path="/askcodi-ide">
+            <Route path="/vibe">
               <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
-                <AskCodiIDEPage />
+                <VIBEPage />
               </Suspense>
             </Route>
             
