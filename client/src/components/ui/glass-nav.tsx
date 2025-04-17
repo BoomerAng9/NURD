@@ -44,7 +44,15 @@ interface NavItem {
 
 // Main navigation structure with dropdowns for better organization
 const navigation: NavItem[] = [
-  { name: 'About Us', path: '/about', icon: <Info className="h-4 w-4 mr-2" /> },
+  { 
+    name: 'About Us', 
+    icon: <Info className="h-4 w-4 mr-2" />,
+    isDropdown: true,
+    children: [
+      { name: 'About NURD', path: '/about', icon: <Info className="h-4 w-4 mr-2" /> },
+      { name: 'Reinvestment', path: '/reinvestment', icon: <Heart className="h-4 w-4 mr-2" /> },
+    ]
+  },
   { name: 'ACHIEVERS', path: '/achievers', icon: <Award className="h-4 w-4 mr-2" /> },
   { 
     name: 'Access AI', 
@@ -67,14 +75,6 @@ const navigation: NavItem[] = [
       { name: 'Trainers', path: '/trainers', icon: <Users className="h-4 w-4 mr-2" /> },
       { name: 'Apply to Teach', path: '/apply', icon: <UserPlus className="h-4 w-4 mr-2" /> },
       { name: 'Create Course', path: '/create-course', icon: <FileText className="h-4 w-4 mr-2" /> },
-    ]
-  },
-  { 
-    name: 'Resources', 
-    icon: <Star className="h-4 w-4 mr-2" />,
-    isDropdown: true,
-    children: [
-      { name: 'Reinvestment', path: '/reinvestment', icon: <Heart className="h-4 w-4 mr-2" /> },
     ]
   },
 ];
