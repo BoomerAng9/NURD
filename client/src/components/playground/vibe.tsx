@@ -60,6 +60,12 @@ export default function VIBE() {
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [onboardingStep, setOnboardingStep] = useState(0);
   const [userAchievements, setUserAchievements] = useState<string[]>([]);
+  
+  // AI assistant messages
+  const [showAssistant, setShowAssistant] = useState(false);
+  const [assistantMessages, setAssistantMessages] = useState<{message: string, type: 'tip' | 'encouragement' | 'help'}[]>([
+    { message: "Welcome to V.I.B.E.! I'm your coding buddy. Need any help?", type: 'encouragement' },
+  ]);
 
   // Load available models
   useEffect(() => {
@@ -354,18 +360,26 @@ export default function VIBE() {
                 </CardDescription>
               </div>
               <div className="flex flex-col md:flex-row gap-3">
-                <Select value={selectedModel} onValueChange={handleModelChange}>
-                  <SelectTrigger className="w-[240px]">
-                    <SelectValue placeholder="Select AI model" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableModels.map((model) => (
-                      <SelectItem key={model} value={model}>
-                        {model}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="flex items-center gap-2">
+                  <Select value={selectedModel} onValueChange={handleModelChange}>
+                    <SelectTrigger className="w-[200px]">
+                      <SelectValue placeholder="Select AI model" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableModels.map((model) => (
+                        <SelectItem key={model} value={model}>
+                          {model}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  
+                  <HelpTooltip message="AI models are like different brains that can help you code. Each one is good at different things!">
+                    <div className="rounded-full bg-purple-500/10 p-1">
+                      <HelpCircle className="h-4 w-4 text-purple-400" />
+                    </div>
+                  </HelpTooltip>
+                </div>
               </div>
             </div>
           </CardHeader>
@@ -391,7 +405,14 @@ export default function VIBE() {
                 {/* Generate Tab Content */}
                 <TabsContent value="generate" className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">What would you like to build? Tell me here:</label>
+                    <div className="flex items-center gap-2 mb-2">
+                      <label className="block text-sm font-medium">What would you like to build? Tell me here:</label>
+                      <HelpTooltip message="Just describe what you want to make in normal words - no need to know coding! I'll turn your ideas into real code.">
+                        <div className="rounded-full bg-purple-500/10 p-1">
+                          <HelpCircle className="h-3 w-3 text-purple-400" />
+                        </div>
+                      </HelpTooltip>
+                    </div>
                     <Textarea
                       placeholder="Examples: 
 • Make a button that changes color when clicked
@@ -411,7 +432,14 @@ export default function VIBE() {
                 <TabsContent value="explain" className="space-y-4">
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <label className="block text-sm font-medium">Paste code you'd like me to explain:</label>
+                      <div className="flex items-center gap-2">
+                        <label className="block text-sm font-medium">Paste code you'd like me to explain:</label>
+                        <HelpTooltip message="Choose the language your code is written in, so I can explain it correctly!">
+                          <div className="rounded-full bg-purple-500/10 p-1">
+                            <HelpCircle className="h-3 w-3 text-purple-400" />
+                          </div>
+                        </HelpTooltip>
+                      </div>
                       <Select value={language} onValueChange={handleLanguageChange}>
                         <SelectTrigger className="w-[180px]">
                           <SelectValue placeholder="Choose language" />
@@ -450,7 +478,14 @@ export default function VIBE() {
                 <TabsContent value="complete" className="space-y-4">
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <label className="block text-sm font-medium">Start the code, I'll finish it:</label>
+                      <div className="flex items-center gap-2">
+                        <label className="block text-sm font-medium">Start the code, I'll finish it:</label>
+                        <HelpTooltip message="You start writing some code, and I'll help complete it! Great for when you have an idea but aren't sure how to finish it.">
+                          <div className="rounded-full bg-purple-500/10 p-1">
+                            <HelpCircle className="h-3 w-3 text-purple-400" />
+                          </div>
+                        </HelpTooltip>
+                      </div>
                       <Select value={language} onValueChange={handleLanguageChange}>
                         <SelectTrigger className="w-[180px]">
                           <SelectValue placeholder="Choose language" />
@@ -492,6 +527,11 @@ export default function VIBE() {
                       <label className="text-sm font-medium flex items-center gap-2">
                         <Settings className="h-4 w-4" />
                         Creativity Level: {temperature.toFixed(1)}
+                        <HelpTooltip message="This controls how creative the AI will be. Low = follows instructions exactly. High = adds more creative ideas!">
+                          <div className="rounded-full bg-purple-500/10 p-1">
+                            <HelpCircle className="h-3 w-3 text-purple-400" />
+                          </div>
+                        </HelpTooltip>
                       </label>
                       <Badge variant="outline" className="text-xs font-normal">
                         {temperature < 0.4 ? 'Follows Instructions Exactly' : temperature > 0.7 ? 'Super Creative' : 'Balanced'}
@@ -603,6 +643,99 @@ export default function VIBE() {
           </CardFooter>
         </Card>
       </motion.div>
+      
+      {/* AI Assistant Chat Panel */}
+      <div className={`fixed bottom-4 right-4 z-40 transition-all duration-300 ${showAssistant ? 'w-80' : 'w-auto'}`}>
+        <div className="flex flex-col">
+          {showAssistant && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="bg-gradient-to-br from-gray-900 to-gray-800 border border-purple-500/30 rounded-xl shadow-xl p-4 mb-2 max-h-96 overflow-y-auto"
+            >
+              <div className="flex justify-between items-center mb-3">
+                <h4 className="text-sm font-semibold text-white/90 flex items-center gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5 text-purple-400" />
+                  V.I.B.E. Assistant
+                </h4>
+                <button 
+                  onClick={() => setShowAssistant(false)}
+                  className="text-gray-400 hover:text-white text-xs"
+                >
+                  Close
+                </button>
+              </div>
+              
+              <div className="space-y-3">
+                {assistantMessages.map((msg, idx) => (
+                  <div 
+                    key={idx}
+                    className={`p-2 rounded-lg text-xs ${
+                      msg.type === 'tip' 
+                        ? 'bg-blue-500/10 text-blue-300' 
+                        : msg.type === 'encouragement' 
+                        ? 'bg-purple-500/10 text-purple-300'
+                        : 'bg-green-500/10 text-green-300'
+                    }`}
+                  >
+                    <div className="flex items-start gap-2">
+                      <div className="mt-0.5">
+                        {msg.type === 'tip' && <LightbulbIcon className="h-3.5 w-3.5" />}
+                        {msg.type === 'encouragement' && <Award className="h-3.5 w-3.5" />}
+                        {msg.type === 'help' && <Book className="h-3.5 w-3.5" />}
+                      </div>
+                      <div>{msg.message}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mt-3 pt-3 border-t border-gray-700">
+                <div className="flex gap-2 mt-1">
+                  <button 
+                    className="text-xs bg-blue-500/10 text-blue-300 px-2 py-1 rounded hover:bg-blue-500/20 transition-colors"
+                    onClick={() => {
+                      setAssistantMessages([
+                        ...assistantMessages,
+                        { 
+                          message: "Need a simple challenge? Try making a button that counts clicks when pressed!", 
+                          type: 'tip' 
+                        }
+                      ]);
+                    }}
+                  >
+                    Give me a challenge
+                  </button>
+                  <button 
+                    className="text-xs bg-purple-500/10 text-purple-300 px-2 py-1 rounded hover:bg-purple-500/20 transition-colors"
+                    onClick={() => {
+                      setAssistantMessages([
+                        ...assistantMessages,
+                        { 
+                          message: "You're doing great! Keep experimenting - making mistakes is how we learn coding!", 
+                          type: 'encouragement' 
+                        }
+                      ]);
+                    }}
+                  >
+                    I'm stuck
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+          
+          <Button 
+            variant={showAssistant ? "default" : "outline"} 
+            size="icon" 
+            className={`rounded-full h-12 w-12 ${showAssistant ? 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500' : 'bg-purple-500/10 border-purple-500/30'}`}
+            onClick={() => setShowAssistant(!showAssistant)}
+          >
+            <MessageCircle className={`h-5 w-5 ${showAssistant ? 'text-white' : 'text-purple-400'}`} />
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
