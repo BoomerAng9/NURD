@@ -24,6 +24,11 @@ export default function VIBE() {
   const [selectedModel, setSelectedModel] = useState('');
   const [availableModels, setAvailableModels] = useState<string[]>([]);
   const resultRef = useRef<HTMLDivElement>(null);
+  
+  // Onboarding state
+  const [showOnboarding, setShowOnboarding] = useState(true);
+  const [onboardingStep, setOnboardingStep] = useState(0);
+  const [userAchievements, setUserAchievements] = useState<string[]>([]);
 
   // Load available models
   useEffect(() => {
@@ -163,7 +168,7 @@ export default function VIBE() {
                   </div>
                 </CardTitle>
                 <CardDescription>
-                  Powerful multi-model AI coding environment supporting multiple LLMs including GPT, Claude, Mistral, Gemini, and Meta models
+                  Your AI coding buddy! Type simple instructions to create, explain, or finish code. Perfect for students learning to code with AI.
                 </CardDescription>
               </div>
               <div className="flex flex-col md:flex-row gap-3">
@@ -204,13 +209,19 @@ export default function VIBE() {
                 {/* Generate Tab Content */}
                 <TabsContent value="generate" className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Describe the code you want to generate:</label>
+                    <label className="block text-sm font-medium mb-2">What would you like to build? Tell me here:</label>
                     <Textarea
-                      placeholder="E.g., Create a React component that displays a responsive image gallery with lightbox functionality"
+                      placeholder="Examples: 
+• Make a button that changes color when clicked
+• Create a simple game where I can move a character with arrow keys
+• Help me display my favorite images in a photo gallery"
                       value={prompt}
                       onChange={(e) => setPrompt(e.target.value)}
                       className="min-h-32"
                     />
+                    <div className="mt-2 text-xs text-blue-400 bg-blue-400/10 p-2 rounded-md">
+                      <span className="font-semibold">💡 Tip:</span> The more details you add, the better your results will be! Try describing what your project should look like and what it should do.
+                    </div>
                   </div>
                 </TabsContent>
 
@@ -218,10 +229,10 @@ export default function VIBE() {
                 <TabsContent value="explain" className="space-y-4">
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <label className="block text-sm font-medium">Enter code to explain:</label>
+                      <label className="block text-sm font-medium">Paste code you'd like me to explain:</label>
                       <Select value={language} onValueChange={handleLanguageChange}>
                         <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Language" />
+                          <SelectValue placeholder="Choose language" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="javascript">JavaScript</SelectItem>
@@ -242,11 +253,14 @@ export default function VIBE() {
                       </Select>
                     </div>
                     <Textarea
-                      placeholder="Paste code to explain here..."
+                      placeholder="Found some code online that's confusing? Paste it here and I'll explain what it does in simple terms!"
                       value={code}
                       onChange={(e) => setCode(e.target.value)}
                       className="min-h-32 font-mono"
                     />
+                    <div className="mt-2 text-xs text-purple-400 bg-purple-400/10 p-2 rounded-md">
+                      <span className="font-semibold">🔍 What happens:</span> I'll break down the code step-by-step and explain what each part does, without the complicated tech talk!
+                    </div>
                   </div>
                 </TabsContent>
 
@@ -254,10 +268,10 @@ export default function VIBE() {
                 <TabsContent value="complete" className="space-y-4">
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <label className="block text-sm font-medium">Enter code to complete:</label>
+                      <label className="block text-sm font-medium">Start the code, I'll finish it:</label>
                       <Select value={language} onValueChange={handleLanguageChange}>
                         <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Language" />
+                          <SelectValue placeholder="Choose language" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="javascript">JavaScript</SelectItem>
@@ -278,11 +292,14 @@ export default function VIBE() {
                       </Select>
                     </div>
                     <Textarea
-                      placeholder="Enter partial code to complete..."
+                      placeholder="Type the beginning of your code here - like 'function createGame() {' - and I'll finish it for you!"
                       value={code}
                       onChange={(e) => setCode(e.target.value)}
                       className="min-h-32 font-mono"
                     />
+                    <div className="mt-2 text-xs text-green-400 bg-green-400/10 p-2 rounded-md">
+                      <span className="font-semibold">✨ Cool trick:</span> Try typing a comment above your code that describes what you want it to do! Example: "// Create a button that shows an alert when clicked"
+                    </div>
                   </div>
                 </TabsContent>
 
@@ -292,20 +309,27 @@ export default function VIBE() {
                     <div className="flex items-center justify-between">
                       <label className="text-sm font-medium flex items-center gap-2">
                         <Settings className="h-4 w-4" />
-                        Temperature: {temperature.toFixed(1)}
+                        Creativity Level: {temperature.toFixed(1)}
                       </label>
                       <Badge variant="outline" className="text-xs font-normal">
-                        {temperature < 0.4 ? 'More Precise' : temperature > 0.7 ? 'More Creative' : 'Balanced'}
+                        {temperature < 0.4 ? 'Follows Instructions Exactly' : temperature > 0.7 ? 'Super Creative' : 'Balanced'}
                       </Badge>
                     </div>
-                    <Slider
-                      value={[temperature]}
-                      min={0}
-                      max={1}
-                      step={0.1}
-                      onValueChange={handleTemperatureChange}
-                      className="w-full"
-                    />
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xs">Precise</span>
+                      <Slider
+                        value={[temperature]}
+                        min={0}
+                        max={1}
+                        step={0.1}
+                        onValueChange={handleTemperatureChange}
+                        className="w-full"
+                      />
+                      <span className="text-xs">Creative</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Slide left for code that follows your instructions exactly, or right for more creative ideas!
+                    </p>
                   </div>
                 )}
 
