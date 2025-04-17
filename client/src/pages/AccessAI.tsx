@@ -64,10 +64,10 @@ const aiResources = [
     color: "from-purple-600 to-pink-400"
   },
   {
-    title: "AskCodi IDE",
-    description: "Advanced AI coding assistant powered by multiple models",
+    title: "V.I.B.E.",
+    description: "Vibrant Imagination Build Environment for collaborative coding",
     icon: <Wand2 className="h-8 w-8 text-teal-500" />,
-    path: "/askcodi-ide",
+    path: "/vibe",
     color: "from-teal-500 to-green-400"
   },
   {
