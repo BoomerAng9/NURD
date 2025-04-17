@@ -170,21 +170,48 @@ export async function getModels(req: Request, res: Response) {
   try {
     if (!checkAskCodiConfiguration(res)) return;
 
-    const response = await axios.get(
-      'https://api.askcodi.com/v1/models',
-      {
-        headers: {
-          'Authorization': `Bearer ${process.env.ASKCODI_API_KEY}`,
-        },
-      }
-    );
+    try {
+      const response = await axios.get(
+        'https://api.askcodi.com/v1/models',
+        {
+          headers: {
+            'Authorization': `Bearer ${process.env.ASKCODI_API_KEY}`,
+          },
+        }
+      );
 
-    return res.json({ models: response.data.models });
+      return res.json({ models: response.data.models });
+    } catch (apiError) {
+      console.warn('Could not fetch models from AskCodi API, returning default models instead:', apiError);
+      
+      // Return default models instead of error
+      const defaultModels = [
+        'gpt-3.5-turbo',
+        'claude-instant-1',
+        'mistral-tiny',
+        'gemini-pro',
+        'llama-2'
+      ];
+      
+      return res.json({ 
+        models: defaultModels,
+        source: 'default' 
+      });
+    }
   } catch (error) {
-    console.error('Error getting models from AskCodi API:', error);
-    return res.status(500).json({ 
-      error: 'Error retrieving models', 
-      details: error instanceof Error ? error.message : 'Unknown error' 
+    console.error('Unexpected error in getModels:', error);
+    
+    // Even in case of unexpected errors, return default models
+    const fallbackModels = [
+      'gpt-3.5-turbo',
+      'claude-instant-1',
+      'mistral-tiny'
+    ];
+    
+    return res.json({ 
+      models: fallbackModels,
+      source: 'fallback',
+      error: error instanceof Error ? error.message : 'Unknown error' 
     });
   }
 }

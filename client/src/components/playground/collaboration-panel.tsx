@@ -577,13 +577,22 @@ export default function CollaborationPanel({ code, onCodeChange }: Collaboration
                   className="w-full" 
                   variant="outline"
                   onClick={() => {
-                    // Simulate Teams sign-in
-                    setTeamsSignedIn(true);
-                    setTeamsMeetingUrl("https://teams.microsoft.com/l/meetup-join/example");
-                    toast({
-                      title: "Teams Sign-in Simulated",
-                      description: "This would connect to Microsoft Graph API in a real implementation",
-                    });
+                    try {
+                      // Simulate Teams sign-in
+                      setTeamsSignedIn(true);
+                      setTeamsMeetingUrl("https://teams.microsoft.com/l/meetup-join/example");
+                      toast({
+                        title: "Teams Sign-in Simulated",
+                        description: "This would connect to Microsoft Graph API in a real implementation",
+                      });
+                    } catch (error) {
+                      console.error("Teams sign-in error:", error);
+                      toast({
+                        title: "Could not connect to Teams",
+                        description: "This feature is coming soon. Try again later.",
+                        variant: "destructive"
+                      });
+                    }
                   }}
                 >
                   <Video className="mr-2 h-4 w-4" />
