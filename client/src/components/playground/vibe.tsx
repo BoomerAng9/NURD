@@ -14,7 +14,7 @@ import {
   Info, MessageCircle, Send, Flame, Users
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { getCodeGenerationWithAskCodi, getCodeExplanationWithAskCodi, getCodeCompletionWithAskCodi, getAvailableModels } from '@/services/askcodi-service';
+import { getCodeGenerationWithAskCodi, getCodeExplanationWithAskCodi, getCodeCompletionWithAskCodi } from '@/services/askcodi-service';
 import CollaborationPanel from './collaboration-panel';
 
 // Helper tooltip component for friendly contextual guidance
@@ -120,9 +120,9 @@ export default function VIBE() {
   const [loading, setLoading] = useState(false);
   const [language, setLanguage] = useState('javascript');
   const [temperature, setTemperature] = useState(0.7);
-  const [models, setModels] = useState<string[]>([]);
-  const [selectedModel, setSelectedModel] = useState('');
-  const [availableModels, setAvailableModels] = useState<string[]>([]);
+  const [models, setModels] = useState<string[]>(['gpt-3.5-turbo', 'claude-instant-1', 'mistral-tiny']);
+  const [selectedModel, setSelectedModel] = useState('gpt-3.5-turbo');
+  const [availableModels, setAvailableModels] = useState<string[]>(['gpt-3.5-turbo', 'claude-instant-1', 'mistral-tiny']);
   const resultRef = useRef<HTMLDivElement>(null);
   
   // Onboarding state
@@ -144,32 +144,10 @@ export default function VIBE() {
     { message: "Welcome to V.I.B.E.! I'm your coding buddy. Need any help?", type: 'encouragement' },
   ]);
 
-  // Load available models
+  // Use predefined models instead of loading from API
   useEffect(() => {
-    async function loadModels() {
-      try {
-        const models = await getAvailableModels();
-        setAvailableModels(models);
-        
-        // Always set a default model
-        setSelectedModel(models.length > 0 ? models[0] : 'gpt-3.5-turbo');
-      } catch (error) {
-        console.error('Failed to load models:', error);
-        
-        // Provide fallback models if API fails
-        const fallbackModels = ['gpt-3.5-turbo', 'claude-instant-1', 'mistral-tiny'];
-        setAvailableModels(fallbackModels);
-        setSelectedModel('gpt-3.5-turbo');
-        
-        toast({
-          title: 'Using default models',
-          description: 'Could not connect to model service. Using default models instead.',
-          variant: 'default',
-        });
-      }
-    }
-    
-    loadModels();
+    // We're using pre-loaded default models now
+    console.log('Using default models:', availableModels);
   }, []);
   
   const handleLanguageChange = (value: string) => {
