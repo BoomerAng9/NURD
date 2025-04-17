@@ -320,22 +320,7 @@ const TestComponent = () => {
             </svg>
             <span className="font-semibold">V.I.B.E.</span>
           </motion.a>
-          <motion.a 
-            href="/ai-code-tools" 
-            className="glass-button flex items-center space-x-2 bg-gradient-to-r from-purple-700/30 to-pink-700/30 border-purple-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
-            data-cursor-text="AI-powered coding tools"
-            whileHover={{ y: -4, scale: 1.05, transition: { duration: 0.2 } }}
-            whileTap={{ scale: 0.98 }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path>
-              <path d="M7 7h.01"></path>
-            </svg>
-            <span className="font-semibold">AI Code Tools</span>
-          </motion.a>
+
           <motion.a 
             href="/achievers" 
             className="glass-button flex items-center space-x-2 bg-gradient-to-r from-orange-600/20 to-amber-600/20 border-orange-500/30 px-5 py-3 rounded-lg shadow-md cursor-pointer"
@@ -515,7 +500,8 @@ const AppContent = () => {
             <Route path="/auth" component={AuthPage} />
             <Route path="/achievers" component={Achievers} />
             <Route path="/access-ai" component={AccessAI} />
-            <Route path="/ai-code-tools" component={AICodeTools} />
+            {/* AI Code Tools page hidden for now - functionality under development 
+            <Route path="/ai-code-tools" component={AICodeTools} /> */}
             <Route path="/code-tools" component={CodeTools} />
             <Route path="/payment" component={Payment} />
             <Route path="/progress" component={UserProgress} />

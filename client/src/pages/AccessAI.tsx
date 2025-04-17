@@ -57,13 +57,6 @@ const aiResources = [
     color: "from-blue-600 to-cyan-400"
   },
   {
-    title: "AI Code Tools",
-    description: "Generate, explain, and optimize code using AI",
-    icon: <BrainCircuit className="h-8 w-8 text-purple-500" />,
-    path: "/ai-code-tools",
-    color: "from-purple-600 to-pink-400"
-  },
-  {
     title: "V.I.B.E.",
     description: "Vibrant Imagination Build Environment for collaborative coding",
     icon: <Wand2 className="h-8 w-8 text-teal-500" />,

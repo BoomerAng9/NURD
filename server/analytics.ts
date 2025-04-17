@@ -27,6 +27,11 @@ interface QueryResultRow {
   [key: string]: any;
 }
 
+// Custom type for SQL query results
+interface SqlQueryResult extends Array<Record<string, unknown>> {
+  [index: number]: Record<string, unknown>;
+}
+
 /**
  * Get overall platform statistics
  * For admin dashboard overview
@@ -146,7 +151,7 @@ export async function getUserGrowthStats(req: Request, res: Response) {
     `);
     
     // Transform the data for chart display
-    const result = {
+    const result: ChartData = {
       labels: [],
       datasets: [{
         label: 'New Users',
