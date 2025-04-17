@@ -8,9 +8,40 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Sparkles, Code, Edit, Settings, Wand2 } from 'lucide-react';
+import { 
+  Loader2, Sparkles, Code, Edit, Settings, Wand2, 
+  HelpCircle, Star, Book, LightbulbIcon, Award, Rocket,
+  Info, MessageCircle, Send
+} from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { getCodeGenerationWithAskCodi, getCodeExplanationWithAskCodi, getCodeCompletionWithAskCodi, getAvailableModels } from '@/services/askcodi-service';
+
+// Helper tooltip component for friendly contextual guidance
+const HelpTooltip = ({ message, children }: { message: string, children: React.ReactNode }) => {
+  const [visible, setVisible] = useState(false);
+  
+  return (
+    <div className="relative inline-block">
+      <div 
+        className="inline-flex items-center cursor-help"
+        onMouseEnter={() => setVisible(true)}
+        onMouseLeave={() => setVisible(false)}
+        onClick={() => setVisible(!visible)}
+      >
+        {children}
+      </div>
+      
+      {visible && (
+        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-3 bg-black/90 backdrop-blur-sm text-white text-xs rounded-md shadow-lg z-50">
+          <div className="relative">
+            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-black/90 rotate-45"></div>
+            <p>{message}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default function VIBE() {
   const [tab, setTab] = useState('generate');
@@ -84,6 +115,97 @@ export default function VIBE() {
     }
   };
 
+  // Check if user has completed an action to earn an achievement
+  const checkForAchievements = (action: string) => {
+    const newAchievements = [...userAchievements];
+    
+    switch(action) {
+      case 'generate':
+        if (!userAchievements.includes('first_generation')) {
+          newAchievements.push('first_generation');
+          toast({
+            title: '🏆 Achievement Unlocked!',
+            description: 'You created your first code generation!',
+          });
+        }
+        break;
+      case 'explain':
+        if (!userAchievements.includes('first_explanation')) {
+          newAchievements.push('first_explanation');
+          toast({
+            title: '🏆 Achievement Unlocked!',
+            description: 'You got your first code explanation!',
+          });
+        }
+        break;
+      case 'complete':
+        if (!userAchievements.includes('first_completion')) {
+          newAchievements.push('first_completion');
+          toast({
+            title: '🏆 Achievement Unlocked!',
+            description: 'You completed your first code snippet!',
+          });
+        }
+        break;
+    }
+    
+    setUserAchievements(newAchievements);
+  };
+
+  // Onboarding steps
+  const onboardingSteps = [
+    {
+      title: "Welcome to V.I.B.E.",
+      description: "This is your AI coding buddy! I'll help you learn coding in a fun, easy way. Let me show you around.",
+      icon: <Rocket className="h-8 w-8 text-purple-500" />
+    },
+    {
+      title: "Generate Code",
+      description: "Tell me what you want to build in simple words. No need for technical language - just describe what you want!",
+      icon: <Wand2 className="h-8 w-8 text-blue-500" />
+    },
+    {
+      title: "Explain Code",
+      description: "Found code online that's confusing? Paste it here and I'll explain what it does in simple terms.",
+      icon: <Book className="h-8 w-8 text-orange-500" />
+    },
+    {
+      title: "Complete Code",
+      description: "Start typing some code and I'll help finish it! Great when you have an idea but aren't sure how to code it.",
+      icon: <Code className="h-8 w-8 text-green-500" />
+    },
+    {
+      title: "You're Ready!",
+      description: "Let's start coding together! Remember, there are no wrong questions - I'm here to help you learn.",
+      icon: <Star className="h-8 w-8 text-yellow-500" />
+    }
+  ];
+
+  // Handle advancing the onboarding
+  const advanceOnboarding = () => {
+    if (onboardingStep < onboardingSteps.length - 1) {
+      setOnboardingStep(onboardingStep + 1);
+    } else {
+      setShowOnboarding(false);
+      // Save to localStorage that user has seen onboarding
+      localStorage.setItem('vibeOnboardingComplete', 'true');
+    }
+  };
+
+  // Skip onboarding completely
+  const skipOnboarding = () => {
+    setShowOnboarding(false);
+    localStorage.setItem('vibeOnboardingComplete', 'true');
+  };
+
+  // Check if user has completed onboarding before
+  useEffect(() => {
+    const onboardingComplete = localStorage.getItem('vibeOnboardingComplete');
+    if (onboardingComplete === 'true') {
+      setShowOnboarding(false);
+    }
+  }, []);
+
   const handleSubmit = async () => {
     if ((tab === 'generate' && !prompt) || (tab !== 'generate' && !code)) {
       toast({
@@ -116,12 +238,14 @@ export default function VIBE() {
           temperature,
           maxTokens: 2048
         });
+        checkForAchievements('generate');
       } else if (tab === 'explain') {
         response = await getCodeExplanationWithAskCodi({
           code,
           language,
           model: selectedModel
         });
+        checkForAchievements('explain');
       } else if (tab === 'complete') {
         response = await getCodeCompletionWithAskCodi({
           code,
@@ -130,6 +254,7 @@ export default function VIBE() {
           temperature,
           maxTokens: 2048
         });
+        checkForAchievements('complete');
       }
 
       setResult(response);
@@ -152,6 +277,63 @@ export default function VIBE() {
 
   return (
     <div className="container max-w-6xl mx-auto py-8 px-4">
+      {/* Onboarding Modal */}
+      {showOnboarding && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }} 
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="bg-gradient-to-br from-gray-900 to-gray-800 border border-purple-500/30 rounded-xl shadow-xl max-w-md w-full p-6"
+          >
+            <div className="flex flex-col items-center text-center space-y-4">
+              {onboardingSteps[onboardingStep].icon}
+              <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
+                {onboardingSteps[onboardingStep].title}
+              </h3>
+              <p className="text-gray-300 text-sm">
+                {onboardingSteps[onboardingStep].description}
+              </p>
+              
+              {/* Progress Indicator */}
+              <div className="flex space-x-1 my-2">
+                {onboardingSteps.map((_, idx) => (
+                  <div 
+                    key={idx} 
+                    className={`h-1.5 rounded-full ${idx === onboardingStep ? 'w-6 bg-purple-500' : 'w-3 bg-gray-600'}`}
+                  />
+                ))}
+              </div>
+              
+              <div className="flex gap-3 w-full mt-2">
+                {onboardingStep > 0 && (
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setOnboardingStep(onboardingStep - 1)}
+                    className="flex-1"
+                  >
+                    Back
+                  </Button>
+                )}
+                <Button 
+                  onClick={advanceOnboarding}
+                  className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white flex-1"
+                >
+                  {onboardingStep === onboardingSteps.length - 1 ? "Get Started" : "Next"}
+                </Button>
+              </div>
+              
+              <button 
+                onClick={skipOnboarding}
+                className="text-xs text-gray-400 hover:text-gray-300 mt-2"
+              >
+                Skip Tour
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+      
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -387,13 +569,37 @@ export default function VIBE() {
           </CardContent>
 
           <CardFooter className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-purple-400/30 pt-4">
-            <div className="text-xs text-muted-foreground">
-              <span className="font-semibold">Tip:</span> For best results, provide detailed prompts with specific requirements and examples.
+            <div className="flex flex-wrap gap-2">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-8 text-xs" 
+                onClick={() => setShowOnboarding(true)}
+              >
+                <HelpCircle className="h-3.5 w-3.5 mr-1.5" />
+                Show Tour
+              </Button>
+              
+              <Badge variant="outline" className="flex items-center gap-1 cursor-pointer hover:bg-purple-500/10 transition-colors" title="Connect your work with other NURD tools!">
+                <Book className="h-3 w-3" />
+                Save to My Projects
+              </Badge>
+              
+              <Badge variant="outline" className="flex items-center gap-1 cursor-pointer hover:bg-blue-500/10 transition-colors" title="Work with a friend on the same code">
+                <Star className="h-3 w-3" />
+                Create Study Group
+              </Badge>
             </div>
-            <Badge variant="outline" className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-green-500"></span>
-              Powered by V.I.B.E. Technology
-            </Badge>
+            
+            <div className="flex items-center gap-3">
+              <div className="text-xs text-muted-foreground hidden sm:block">
+                <span className="font-semibold">💭 Remember:</span> There are no silly questions in coding!
+              </div>
+              <Badge variant="outline" className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                Powered by V.I.B.E. Technology
+              </Badge>
+            </div>
           </CardFooter>
         </Card>
       </motion.div>
