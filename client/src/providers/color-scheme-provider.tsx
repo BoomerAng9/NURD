@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useUserPreferences } from './user-preferences-provider';
 
 // Define the available color schemes
 export type ColorScheme = 'default' | 'ocean' | 'forest' | 'sunset' | 'space';
@@ -7,7 +8,14 @@ export type ColorScheme = 'default' | 'ocean' | 'forest' | 'sunset' | 'space';
 interface ColorSchemeContextType {
   colorScheme: ColorScheme;
   setColorScheme: (scheme: ColorScheme) => void;
-  availableSchemes: { id: ColorScheme; name: string; description: string; colors: { primary: string; accent: string; } }[];
+  availableSchemes: { 
+    id: ColorScheme; 
+    name: string; 
+    description: string; 
+    colors: { primary: string; accent: string; };
+    recommended?: boolean;
+    tags?: string[];
+  }[];
 }
 
 // Create the context with a default value
@@ -31,7 +39,9 @@ const schemes = [
     colors: {
       primary: '#3760ff',
       accent: '#6638e8',
-    }
+    },
+    recommended: true,
+    tags: ['vibrant', 'energetic', 'creative']
   },
   {
     id: 'ocean' as ColorScheme,
@@ -40,7 +50,8 @@ const schemes = [
     colors: {
       primary: '#0891b2',
       accent: '#2563eb',
-    }
+    },
+    tags: ['calm', 'peaceful', 'focused']
   },
   {
     id: 'forest' as ColorScheme,
@@ -49,7 +60,8 @@ const schemes = [
     colors: {
       primary: '#16a34a',
       accent: '#059669',
-    }
+    },
+    tags: ['natural', 'fresh', 'growth']
   },
   {
     id: 'sunset' as ColorScheme,
@@ -58,7 +70,8 @@ const schemes = [
     colors: {
       primary: '#ea580c',
       accent: '#dc2626',
-    }
+    },
+    tags: ['warm', 'energetic', 'creative']
   },
   {
     id: 'space' as ColorScheme,
@@ -67,13 +80,21 @@ const schemes = [
     colors: {
       primary: '#7c3aed',
       accent: '#4f46e5',
-    }
+    },
+    tags: ['mysterious', 'creative', 'imaginative']
   },
 ];
 
 export const ColorSchemeProvider: React.FC<ColorSchemeProviderProps> = ({ children }) => {
-  // Initialize color scheme from localStorage or default
-  const [colorScheme, setColorSchemeState] = useState<ColorScheme>(() => {
+  // Access user preferences if available, otherwise use local state
+  const userPrefsContext = useContext(React.createContext(null));
+  const hasUserPrefs = userPrefsContext !== null;
+  
+  // If we have user preferences, use them; otherwise use local state
+  const userPrefs = hasUserPrefs ? useUserPreferences() : null;
+  
+  // Initialize color scheme from preferences, localStorage, or default
+  const [localColorScheme, setLocalColorScheme] = useState<ColorScheme>(() => {
     if (typeof window !== 'undefined') {
       const savedScheme = localStorage.getItem('nurd-color-scheme');
       return (savedScheme as ColorScheme) || 'default';
@@ -81,11 +102,18 @@ export const ColorSchemeProvider: React.FC<ColorSchemeProviderProps> = ({ childr
     return 'default';
   });
 
-  // Update the color scheme and save to localStorage
+  // Use user preferences if available, otherwise use local state
+  const colorScheme = userPrefs ? userPrefs.preferences.colorScheme : localColorScheme;
+  
+  // Update the color scheme in user preferences or local state
   const setColorScheme = (scheme: ColorScheme) => {
-    setColorSchemeState(scheme);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('nurd-color-scheme', scheme);
+    if (userPrefs) {
+      userPrefs.updatePreference('colorScheme', scheme);
+    } else {
+      setLocalColorScheme(scheme);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('nurd-color-scheme', scheme);
+      }
     }
   };
 
