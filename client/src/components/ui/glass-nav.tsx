@@ -63,7 +63,7 @@ const navigation: NavItem[] = [
       { name: 'AI Dashboard', path: '/access-ai', icon: <LayoutDashboard className="h-4 w-4 mr-2" /> },
       { name: 'Code Playground', path: '/code-playground', icon: <Code className="h-4 w-4 mr-2" /> },
       { name: 'AI Code Tools', path: '/ai-code-tools', icon: <FileText className="h-4 w-4 mr-2" /> },
-      { name: 'AskCodi IDE', path: '/askcodi-ide', icon: <Wand2 className="h-4 w-4 mr-2" /> },
+      { name: 'V.I.B.E.', path: '/vibe', icon: <Wand2 className="h-4 w-4 mr-2" /> },
       { name: 'Skills Exchange', path: '/skill-marketplace', icon: <Users2 className="h-4 w-4 mr-2" /> },
     ]
   },
