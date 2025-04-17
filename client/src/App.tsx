@@ -42,6 +42,7 @@ import ModuleDetail from "@/pages/ModuleDetail";
 import AICourseCreator from "@/pages/AICourseCreator";
 import Reinvestment from "@/pages/reinvestment";
 import CreateCourse from "@/pages/create-course";
+import AccessAI from "@/pages/AccessAI";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { LayoutDashboard, Send } from "lucide-react";
 
@@ -510,6 +511,7 @@ const AppContent = () => {
             <Route path="/home" component={Landing} />
             <Route path="/auth" component={AuthPage} />
             <Route path="/achievers" component={Achievers} />
+            <Route path="/access-ai" component={AccessAI} />
             <Route path="/ai-code-tools" component={AICodeTools} />
             <Route path="/code-tools" component={CodeTools} />
             <Route path="/payment" component={Payment} />
