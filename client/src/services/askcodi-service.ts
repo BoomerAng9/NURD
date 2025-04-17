@@ -1,23 +1,68 @@
-// AskCodi service for AI code tools
-import { askCodiTools } from './api-service';
+/**
+ * AskCodi API integration service
+ * Provides functions to interact with the AskCodi API through our backend
+ */
+
+/**
+ * Interface for code generation request
+ */
+interface CodeGenerationRequest {
+  prompt: string;
+  model?: string;
+  maxTokens?: number;
+  temperature?: number;
+}
+
+/**
+ * Interface for code explanation request
+ */
+interface CodeExplanationRequest {
+  code: string;
+  language?: string;
+  model?: string;
+}
+
+/**
+ * Interface for code completion request
+ */
+interface CodeCompletionRequest {
+  code: string;
+  language: string;
+  model?: string;
+  maxTokens?: number;
+  temperature?: number;
+}
 
 /**
  * Generate code using AskCodi API
  */
 export async function getCodeGenerationWithAskCodi({
   prompt,
-  model = 'default',
-  maxTokens = 500,
+  model,
+  maxTokens = 2048,
   temperature = 0.7
-}: {
-  prompt: string;
-  model?: string;
-  maxTokens?: number;
-  temperature?: number;
-}): Promise<string> {
+}: CodeGenerationRequest): Promise<string> {
   try {
-    const response = await askCodiTools.generateCode(prompt, model, maxTokens, temperature);
-    return response.code;
+    const response = await fetch('/api/askcodi/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt,
+        model,
+        maxTokens,
+        temperature
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to generate code');
+    }
+
+    const data = await response.json();
+    return data.result;
   } catch (error) {
     console.error('Error generating code with AskCodi:', error);
     throw error;
@@ -30,15 +75,28 @@ export async function getCodeGenerationWithAskCodi({
 export async function getCodeExplanationWithAskCodi({
   code,
   language,
-  model = 'default'
-}: {
-  code: string;
-  language?: string;
-  model?: string;
-}): Promise<string> {
+  model
+}: CodeExplanationRequest): Promise<string> {
   try {
-    const response = await askCodiTools.explainCode(code, language, model);
-    return response.explanation;
+    const response = await fetch('/api/askcodi/explain', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        code,
+        language,
+        model
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to explain code');
+    }
+
+    const data = await response.json();
+    return data.result;
   } catch (error) {
     console.error('Error explaining code with AskCodi:', error);
     throw error;
@@ -51,19 +109,32 @@ export async function getCodeExplanationWithAskCodi({
 export async function getCodeCompletionWithAskCodi({
   code,
   language,
-  model = 'default',
-  maxTokens = 200,
+  model,
+  maxTokens = 2048,
   temperature = 0.7
-}: {
-  code: string;
-  language: string;
-  model?: string;
-  maxTokens?: number;
-  temperature?: number;
-}): Promise<string> {
+}: CodeCompletionRequest): Promise<string> {
   try {
-    const response = await askCodiTools.completeCode(code, language, model, maxTokens, temperature);
-    return response.completion;
+    const response = await fetch('/api/askcodi/complete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        code,
+        language,
+        model,
+        maxTokens,
+        temperature
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to complete code');
+    }
+
+    const data = await response.json();
+    return data.result;
   } catch (error) {
     console.error('Error completing code with AskCodi:', error);
     throw error;
@@ -75,18 +146,17 @@ export async function getCodeCompletionWithAskCodi({
  */
 export async function getAvailableModels(): Promise<string[]> {
   try {
-    const response = await askCodiTools.getModels();
-    return response.models;
+    const response = await fetch('/api/askcodi/models');
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to get available models');
+    }
+
+    const data = await response.json();
+    return data.models;
   } catch (error) {
     console.error('Error fetching AskCodi models:', error);
     throw error;
   }
 }
-
-// Export all functions
-export default {
-  getCodeGenerationWithAskCodi,
-  getCodeExplanationWithAskCodi,
-  getCodeCompletionWithAskCodi,
-  getAvailableModels
-};

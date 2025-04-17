@@ -1,16 +1,12 @@
 import { Request, Response } from 'express';
-import fetch from 'node-fetch';
+import axios from 'axios';
 
-// AskCodi API base URL
-const ASKCODI_API_URL = 'https://api.askcodi.com';
-const ASKCODI_API_KEY = process.env.ASKCODI_API_KEY;
-
-// Check if AskCodi API key is configured
+/**
+ * Check if AskCodi API key is configured
+ */
 function checkAskCodiConfiguration(res: Response): boolean {
-  if (!ASKCODI_API_KEY) {
-    res.status(500).json({ 
-      error: 'AskCodi API is not configured. Please add the ASKCODI_API_KEY to the environment variables.' 
-    });
+  if (!process.env.ASKCODI_API_KEY) {
+    res.status(500).json({ error: 'AskCodi API key is not configured' });
     return false;
   }
   return true;
@@ -50,39 +46,38 @@ interface CodeCompletionRequest {
  * Generate code using AskCodi API
  */
 export async function generateCode(req: Request, res: Response) {
-  if (!checkAskCodiConfiguration(res)) return;
-
   try {
-    const { prompt, model = 'default', maxTokens = 500, temperature = 0.7 } = req.body as CodeGenerationRequest;
-    
+    if (!checkAskCodiConfiguration(res)) return;
+
+    const { prompt, model, maxTokens = 2048, temperature = 0.7 } = req.body as CodeGenerationRequest;
+
     if (!prompt) {
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
-    const response = await fetch(`${ASKCODI_API_URL}/code-generation`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${ASKCODI_API_KEY}`
-      },
-      body: JSON.stringify({
+    const response = await axios.post(
+      'https://api.askcodi.com/v1/code/generate',
+      {
         prompt,
-        model,
+        model: model || 'gpt-4o-mini', // Default model
         max_tokens: maxTokens,
-        temperature
-      })
+        temperature,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.ASKCODI_API_KEY}`,
+        },
+      }
+    );
+
+    return res.json({ result: response.data.choices[0].text });
+  } catch (error) {
+    console.error('Error generating code with AskCodi API:', error);
+    return res.status(500).json({ 
+      error: 'Error generating code', 
+      details: error instanceof Error ? error.message : 'Unknown error' 
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.error || `Request failed with status ${response.status}`);
-    }
-
-    const data = await response.json();
-    res.json({ code: data.code });
-  } catch (error: any) {
-    console.error('Error generating code with AskCodi:', error);
-    res.status(500).json({ error: error.message || 'Failed to generate code' });
   }
 }
 
@@ -90,38 +85,37 @@ export async function generateCode(req: Request, res: Response) {
  * Explain code using AskCodi API
  */
 export async function explainCodeWithAskCodi(req: Request, res: Response) {
-  if (!checkAskCodiConfiguration(res)) return;
-
   try {
-    const { code, language, model = 'default' } = req.body as CodeExplanationRequest;
-    
+    if (!checkAskCodiConfiguration(res)) return;
+
+    const { code, language, model } = req.body as CodeExplanationRequest;
+
     if (!code) {
       return res.status(400).json({ error: 'Code is required' });
     }
 
-    const response = await fetch(`${ASKCODI_API_URL}/code-explanation`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${ASKCODI_API_KEY}`
-      },
-      body: JSON.stringify({
+    const response = await axios.post(
+      'https://api.askcodi.com/v1/code/explain',
+      {
         code,
-        language,
-        model
-      })
+        language: language || 'javascript',
+        model: model || 'claude-3-5-sonnet',
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.ASKCODI_API_KEY}`,
+        },
+      }
+    );
+
+    return res.json({ result: response.data.explanation });
+  } catch (error) {
+    console.error('Error explaining code with AskCodi API:', error);
+    return res.status(500).json({ 
+      error: 'Error explaining code', 
+      details: error instanceof Error ? error.message : 'Unknown error' 
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.error || `Request failed with status ${response.status}`);
-    }
-
-    const data = await response.json();
-    res.json({ explanation: data.explanation });
-  } catch (error: any) {
-    console.error('Error explaining code with AskCodi:', error);
-    res.status(500).json({ error: error.message || 'Failed to explain code' });
   }
 }
 
@@ -129,40 +123,43 @@ export async function explainCodeWithAskCodi(req: Request, res: Response) {
  * Complete code using AskCodi API
  */
 export async function completeCode(req: Request, res: Response) {
-  if (!checkAskCodiConfiguration(res)) return;
-
   try {
-    const { code, language, model = 'default', maxTokens = 200, temperature = 0.7 } = req.body as CodeCompletionRequest;
-    
-    if (!code || !language) {
-      return res.status(400).json({ error: 'Code and language are required' });
+    if (!checkAskCodiConfiguration(res)) return;
+
+    const { code, language, model, maxTokens = 2048, temperature = 0.7 } = req.body as CodeCompletionRequest;
+
+    if (!code) {
+      return res.status(400).json({ error: 'Code is required' });
     }
 
-    const response = await fetch(`${ASKCODI_API_URL}/code-completion`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${ASKCODI_API_KEY}`
-      },
-      body: JSON.stringify({
+    if (!language) {
+      return res.status(400).json({ error: 'Language is required' });
+    }
+
+    const response = await axios.post(
+      'https://api.askcodi.com/v1/code/complete',
+      {
         code,
         language,
-        model,
+        model: model || 'gemini-1.5-flash',
         max_tokens: maxTokens,
-        temperature
-      })
+        temperature,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.ASKCODI_API_KEY}`,
+        },
+      }
+    );
+
+    return res.json({ result: response.data.choices[0].text });
+  } catch (error) {
+    console.error('Error completing code with AskCodi API:', error);
+    return res.status(500).json({ 
+      error: 'Error completing code', 
+      details: error instanceof Error ? error.message : 'Unknown error' 
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.error || `Request failed with status ${response.status}`);
-    }
-
-    const data = await response.json();
-    res.json({ completion: data.completion });
-  } catch (error: any) {
-    console.error('Error completing code with AskCodi:', error);
-    res.status(500).json({ error: error.message || 'Failed to complete code' });
   }
 }
 
@@ -170,25 +167,24 @@ export async function completeCode(req: Request, res: Response) {
  * Get available models from AskCodi API
  */
 export async function getModels(req: Request, res: Response) {
-  if (!checkAskCodiConfiguration(res)) return;
-
   try {
-    const response = await fetch(`${ASKCODI_API_URL}/models`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${ASKCODI_API_KEY}`
+    if (!checkAskCodiConfiguration(res)) return;
+
+    const response = await axios.get(
+      'https://api.askcodi.com/v1/models',
+      {
+        headers: {
+          'Authorization': `Bearer ${process.env.ASKCODI_API_KEY}`,
+        },
       }
+    );
+
+    return res.json({ models: response.data.models });
+  } catch (error) {
+    console.error('Error getting models from AskCodi API:', error);
+    return res.status(500).json({ 
+      error: 'Error retrieving models', 
+      details: error instanceof Error ? error.message : 'Unknown error' 
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.error || `Request failed with status ${response.status}`);
-    }
-
-    const data = await response.json();
-    res.json({ models: data.models });
-  } catch (error: any) {
-    console.error('Error fetching AskCodi models:', error);
-    res.status(500).json({ error: error.message || 'Failed to fetch models' });
   }
 }
