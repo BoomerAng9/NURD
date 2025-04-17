@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { ColorSchemeProvider } from "@/providers/color-scheme-provider";
+import { UserPreferencesProvider } from "@/providers/user-preferences-provider";
 import { PageTransition } from "@/components/animations/page-transition";
 import MagicCursor from "@/components/ui/magic-cursor";
 import { ApplyModal } from "@/components/ui/apply-modal";
@@ -657,10 +658,12 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <ThemeProvider>
-          <ColorSchemeProvider>
-            <AppContent />
-            <Toaster />
-          </ColorSchemeProvider>
+          <UserPreferencesProvider>
+            <ColorSchemeProvider>
+              <AppContent />
+              <Toaster />
+            </ColorSchemeProvider>
+          </UserPreferencesProvider>
         </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>

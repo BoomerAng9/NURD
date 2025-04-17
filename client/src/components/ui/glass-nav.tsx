@@ -32,6 +32,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
 import { ColorSchemePicker } from '@/components/ui/color-scheme-picker';
+import { UserPreferencesPanel } from '@/components/ui/user-preferences-panel';
 
 interface NavItem {
   name: string;
