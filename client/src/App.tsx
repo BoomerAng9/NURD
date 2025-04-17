@@ -45,6 +45,7 @@ import AICourseCreator from "@/pages/AICourseCreator";
 import Reinvestment from "@/pages/reinvestment";
 import CreateCourse from "@/pages/create-course";
 import AccessAI from "@/pages/AccessAI";
+import ModelTest from "@/pages/ModelTest";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { LayoutDashboard, Send } from "lucide-react";
 
@@ -521,6 +522,7 @@ const AppContent = () => {
             <Route path="/skill-marketplace" component={SkillMarketplace} />
             <Route path="/reinvestment" component={Reinvestment} />
             <Route path="/create-course" component={CreateCourse} />
+            <Route path="/model-test" component={ModelTest} />
             
             {/* Coming Soon placeholder pages */}
             <Route path="/summer-initiative">

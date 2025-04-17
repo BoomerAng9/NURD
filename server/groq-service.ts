@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import axios from 'axios';
+import Groq from 'groq-sdk';
 
 /**
- * Check if AskCodi API key is configured
+ * Check if GROQ API key is configured
  */
-function checkAskCodiConfiguration(res: Response): boolean {
-  if (!process.env.ASKCODI_API_KEY) {
-    res.status(500).json({ error: 'AskCodi API key is not configured' });
+function checkGroqConfiguration(res: Response): boolean {
+  if (!process.env.GROQ_API_KEY) {
+    res.status(500).json({ error: 'GROQ API key is not configured' });
     return false;
   }
   return true;
@@ -17,7 +17,7 @@ function checkAskCodiConfiguration(res: Response): boolean {
  */
 interface CodeGenerationRequest {
   prompt: string;
-  model?: string;  // Default to a specific model if not provided
+  model?: string;
   maxTokens?: number;
   temperature?: number;
 }
@@ -43,33 +43,30 @@ interface CodeCompletionRequest {
 }
 
 /**
- * Generate code using OpenAI directly, using GPT-4 Nano
+ * Generate code using GROQ API with Llama 3 or Mistral models
  */
-export async function generateCode(req: Request, res: Response) {
+export async function generateCodeWithGroq(req: Request, res: Response) {
   try {
-    if (!process.env.OPENAI_API_KEY) {
-      return res.status(500).json({ error: 'OpenAI API key is not configured' });
-    }
+    if (!checkGroqConfiguration(res)) return;
 
     const { prompt, model, maxTokens = 2048, temperature = 0.7 } = req.body as CodeGenerationRequest;
 
     if (!prompt) {
       return res.status(400).json({ error: 'Prompt is required' });
     }
-    
-    // Use OpenAI API directly
-    const { OpenAI } = await import('openai');
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+
+    // Initialize GROQ client
+    const groq = new Groq({
+      apiKey: process.env.GROQ_API_KEY,
     });
 
     const systemMessage = "You are an expert programmer. Generate clean, well-commented, and efficient code based on the user's request. Include only the code and necessary comments.";
 
-    console.log("Generating code with OpenAI using prompt:", prompt);
+    console.log("Generating code with GROQ using prompt:", prompt);
     
-    // Make request to OpenAI API with GPT-4 Nano (gpt-4-1106-preview)
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4-1106-preview', // Using GPT-4 Nano as requested
+    // Make request to GROQ API with preferred model
+    const response = await groq.chat.completions.create({
+      model: model || 'llama3-70b-8192', // Default to Llama 3 70B
       messages: [
         { role: 'system', content: systemMessage },
         { role: 'user', content: `Generate code for: ${prompt}` }
@@ -80,14 +77,14 @@ export async function generateCode(req: Request, res: Response) {
 
     // Extract the code from the response
     const codeResult = response.choices[0]?.message?.content || '';
-    console.log("OpenAI response received successfully");
+    console.log("GROQ response received successfully");
     
     return res.json({ 
       result: codeResult,
-      source: 'openai'
+      source: 'groq'
     });
   } catch (error) {
-    console.error('Error generating code with OpenAI:', error);
+    console.error('Error generating code with GROQ:', error);
     return res.status(500).json({ 
       error: 'Error generating code', 
       details: error instanceof Error ? error.message : 'Unknown error' 
@@ -96,13 +93,11 @@ export async function generateCode(req: Request, res: Response) {
 }
 
 /**
- * Explain code using OpenAI API and GPT-4 Nano
+ * Explain code using GROQ API
  */
-export async function explainCodeWithAskCodi(req: Request, res: Response) {
+export async function explainCodeWithGroq(req: Request, res: Response) {
   try {
-    if (!process.env.OPENAI_API_KEY) {
-      return res.status(500).json({ error: 'OpenAI API key is not configured' });
-    }
+    if (!checkGroqConfiguration(res)) return;
 
     const { code, language, model } = req.body as CodeExplanationRequest;
 
@@ -110,20 +105,19 @@ export async function explainCodeWithAskCodi(req: Request, res: Response) {
       return res.status(400).json({ error: 'Code is required' });
     }
     
-    // Use OpenAI API directly
-    const { OpenAI } = await import('openai');
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+    // Initialize GROQ client
+    const groq = new Groq({
+      apiKey: process.env.GROQ_API_KEY,
     });
 
     // Prepare the system message to indicate this is for code explanation
     const systemMessage = "You are an expert programmer and educator. Explain the provided code clearly, focusing on what it does, how it works, and why it's structured that way. Make your explanation accessible for students learning to code.";
 
-    console.log("Explaining code with OpenAI, language:", language);
+    console.log("Explaining code with GROQ, language:", language);
     
-    // Make request to OpenAI API with GPT-4 Nano
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4-1106-preview', // Using GPT-4 Nano as requested
+    // Make request to GROQ API
+    const response = await groq.chat.completions.create({
+      model: model || 'llama3-70b-8192', // Default to Llama 3 70B
       messages: [
         { role: 'system', content: systemMessage },
         { role: 'user', content: `Explain this ${language || 'code'} code in simple terms:\n\n${code}` }
@@ -133,14 +127,14 @@ export async function explainCodeWithAskCodi(req: Request, res: Response) {
 
     // Extract the explanation from the response
     const explanation = response.choices[0]?.message?.content || '';
-    console.log("OpenAI explanation response received successfully");
+    console.log("GROQ explanation response received successfully");
     
     return res.json({ 
       result: explanation,
-      source: 'openai'
+      source: 'groq'
     });
   } catch (error) {
-    console.error('Error explaining code with OpenAI:', error);
+    console.error('Error explaining code with GROQ:', error);
     return res.status(500).json({ 
       error: 'Error explaining code', 
       details: error instanceof Error ? error.message : 'Unknown error' 
@@ -149,13 +143,11 @@ export async function explainCodeWithAskCodi(req: Request, res: Response) {
 }
 
 /**
- * Complete code using OpenAI API with GPT-4 Nano model
+ * Complete code using GROQ API
  */
-export async function completeCode(req: Request, res: Response) {
+export async function completeCodeWithGroq(req: Request, res: Response) {
   try {
-    if (!process.env.OPENAI_API_KEY) {
-      return res.status(500).json({ error: 'OpenAI API key is not configured' });
-    }
+    if (!checkGroqConfiguration(res)) return;
 
     const { code, language, model, maxTokens = 2048, temperature = 0.7 } = req.body as CodeCompletionRequest;
 
@@ -167,20 +159,19 @@ export async function completeCode(req: Request, res: Response) {
       return res.status(400).json({ error: 'Language is required' });
     }
     
-    // Use OpenAI API directly
-    const { OpenAI } = await import('openai');
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+    // Initialize GROQ client
+    const groq = new Groq({
+      apiKey: process.env.GROQ_API_KEY,
     });
 
     // Prepare the system message to indicate this is for code completion
     const systemMessage = `You are an expert ${language} programmer. Complete the code snippet provided by the user in a way that satisfies the implied functionality. Return only the completed code, not an explanation.`;
 
-    console.log("Completing code with OpenAI, language:", language);
+    console.log("Completing code with GROQ, language:", language);
     
-    // Make request to OpenAI API with GPT-4 Nano model
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4-1106-preview', // Using GPT-4 Nano as requested
+    // Make request to GROQ API
+    const response = await groq.chat.completions.create({
+      model: model || 'llama3-70b-8192', // Default to Llama 3 70B
       messages: [
         { role: 'system', content: systemMessage },
         { role: 'user', content: `Complete this ${language} code snippet. Provide a full implementation that would work:\n\n${code}` }
@@ -191,14 +182,14 @@ export async function completeCode(req: Request, res: Response) {
 
     // Extract the completion from the response
     const completion = response.choices[0]?.message?.content || '';
-    console.log("OpenAI code completion response received successfully");
+    console.log("GROQ code completion response received successfully");
     
     return res.json({ 
       result: completion,
-      source: 'openai'
+      source: 'groq'
     });
   } catch (error) {
-    console.error('Error completing code with OpenAI:', error);
+    console.error('Error completing code with GROQ:', error);
     return res.status(500).json({ 
       error: 'Error completing code', 
       details: error instanceof Error ? error.message : 'Unknown error' 
@@ -207,33 +198,66 @@ export async function completeCode(req: Request, res: Response) {
 }
 
 /**
- * Get available OpenAI models
+ * Get available GROQ models
  */
-export async function getModels(req: Request, res: Response) {
+export async function getGroqModels(req: Request, res: Response) {
   try {
-    // Return OpenAI models directly instead of fetching from AskCodi
-    const openaiModels = [
-      'gpt-4-1106-preview', // GPT-4 Nano (primary)
-      'gpt-3.5-turbo',      // GPT-3.5 Turbo (fallback)
+    // Check if we have a GROQ API key
+    const hasGroqApi = !!process.env.GROQ_API_KEY;
+    console.log('GROQ API key available:', hasGroqApi);
+    
+    // Return a curated list of GROQ models optimized for coding tasks
+    const groqModels = [
+      // Meta's Llama family
+      'llama3-70b-8192',      // Llama 3 70B (most powerful)
+      'llama3-8b-8192',       // Llama 3 8B (fast)
+      'llama3.1-8b-8192',     // Llama 3.1 8B (fast and improved)
+      'llama3.1-70b-8192',    // Llama 3.1 70B (most powerful and improved)
+      'llama2-70b-4096',      // Legacy Llama 2 (fallback)
+      
+      // Mistral AI models
+      'mistral-7b-instruct',  // Mistral 7B (fast)
+      'mixtral-8x7b-32768',   // Mixtral 8x7B (powerful)
+      'mixtral-8x22b-32768',  // Mixtral large (experimental)
+      
+      // Google models
+      'gemma-7b-it',          // Gemma 7B
+      
+      // Stable models
+      'stable-code-3b',       // Code-specific small model
     ];
     
-    return res.json({ 
-      models: openaiModels,
-      source: 'openai_static'
-    });
+    // Add category information for better organization
+    const categorizedModels = {
+      models: groqModels,
+      categories: {
+        'llama': ['llama3-70b-8192', 'llama3-8b-8192', 'llama3.1-8b-8192', 'llama3.1-70b-8192', 'llama2-70b-4096'],
+        'mistral': ['mistral-7b-instruct', 'mixtral-8x7b-32768', 'mixtral-8x22b-32768'],
+        'google': ['gemma-7b-it'],
+        'stable': ['stable-code-3b']
+      },
+      source: hasGroqApi ? 'groq_api' : 'groq_static',
+      apiStatus: hasGroqApi ? 'available' : 'unavailable',
+      timestamp: new Date().toISOString()
+    };
+    
+    console.log('Returning model list with', groqModels.length, 'models');
+    return res.json(categorizedModels);
   } catch (error) {
-    console.error('Unexpected error in getModels:', error);
+    console.error('Unexpected error in getGroqModels:', error);
     
     // Even in case of unexpected errors, return default models
     const fallbackModels = [
-      'gpt-4-1106-preview',
-      'gpt-3.5-turbo'
+      'llama3-70b-8192',
+      'llama3-8b-8192',
+      'mixtral-8x7b-32768'
     ];
     
     return res.json({ 
       models: fallbackModels,
       source: 'fallback',
-      error: error instanceof Error ? error.message : 'Unknown error' 
+      error: error instanceof Error ? error.message : 'Unknown error',
+      errorTimestamp: new Date().toISOString()
     });
   }
 }

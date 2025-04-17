@@ -16,6 +16,12 @@ import {
   completeCode,
   getModels
 } from "./askcodi-service";
+import {
+  generateCodeWithGroq,
+  explainCodeWithGroq,
+  completeCodeWithGroq,
+  getGroqModels
+} from "./groq-service";
 import { 
   createPaymentIntent,
   createSubscription,
@@ -980,6 +986,12 @@ Follow these guidelines:
   app.post('/api/askcodi/explain', explainCodeWithAskCodi);
   app.post('/api/askcodi/complete', completeCode);
   app.get('/api/askcodi/models', getModels);
+  
+  // GROQ API Endpoints
+  app.post('/api/groq/generate', generateCodeWithGroq);
+  app.post('/api/groq/explain', explainCodeWithGroq);
+  app.post('/api/groq/complete', completeCodeWithGroq);
+  app.get('/api/groq/models', getGroqModels);
   
   // Payment Processing Endpoints
   app.post('/api/payments/create-payment-intent', createPaymentIntent);

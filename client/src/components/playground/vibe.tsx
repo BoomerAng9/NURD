@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { getCodeGenerationWithAskCodi, getCodeExplanationWithAskCodi, getCodeCompletionWithAskCodi } from '@/services/askcodi-service';
+import { getCodeGenerationWithGroq, getCodeExplanationWithGroq, getCodeCompletionWithGroq, getGroqModels } from '@/services/groq-service';
 import CollaborationPanel from './collaboration-panel';
 
 // Helper tooltip component for friendly contextual guidance
@@ -120,9 +121,9 @@ export default function VIBE() {
   const [loading, setLoading] = useState(false);
   const [language, setLanguage] = useState('javascript');
   const [temperature, setTemperature] = useState(0.7);
-  const [models, setModels] = useState<string[]>(['gpt-3.5-turbo', 'claude-instant-1', 'mistral-tiny']);
-  const [selectedModel, setSelectedModel] = useState('gpt-3.5-turbo');
-  const [availableModels, setAvailableModels] = useState<string[]>(['gpt-3.5-turbo', 'claude-instant-1', 'mistral-tiny']);
+  const [models, setModels] = useState<string[]>(['gpt-4-1106-preview', 'gpt-3.5-turbo']);
+  const [selectedModel, setSelectedModel] = useState('gpt-4-1106-preview');
+  const [availableModels, setAvailableModels] = useState<string[]>(['gpt-4-1106-preview', 'gpt-3.5-turbo']);
   const resultRef = useRef<HTMLDivElement>(null);
   
   // Onboarding state
@@ -144,10 +145,66 @@ export default function VIBE() {
     { message: "Welcome to V.I.B.E.! I'm your coding buddy. Need any help?", type: 'encouragement' },
   ]);
 
-  // Use predefined models instead of loading from API
+  // Load available models from APIs
   useEffect(() => {
-    // We're using pre-loaded default models now
-    console.log('Using default models:', availableModels);
+    const loadModels = async () => {
+      try {
+        // Get GROQ models
+        const groqModelsList = await getGroqModels();
+        
+        // Create a comprehensive list of available models
+        const allModels = [
+          // OpenAI/GPT models (default)
+          'gpt-4-1106-preview',  // GPT-4 Nano
+          'gpt-3.5-turbo',       // GPT-3.5
+          
+          // GROQ models with proper prefixes
+          ...groqModelsList.map(model => `groq:${model}`),
+          
+          // Add Meta Llama models with proper prefix
+          'meta:llama-3.1-8b',
+          'meta:llama-3.1-70b',
+          'meta:llama-3-8b',
+          'meta:llama-3-70b',
+          'meta:llama-2-70b',
+          'meta:llama-4-maverick-17b',
+          'meta:llama-4-scout-17b',
+          
+          // Add Mistral models
+          'mistral:mistral-saba-24b',
+          'mistral:mixtral-8x7b',
+          'mistral:mistral-7b',
+          
+          // Other models
+          'sdaia:allam-2-7b'
+        ];
+        
+        setAvailableModels(allModels);
+        setModels(allModels);
+        
+        // Default to GPT-4 Nano if no model is selected
+        if (!selectedModel) {
+          setSelectedModel('gpt-4-1106-preview');
+        }
+        
+        console.log('Loaded models:', allModels);
+      } catch (error) {
+        console.error('Error loading models:', error);
+        // Fallback to default models if loading fails
+        const fallbackModels = [
+          'gpt-4-1106-preview',
+          'gpt-3.5-turbo',
+          'groq:llama3-70b-8192',
+          'groq:mixtral-8x7b-32768',
+          'meta:llama-3.1-70b'
+        ];
+        setAvailableModels(fallbackModels);
+        setModels(fallbackModels);
+        setSelectedModel('gpt-4-1106-preview');
+      }
+    };
+    
+    loadModels();
   }, []);
   
   const handleLanguageChange = (value: string) => {
@@ -417,30 +474,62 @@ export default function VIBE() {
 
     try {
       let response: string = '';
+      
+      // Check if using a GROQ model (prefixed with "groq:")
+      const isGroqModel = selectedModel.startsWith('groq:');
+      // Extract actual model name without prefix
+      const actualModelName = isGroqModel ? selectedModel.substring(5) : selectedModel;
 
       if (tab === 'generate') {
-        response = await getCodeGenerationWithAskCodi({
-          prompt,
-          model: selectedModel,
-          temperature,
-          maxTokens: 2048
-        });
+        if (isGroqModel) {
+          response = await getCodeGenerationWithGroq({
+            prompt,
+            model: actualModelName,
+            temperature,
+            maxTokens: 2048
+          });
+        } else {
+          response = await getCodeGenerationWithAskCodi({
+            prompt,
+            model: actualModelName,
+            temperature,
+            maxTokens: 2048
+          });
+        }
         checkForAchievements('generate');
       } else if (tab === 'explain') {
-        response = await getCodeExplanationWithAskCodi({
-          code,
-          language,
-          model: selectedModel
-        });
+        if (isGroqModel) {
+          response = await getCodeExplanationWithGroq({
+            code,
+            language,
+            model: actualModelName
+          });
+        } else {
+          response = await getCodeExplanationWithAskCodi({
+            code,
+            language,
+            model: actualModelName
+          });
+        }
         checkForAchievements('explain');
       } else if (tab === 'complete') {
-        response = await getCodeCompletionWithAskCodi({
-          code,
-          language,
-          model: selectedModel,
-          temperature,
-          maxTokens: 2048
-        });
+        if (isGroqModel) {
+          response = await getCodeCompletionWithGroq({
+            code,
+            language,
+            model: actualModelName,
+            temperature,
+            maxTokens: 2048
+          });
+        } else {
+          response = await getCodeCompletionWithAskCodi({
+            code,
+            language,
+            model: actualModelName,
+            temperature,
+            maxTokens: 2048
+          });
+        }
         checkForAchievements('complete');
       }
 
@@ -549,7 +638,13 @@ export default function VIBE() {
                     <SelectContent>
                       {availableModels.map((model) => (
                         <SelectItem key={model} value={model}>
-                          {model}
+                          {model === 'gpt-4-1106-preview' ? 'GPT-4 Nano (Advanced)' : 
+                           model === 'gpt-3.5-turbo' ? 'GPT-3.5 Turbo (Fast)' : 
+                           model.startsWith('groq:') ? `GROQ: ${model.substring(5)}` :
+                           model.startsWith('meta:') ? `Meta: ${model.substring(5)}` :
+                           model.startsWith('mistral:') ? `Mistral: ${model.substring(8)}` :
+                           model.startsWith('sdaia:') ? `SDAIA: ${model.substring(6)}` :
+                           model}
                         </SelectItem>
                       ))}
                     </SelectContent>

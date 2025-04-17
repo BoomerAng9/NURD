@@ -74,14 +74,47 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = process.env.PORT || 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-  }, () => {
-    log(`Server listening on http://0.0.0.0:${port}`);
-  });
+  // Try multiple ports with fallback mechanism
+  const attemptListen = (ports: number[]) => {
+    if (ports.length === 0) {
+      log("Failed to start server on any port. Exiting.");
+      process.exit(1);
+      return;
+    }
+    
+    const port = ports[0];
+    const remainingPorts = ports.slice(1);
+    
+    const onError = (err: any) => {
+      if (err.code === 'EADDRINUSE') {
+        log(`Port ${port} is already in use, trying next port...`);
+        attemptListen(remainingPorts);
+      } else {
+        log(`Error starting server: ${err.message}`);
+        process.exit(1);
+      }
+    };
+    
+    server.on('error', onError);
+    
+    try {
+      server.listen({
+        port,
+        host: "0.0.0.0",
+      }, () => {
+        // Remove the error handler once we're successfully listening
+        server.removeListener('error', onError);
+        log(`Server successfully listening on http://0.0.0.0:${port}`);
+        
+        // Store the successful port in a global variable that can be accessed by other modules
+        (global as any).SERVER_PORT = port;
+      });
+    } catch (err) {
+      log(`Exception when starting server on port ${port}: ${(err as Error).message}`);
+      attemptListen(remainingPorts);
+    }
+  };
+  
+  // Try port 5000 first (Replit's expected port), then fall back to others
+  attemptListen([5000, 5005, 3000, 8080, 4000]);
 })();
