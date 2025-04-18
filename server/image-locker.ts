@@ -3,13 +3,17 @@ import multer from 'multer';
 import path from 'path';
 import { storage } from './storage';
 import fs from 'fs';
-import { z } from 'zod';
-import { ZodError } from 'zod-validation-error';
+import { z, ZodError } from 'zod';
 
 // Create router
 export const imageLockerRouter = express.Router();
 
 // Configure multer storage for image uploads
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const uploadDir = path.join(__dirname, '../uploads/images');
 
 // Ensure the upload directory exists
