@@ -64,6 +64,8 @@ import nurdSkateboardPoolerImg from "@assets/nurd-skateboard-pooler.png";
 import madeInPoolerImg from "./assets/made-in-pooler.png";
 // Made in Pooler green logo
 import madeInPoolerGreenImg from "./assets/made-in-pooler-green.png";
+// Beta stamp image
+import betaStampImg from "./assets/beta-stamp.png";
 
 // Simple component for initial testing - updated with glass UI
 const TestComponent = () => {
@@ -482,18 +484,19 @@ const AppContent = () => {
         onClose={() => setIsApplyModalOpen(false)} 
       />
       
-      {/* Floating BETA button */}
-      <motion.button 
-        className="fixed bottom-20 md:bottom-4 left-4 z-50 flex items-center justify-center h-16 w-16 md:h-14 md:w-14 shadow-xl"
-        initial={{ opacity: 0, scale: 0, y: 20 }}
+      {/* Floating BETA disclaimer stamp */}
+      <motion.div 
+        className="fixed bottom-20 md:bottom-4 right-4 z-50 h-20 w-20 md:h-24 md:w-24 cursor-pointer"
+        initial={{ opacity: 0, scale: 0, rotate: -20, y: 50 }}
         animate={{ 
           opacity: 1, 
           scale: 1,
+          rotate: [-7, 0, -7],
           y: [0, -5, 0],
         }}
         whileHover={{ 
           scale: 1.1,
-          rotate: [-5, 5, 0],
+          rotate: [-10, 0, -10],
           transition: { duration: 0.5 }
         }}
         whileTap={{ scale: 0.95 }}
@@ -502,6 +505,12 @@ const AppContent = () => {
           duration: 0.6, 
           type: "spring",
           damping: 12,
+          rotate: {
+            duration: 4,
+            repeat: Infinity,
+            repeatType: "reverse",
+            ease: "easeInOut"
+          },
           y: {
             duration: 2.5,
             repeat: Infinity,
@@ -510,44 +519,12 @@ const AppContent = () => {
           }
         }}
       >
-        <div className="relative w-full h-full">
-          {/* Background gradient circle with enhanced colors */}
-          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white via-orange-400 to-blue-500 p-0.5 shadow-lg">
-            <div className="absolute inset-0.5 rounded-full bg-gradient-to-tr from-blue-600 via-orange-500 to-white animate-pulse"></div>
-            <motion.div 
-              className="absolute inset-1 rounded-full opacity-40"
-              style={{ 
-                background: "radial-gradient(circle at center, rgba(255,255,255,0.8) 0%, rgba(255,156,78,0.4) 50%, rgba(59,130,246,0.5) 100%)" 
-              }}
-              animate={{ 
-                boxShadow: [
-                  "inset 0 0 15px rgba(255,255,255,0.5)",
-                  "inset 0 0 25px rgba(255,156,78,0.5)",
-                  "inset 0 0 15px rgba(59,130,246,0.5)",
-                  "inset 0 0 15px rgba(255,255,255,0.5)"
-                ]
-              }}
-              transition={{ 
-                duration: 5, 
-                repeat: Infinity, 
-                repeatType: "reverse" 
-              }}
-            />
-          </div>
-          
-          {/* Border with pattern */}
-          <div className="absolute inset-1 rounded-full border-2 border-dashed border-white/50"></div>
-          
-          {/* BETA text - carved out effect */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="font-black text-base md:text-base tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] relative">
-              <span className="absolute inset-0 flex items-center justify-center opacity-60 blur-[0.3px] text-blue-600 translate-y-[0.5px]">BETA</span>
-              <span className="absolute inset-0 flex items-center justify-center text-white/90 blur-[0.2px] -translate-y-[0.5px]">BETA</span>
-              BETA
-            </span>
-          </div>
-        </div>
-      </motion.button>
+        <img 
+          src={betaStampImg} 
+          alt="BETA VERSION - WORK IN PROGRESS" 
+          className="w-full h-full object-contain drop-shadow-xl"
+        />
+      </motion.div>
       
       <main className="flex-grow w-full max-w-[100vw] overflow-x-hidden px-2 sm:px-4">
         <PageTransition>
