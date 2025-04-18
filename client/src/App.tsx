@@ -49,6 +49,7 @@ import Reinvestment from "@/pages/reinvestment";
 import CreateCourse from "@/pages/create-course";
 import AccessAI from "@/pages/AccessAI";
 import ModelTest from "@/pages/ModelTest";
+import ImageLocker from "@/pages/ImageLocker";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { LayoutDashboard, Send } from "lucide-react";
 

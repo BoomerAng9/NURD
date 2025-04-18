@@ -164,6 +164,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/analytics/user-preferences', getUserPreferenceStats);
   app.get('/api/analytics/users', getAllUsers);
   
+  // Image Locker Routes
+  app.use('/api/image-locker', imageLockerRouter);
+  
   // File Upload Route
   app.post('/api/upload', upload.single('file'), (req, res) => {
     try {
