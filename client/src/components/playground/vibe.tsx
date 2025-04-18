@@ -619,10 +619,12 @@ export default function VIBE() {
           <CardHeader>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <CardTitle className="text-2xl bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
+                <CardTitle className="text-2xl">
                   <div className="flex items-center gap-2">
-                    <Sparkles className="h-6 w-6 text-purple-500" />
-                    V.I.B.E. (Vibrant Imagination Build Environment)
+                    <Sparkles className="h-6 w-6 text-purple-500 flex-shrink-0" />
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
+                      V.I.B.E. (Vibrant Imagination Build Environment)
+                    </span>
                   </div>
                 </CardTitle>
                 <CardDescription>

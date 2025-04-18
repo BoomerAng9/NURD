@@ -179,9 +179,9 @@ export const UserPreferencesPanel = () => {
             </div>
             
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="high-contrast">High Contrast Mode</Label>
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1">
+                  <Label htmlFor="high-contrast" className="inline-block">High Contrast Mode</Label>
                   <p className="text-sm text-muted-foreground">
                     Increase contrast for better readability
                   </p>
@@ -190,12 +190,13 @@ export const UserPreferencesPanel = () => {
                   id="high-contrast"
                   checked={preferences.highContrast}
                   onCheckedChange={(checked) => updatePreference('highContrast', checked)}
+                  className="mt-1"
                 />
               </div>
               
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="reduced-motion">Reduced Motion</Label>
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1">
+                  <Label htmlFor="reduced-motion" className="inline-block">Reduced Motion</Label>
                   <p className="text-sm text-muted-foreground">
                     Minimize animations throughout the interface
                   </p>
@@ -204,6 +205,7 @@ export const UserPreferencesPanel = () => {
                   id="reduced-motion"
                   checked={preferences.reducedMotion}
                   onCheckedChange={(checked) => updatePreference('reducedMotion', checked)}
+                  className="mt-1"
                 />
               </div>
             </div>
@@ -212,9 +214,9 @@ export const UserPreferencesPanel = () => {
           {/* Interaction Tab */}
           <TabsContent value="interaction" className="space-y-6">
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="auto-detect">Auto-detect Settings</Label>
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1">
+                  <Label htmlFor="auto-detect" className="inline-block">Auto-detect Settings</Label>
                   <p className="text-sm text-muted-foreground">
                     Automatically detect and apply settings based on your system preferences
                   </p>
@@ -223,6 +225,7 @@ export const UserPreferencesPanel = () => {
                   id="auto-detect"
                   checked={preferences.autoDetect}
                   onCheckedChange={(checked) => updatePreference('autoDetect', checked)}
+                  className="mt-1"
                 />
               </div>
               
