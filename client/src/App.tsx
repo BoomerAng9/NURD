@@ -259,7 +259,7 @@ const TestComponent = () => {
               }}
             />
             <div className="relative p-1 bg-white rounded-lg">
-              <div className="p-5 glass-card overflow-hidden rounded-lg">
+              <div className="p-5 glass-card overflow-hidden rounded-lg relative">
                 <motion.img 
                   src={madeInPoolerImg} 
                   alt="NURD Made in Pooler, GA" 
@@ -270,6 +270,73 @@ const TestComponent = () => {
                   animate={{ scale: 1, y: 0 }}
                   transition={{ type: "spring", damping: 15, stiffness: 300 }}
                 />
+                
+                {/* BETA Stamp */}
+                <motion.div 
+                  className="absolute bottom-8 right-8 h-16 w-16 md:h-20 md:w-20 rotate-[-20deg] shadow-xl z-10"
+                  initial={{ opacity: 0, scale: 0, rotate: -90 }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: 1, 
+                    rotate: -20,
+                    y: [0, -5, 0],
+                  }}
+                  whileHover={{ 
+                    scale: 1.1, 
+                    rotate: [-20, 0, -20],
+                    transition: { duration: 0.5 }
+                  }}
+                  transition={{ 
+                    delay: 1.2, 
+                    duration: 0.6, 
+                    type: "spring",
+                    damping: 12,
+                    y: {
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      ease: "easeInOut"
+                    }
+                  }}
+                >
+                  <div className="relative w-full h-full">
+                    {/* Background gradient circle with enhanced colors */}
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white via-orange-400 to-blue-500 p-0.5 shadow-lg">
+                      <div className="absolute inset-0.5 rounded-full bg-gradient-to-tr from-blue-600 via-orange-500 to-white animate-pulse"></div>
+                      <motion.div 
+                        className="absolute inset-1 rounded-full opacity-40"
+                        style={{ 
+                          background: "radial-gradient(circle at center, rgba(255,255,255,0.8) 0%, rgba(255,156,78,0.4) 50%, rgba(59,130,246,0.5) 100%)" 
+                        }}
+                        animate={{ 
+                          boxShadow: [
+                            "inset 0 0 15px rgba(255,255,255,0.5)",
+                            "inset 0 0 25px rgba(255,156,78,0.5)",
+                            "inset 0 0 15px rgba(59,130,246,0.5)",
+                            "inset 0 0 15px rgba(255,255,255,0.5)"
+                          ]
+                        }}
+                        transition={{ 
+                          duration: 5, 
+                          repeat: Infinity, 
+                          repeatType: "reverse" 
+                        }}
+                      />
+                    </div>
+                    
+                    {/* Border with pattern */}
+                    <div className="absolute inset-1 rounded-full border-2 border-dashed border-white/50"></div>
+                    
+                    {/* BETA text - carved out effect */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="font-black text-lg md:text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] relative">
+                        <span className="absolute inset-0 flex items-center justify-center opacity-60 blur-[0.3px] text-blue-600 translate-y-[0.5px]">BETA</span>
+                        <span className="absolute inset-0 flex items-center justify-center text-white/90 blur-[0.2px] -translate-y-[0.5px]">BETA</span>
+                        BETA
+                      </span>
+                    </div>
+                  </div>
+                </motion.div>
               </div>
             </div>
           </motion.div>
