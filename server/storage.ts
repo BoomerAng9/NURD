@@ -1197,6 +1197,432 @@ export class DatabaseStorage implements IStorage {
       
     return updatedUser;
   }
+  
+  // Image Locker - Category methods
+  async getImageCategories(): Promise<ImageCategory[]> {
+    return db
+      .select()
+      .from(image_categories)
+      .orderBy(asc(image_categories.name));
+  }
+
+  async getImageCategoryById(id: number): Promise<ImageCategory | undefined> {
+    const [category] = await db
+      .select()
+      .from(image_categories)
+      .where(eq(image_categories.id, id));
+    
+    return category || undefined;
+  }
+
+  async createImageCategory(category: InsertImageCategory): Promise<ImageCategory> {
+    const [newCategory] = await db
+      .insert(image_categories)
+      .values(category)
+      .returning();
+    
+    return newCategory;
+  }
+
+  async updateImageCategory(id: number, category: Partial<InsertImageCategory>): Promise<ImageCategory | undefined> {
+    const [updatedCategory] = await db
+      .update(image_categories)
+      .set({
+        ...category,
+        updated_at: new Date()
+      })
+      .where(eq(image_categories.id, id))
+      .returning();
+    
+    return updatedCategory || undefined;
+  }
+
+  async deleteImageCategory(id: number): Promise<boolean> {
+    try {
+      await db
+        .delete(image_categories)
+        .where(eq(image_categories.id, id));
+      
+      return true;
+    } catch (error) {
+      console.error('Error deleting image category:', error);
+      return false;
+    }
+  }
+
+  // Image Locker - App Pages methods
+  async getAppPages(): Promise<AppPage[]> {
+    return db
+      .select()
+      .from(app_pages)
+      .orderBy(asc(app_pages.name));
+  }
+
+  async getAppPageById(id: number): Promise<AppPage | undefined> {
+    const [page] = await db
+      .select()
+      .from(app_pages)
+      .where(eq(app_pages.id, id));
+    
+    return page || undefined;
+  }
+
+  async getAppPageByName(name: string): Promise<AppPage | undefined> {
+    const [page] = await db
+      .select()
+      .from(app_pages)
+      .where(eq(app_pages.name, name));
+    
+    return page || undefined;
+  }
+
+  async getAppPageByRoute(route: string): Promise<AppPage | undefined> {
+    const [page] = await db
+      .select()
+      .from(app_pages)
+      .where(eq(app_pages.route, route));
+    
+    return page || undefined;
+  }
+
+  async createAppPage(page: InsertAppPage): Promise<AppPage> {
+    const [newPage] = await db
+      .insert(app_pages)
+      .values(page)
+      .returning();
+    
+    return newPage;
+  }
+
+  async updateAppPage(id: number, page: Partial<InsertAppPage>): Promise<AppPage | undefined> {
+    const [updatedPage] = await db
+      .update(app_pages)
+      .set(page)
+      .where(eq(app_pages.id, id))
+      .returning();
+    
+    return updatedPage || undefined;
+  }
+
+  async deleteAppPage(id: number): Promise<boolean> {
+    try {
+      await db
+        .delete(app_pages)
+        .where(eq(app_pages.id, id));
+      
+      return true;
+    } catch (error) {
+      console.error('Error deleting app page:', error);
+      return false;
+    }
+  }
+
+  // Image Locker - Image methods
+  async getImages(categoryId?: number, options?: { limit?: number, offset?: number, active?: boolean }): Promise<Image[]> {
+    let query = db.select().from(images);
+    
+    if (categoryId) {
+      query = query.where(eq(images.category_id, categoryId));
+    }
+    
+    if (options?.active !== undefined) {
+      query = query.where(eq(images.is_active, options.active));
+    }
+    
+    query = query.orderBy(desc(images.uploaded_at));
+    
+    if (options?.limit) {
+      query = query.limit(options.limit);
+    }
+    
+    if (options?.offset) {
+      query = query.offset(options.offset);
+    }
+    
+    return query;
+  }
+
+  async getImageById(id: number): Promise<Image | undefined> {
+    const [image] = await db
+      .select()
+      .from(images)
+      .where(eq(images.id, id));
+    
+    return image || undefined;
+  }
+
+  async createImage(image: InsertImage): Promise<Image> {
+    const [newImage] = await db
+      .insert(images)
+      .values({
+        ...image,
+        uploaded_at: new Date()
+      })
+      .returning();
+    
+    return newImage;
+  }
+
+  async updateImage(id: number, image: Partial<InsertImage>): Promise<Image | undefined> {
+    const [updatedImage] = await db
+      .update(images)
+      .set(image)
+      .where(eq(images.id, id))
+      .returning();
+    
+    return updatedImage || undefined;
+  }
+
+  async toggleImageActive(id: number): Promise<Image | undefined> {
+    const [image] = await db
+      .select()
+      .from(images)
+      .where(eq(images.id, id));
+    
+    if (!image) {
+      return undefined;
+    }
+    
+    const [updatedImage] = await db
+      .update(images)
+      .set({
+        is_active: !image.is_active
+      })
+      .where(eq(images.id, id))
+      .returning();
+    
+    return updatedImage;
+  }
+
+  async deleteImage(id: number): Promise<boolean> {
+    try {
+      await db
+        .delete(images)
+        .where(eq(images.id, id));
+      
+      return true;
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      return false;
+    }
+  }
+
+  async incrementImageUsageCount(id: number): Promise<Image | undefined> {
+    const [updatedImage] = await db
+      .update(images)
+      .set({
+        usage_count: sql`${images.usage_count} + 1`
+      })
+      .where(eq(images.id, id))
+      .returning();
+    
+    return updatedImage || undefined;
+  }
+
+  // Image Locker - Image-Page mappings methods
+  async getImagesForPage(pageId: number, options?: { usageType?: string, limit?: number, offset?: number }): Promise<(Image & { mapping: ImagePageMapping })[]> {
+    let query = db
+      .select({
+        ...images,
+        mapping: image_page_mappings
+      })
+      .from(images)
+      .innerJoin(
+        image_page_mappings,
+        and(
+          eq(images.id, image_page_mappings.image_id),
+          eq(image_page_mappings.page_id, pageId)
+        )
+      );
+    
+    if (options?.usageType) {
+      query = query.where(eq(image_page_mappings.usage_type, options.usageType));
+    }
+    
+    query = query.orderBy(asc(image_page_mappings.position));
+    
+    if (options?.limit) {
+      query = query.limit(options.limit);
+    }
+    
+    if (options?.offset) {
+      query = query.offset(options.offset);
+    }
+    
+    return query;
+  }
+
+  async getPagesForImage(imageId: number): Promise<(AppPage & { mapping: ImagePageMapping })[]> {
+    return db
+      .select({
+        ...app_pages,
+        mapping: image_page_mappings
+      })
+      .from(app_pages)
+      .innerJoin(
+        image_page_mappings,
+        and(
+          eq(app_pages.id, image_page_mappings.page_id),
+          eq(image_page_mappings.image_id, imageId)
+        )
+      )
+      .orderBy(asc(app_pages.name));
+  }
+
+  async createImagePageMapping(mapping: InsertImagePageMapping): Promise<ImagePageMapping> {
+    // Increment the image usage count
+    await this.incrementImageUsageCount(mapping.image_id);
+    
+    const [newMapping] = await db
+      .insert(image_page_mappings)
+      .values({
+        ...mapping,
+        created_at: new Date(),
+        updated_at: new Date()
+      })
+      .returning();
+    
+    return newMapping;
+  }
+
+  async updateImagePageMapping(imageId: number, pageId: number, mapping: Partial<InsertImagePageMapping>): Promise<ImagePageMapping | undefined> {
+    const [updatedMapping] = await db
+      .update(image_page_mappings)
+      .set({
+        ...mapping,
+        updated_at: new Date()
+      })
+      .where(
+        and(
+          eq(image_page_mappings.image_id, imageId),
+          eq(image_page_mappings.page_id, pageId)
+        )
+      )
+      .returning();
+    
+    return updatedMapping || undefined;
+  }
+
+  async deleteImagePageMapping(imageId: number, pageId: number): Promise<boolean> {
+    try {
+      // Decrement the image usage count if needed
+      const image = await this.getImageById(imageId);
+      if (image && image.usage_count > 0) {
+        await db
+          .update(images)
+          .set({
+            usage_count: image.usage_count - 1
+          })
+          .where(eq(images.id, imageId));
+      }
+      
+      await db
+        .delete(image_page_mappings)
+        .where(
+          and(
+            eq(image_page_mappings.image_id, imageId),
+            eq(image_page_mappings.page_id, pageId)
+          )
+        );
+      
+      return true;
+    } catch (error) {
+      console.error('Error deleting image-page mapping:', error);
+      return false;
+    }
+  }
+
+  // Image Locker - Tags methods
+  async getImageTags(): Promise<ImageTag[]> {
+    return db
+      .select()
+      .from(image_tags)
+      .orderBy(asc(image_tags.name));
+  }
+
+  async createImageTag(tag: InsertImageTag): Promise<ImageTag> {
+    const [newTag] = await db
+      .insert(image_tags)
+      .values(tag)
+      .returning();
+    
+    return newTag;
+  }
+
+  async tagImage(imageId: number, tagId: number): Promise<void> {
+    // Check if the tag is already applied
+    const [existingTag] = await db
+      .select()
+      .from(image_tag_mappings)
+      .where(
+        and(
+          eq(image_tag_mappings.image_id, imageId),
+          eq(image_tag_mappings.tag_id, tagId)
+        )
+      );
+    
+    if (!existingTag) {
+      await db
+        .insert(image_tag_mappings)
+        .values({
+          image_id: imageId,
+          tag_id: tagId
+        });
+    }
+  }
+
+  async untagImage(imageId: number, tagId: number): Promise<void> {
+    await db
+      .delete(image_tag_mappings)
+      .where(
+        and(
+          eq(image_tag_mappings.image_id, imageId),
+          eq(image_tag_mappings.tag_id, tagId)
+        )
+      );
+  }
+
+  async getImagesByTag(tagId: number, options?: { limit?: number, offset?: number }): Promise<Image[]> {
+    let query = db
+      .select({
+        ...images
+      })
+      .from(images)
+      .innerJoin(
+        image_tag_mappings,
+        and(
+          eq(images.id, image_tag_mappings.image_id),
+          eq(image_tag_mappings.tag_id, tagId)
+        )
+      )
+      .orderBy(desc(images.uploaded_at));
+    
+    if (options?.limit) {
+      query = query.limit(options.limit);
+    }
+    
+    if (options?.offset) {
+      query = query.offset(options.offset);
+    }
+    
+    return query;
+  }
+
+  async getTagsForImage(imageId: number): Promise<ImageTag[]> {
+    return db
+      .select({
+        ...image_tags
+      })
+      .from(image_tags)
+      .innerJoin(
+        image_tag_mappings,
+        and(
+          eq(image_tags.id, image_tag_mappings.tag_id),
+          eq(image_tag_mappings.image_id, imageId)
+        )
+      )
+      .orderBy(asc(image_tags.name));
+  }
 }
 
 export const storage = new DatabaseStorage();

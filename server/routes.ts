@@ -4,6 +4,7 @@ import { WebSocketServer, WebSocket } from 'ws';
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
 import { setupSSOAuth } from "./sso-auth";
+import { imageLockerRouter } from "./image-locker";
 import { generateCourse } from "./ai-course-generator";
 import { 
   generateCodeSuggestion,
