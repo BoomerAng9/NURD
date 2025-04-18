@@ -559,7 +559,8 @@ const AppContent = () => {
             <Route path="/skill-marketplace" component={SkillMarketplace} />
             <Route path="/reinvestment" component={Reinvestment} />
             <Route path="/create-course" component={CreateCourse} />
-            <Route path="/model-test" component={ModelTest} />
+            <AdminProtectedRoute path="/model-test" component={ModelTest} />
+            <AdminProtectedRoute path="/image-locker" component={ImageLocker} />
             
             {/* Coming Soon placeholder pages */}
             <Route path="/summer-initiative">
