@@ -68,8 +68,7 @@ const createTagSchema = z.object({
 
 const imagePageMappingSchema = z.object({
   usage_type: z.string().optional(),
-  position: z.number().nonnegative().default(0),
-  notes: z.string().optional(),
+  position: z.number().nonnegative().default(0)
 });
 
 // Category routes
@@ -233,16 +232,18 @@ imageLockerRouter.post('/images', upload.single('image'), async (req: Request, r
     const fileUrl = `${baseUrl}/uploads/images/${req.file.filename}`;
     
     const imageData = {
-      title,
-      description: description || null,
-      file_path: fileUrl,
-      file_size: req.file.size,
-      file_type: req.file.mimetype,
+      path: fileUrl,
+      filename: req.file.filename,
+      original_filename: req.file.originalname,
+      size: req.file.size,
+      mimetype: req.file.mimetype,
+      width: null, // We could extract this with an image processing lib if needed
+      height: null, // We could extract this with an image processing lib if needed
       alt_text: altText || null,
+      title: title,
       category_id: categoryId ? parseInt(categoryId) : null,
+      uploaded_by: null, // We could set this from the session if needed
       is_active: true,
-      usage_count: 0,
-      uploaded_at: new Date(),
     };
 
     const newImage = await storage.createImage(imageData);
@@ -287,9 +288,8 @@ imageLockerRouter.delete('/images/:id', async (req: Request, res: Response) => {
     
     // Try to delete the actual file (if it exists and is in our uploads directory)
     try {
-      const urlPath = new URL(image.file_path).pathname;
-      const fileName = path.basename(urlPath);
-      const filePath = path.join(uploadDir, fileName);
+      // Use the path from the database instead of file_path
+      const filePath = path.join(uploadDir, path.basename(image.path));
       
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
@@ -344,8 +344,7 @@ imageLockerRouter.post('/images/:imageId/pages/:pageId', async (req: Request, re
       image_id: imageId,
       page_id: pageId,
       usage_type: mappingData.usage_type || 'general',
-      position: mappingData.position,
-      notes: mappingData.notes || null
+      position: mappingData.position
     });
     
     // Increment usage count
