@@ -1,441 +1,459 @@
-import { Router } from 'express';
-import { storage } from './storage';
+import express, { Request, Response } from 'express';
 import multer from 'multer';
 import path from 'path';
+import { storage } from './storage';
 import fs from 'fs';
-import crypto from 'crypto';
+import { z } from 'zod';
+import { ZodError } from 'zod-validation-error';
 
-// Set up multer for file uploads
-const uploadDir = path.join(process.cwd(), 'uploads');
+// Create router
+export const imageLockerRouter = express.Router();
 
-// Create uploads directory if it doesn't exist
+// Configure multer storage for image uploads
+const uploadDir = path.join(__dirname, '../uploads/images');
+
+// Ensure the upload directory exists
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-const storage_config = multer.diskStorage({
+const storage2 = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    // Generate a unique filename using original name, timestamp, and random string
-    const uniqueSuffix = `${Date.now()}-${crypto.randomBytes(6).toString('hex')}`;
+    // Create a unique filename with timestamp and original extension
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     const ext = path.extname(file.originalname);
-    cb(null, `${path.basename(file.originalname, ext)}-${uniqueSuffix}${ext}`);
+    cb(null, 'image-' + uniqueSuffix + ext);
   }
 });
 
-const upload = multer({
-  storage: storage_config,
-  limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB limit
-  },
-  fileFilter: (req, file, cb) => {
-    // Accept images only
-    if (!file.originalname.match(/\.(jpg|jpeg|png|gif|svg|webp)$/i)) {
-      return cb(new Error('Only image files are allowed!'), false);
-    }
+// File filter to ensure only images are uploaded
+const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  // Accept only image files
+  if (file.mimetype.startsWith('image/')) {
     cb(null, true);
+  } else {
+    cb(new Error('Only image files are allowed!'));
   }
-});
-
-// Setup router
-const router = Router();
-
-// Middleware to check if user has admin rights
-const checkAdmin = (req, res, next) => {
-  if (!req.user || !req.user.is_admin) {
-    return res.status(403).json({ error: 'Unauthorized: Admin access required' });
-  }
-  next();
 };
 
-// Image Categories
-router.get('/categories', async (req, res) => {
+const upload = multer({ 
+  storage: storage2,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  }
+});
+
+// Validation schemas
+const createCategorySchema = z.object({
+  name: z.string().min(3, "Name is required and must be at least 3 characters"),
+  description: z.string().optional(),
+});
+
+const updateCategorySchema = z.object({
+  name: z.string().min(3, "Name is required and must be at least 3 characters").optional(),
+  description: z.string().optional(),
+});
+
+const createTagSchema = z.object({
+  name: z.string().min(2, "Name is required and must be at least 2 characters"),
+});
+
+const imagePageMappingSchema = z.object({
+  usage_type: z.string().optional(),
+  position: z.number().nonnegative().default(0),
+  notes: z.string().optional(),
+});
+
+// Category routes
+imageLockerRouter.get('/categories', async (req: Request, res: Response) => {
   try {
     const categories = await storage.getImageCategories();
-    res.json(categories);
+    return res.status(200).json(categories);
   } catch (error) {
-    console.error('Error fetching image categories:', error);
-    res.status(500).json({ error: 'Failed to fetch image categories' });
+    console.error('Error fetching categories:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-router.get('/categories/:id', async (req, res) => {
+imageLockerRouter.get('/categories/:id', async (req: Request, res: Response) => {
   try {
-    const category = await storage.getImageCategoryById(parseInt(req.params.id));
+    const id = parseInt(req.params.id);
+    const category = await storage.getImageCategoryById(id);
+    
     if (!category) {
-      return res.status(404).json({ error: 'Category not found' });
+      return res.status(404).json({ message: 'Category not found' });
     }
-    res.json(category);
+    
+    return res.status(200).json(category);
   } catch (error) {
-    console.error('Error fetching image category:', error);
-    res.status(500).json({ error: 'Failed to fetch image category' });
+    console.error('Error fetching category:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-router.post('/categories', checkAdmin, async (req, res) => {
+imageLockerRouter.post('/categories', async (req: Request, res: Response) => {
   try {
-    const newCategory = await storage.createImageCategory(req.body);
-    res.status(201).json(newCategory);
+    const categoryData = createCategorySchema.parse(req.body);
+    const newCategory = await storage.createImageCategory(categoryData);
+    return res.status(201).json(newCategory);
   } catch (error) {
-    console.error('Error creating image category:', error);
-    res.status(500).json({ error: 'Failed to create image category' });
+    if (error instanceof ZodError) {
+      return res.status(400).json({ 
+        message: 'Validation error',
+        errors: error.format()
+      });
+    }
+    console.error('Error creating category:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-router.put('/categories/:id', checkAdmin, async (req, res) => {
+imageLockerRouter.put('/categories/:id', async (req: Request, res: Response) => {
   try {
-    const updatedCategory = await storage.updateImageCategory(parseInt(req.params.id), req.body);
+    const id = parseInt(req.params.id);
+    const categoryData = updateCategorySchema.parse(req.body);
+    const updatedCategory = await storage.updateImageCategory(id, categoryData);
+    
     if (!updatedCategory) {
-      return res.status(404).json({ error: 'Category not found' });
+      return res.status(404).json({ message: 'Category not found' });
     }
-    res.json(updatedCategory);
+    
+    return res.status(200).json(updatedCategory);
   } catch (error) {
-    console.error('Error updating image category:', error);
-    res.status(500).json({ error: 'Failed to update image category' });
+    if (error instanceof ZodError) {
+      return res.status(400).json({ 
+        message: 'Validation error',
+        errors: error.format()
+      });
+    }
+    console.error('Error updating category:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-router.delete('/categories/:id', checkAdmin, async (req, res) => {
+imageLockerRouter.delete('/categories/:id', async (req: Request, res: Response) => {
   try {
-    const success = await storage.deleteImageCategory(parseInt(req.params.id));
-    if (!success) {
-      return res.status(404).json({ error: 'Category not found or could not be deleted' });
+    const id = parseInt(req.params.id);
+    const result = await storage.deleteImageCategory(id);
+    
+    if (!result) {
+      return res.status(404).json({ message: 'Category not found or could not be deleted' });
     }
-    res.status(204).end();
+    
+    return res.status(200).json({ message: 'Category deleted successfully' });
   } catch (error) {
-    console.error('Error deleting image category:', error);
-    res.status(500).json({ error: 'Failed to delete image category' });
+    console.error('Error deleting category:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-// App Pages
-router.get('/pages', async (req, res) => {
+// App Pages routes
+imageLockerRouter.get('/pages', async (req: Request, res: Response) => {
   try {
     const pages = await storage.getAppPages();
-    res.json(pages);
+    return res.status(200).json(pages);
   } catch (error) {
-    console.error('Error fetching app pages:', error);
-    res.status(500).json({ error: 'Failed to fetch app pages' });
+    console.error('Error fetching pages:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-router.get('/pages/:id', async (req, res) => {
+imageLockerRouter.get('/pages/:id', async (req: Request, res: Response) => {
   try {
-    const page = await storage.getAppPageById(parseInt(req.params.id));
+    const id = parseInt(req.params.id);
+    const page = await storage.getAppPageById(id);
+    
     if (!page) {
-      return res.status(404).json({ error: 'Page not found' });
+      return res.status(404).json({ message: 'Page not found' });
     }
-    res.json(page);
+    
+    return res.status(200).json(page);
   } catch (error) {
-    console.error('Error fetching app page:', error);
-    res.status(500).json({ error: 'Failed to fetch app page' });
+    console.error('Error fetching page:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-router.post('/pages', checkAdmin, async (req, res) => {
+// Image routes
+imageLockerRouter.get('/images', async (req: Request, res: Response) => {
   try {
-    const newPage = await storage.createAppPage(req.body);
-    res.status(201).json(newPage);
-  } catch (error) {
-    console.error('Error creating app page:', error);
-    res.status(500).json({ error: 'Failed to create app page' });
-  }
-});
-
-router.put('/pages/:id', checkAdmin, async (req, res) => {
-  try {
-    const updatedPage = await storage.updateAppPage(parseInt(req.params.id), req.body);
-    if (!updatedPage) {
-      return res.status(404).json({ error: 'Page not found' });
-    }
-    res.json(updatedPage);
-  } catch (error) {
-    console.error('Error updating app page:', error);
-    res.status(500).json({ error: 'Failed to update app page' });
-  }
-});
-
-router.delete('/pages/:id', checkAdmin, async (req, res) => {
-  try {
-    const success = await storage.deleteAppPage(parseInt(req.params.id));
-    if (!success) {
-      return res.status(404).json({ error: 'Page not found or could not be deleted' });
-    }
-    res.status(204).end();
-  } catch (error) {
-    console.error('Error deleting app page:', error);
-    res.status(500).json({ error: 'Failed to delete app page' });
-  }
-});
-
-// Images
-router.get('/images', async (req, res) => {
-  try {
-    const { categoryId, limit, offset, active } = req.query;
-    const images = await storage.getImages(
-      categoryId ? parseInt(categoryId as string) : undefined,
-      {
-        limit: limit ? parseInt(limit as string) : undefined,
-        offset: offset ? parseInt(offset as string) : undefined,
-        active: active === 'true' ? true : active === 'false' ? false : undefined
-      }
-    );
-    res.json(images);
+    const categoryId = req.query.categoryId ? parseInt(req.query.categoryId as string) : undefined;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+    const offset = req.query.offset ? parseInt(req.query.offset as string) : undefined;
+    const active = req.query.active === 'true' ? true : undefined;
+    
+    const images = await storage.getImages(categoryId, { limit, offset, active });
+    return res.status(200).json(images);
   } catch (error) {
     console.error('Error fetching images:', error);
-    res.status(500).json({ error: 'Failed to fetch images' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-router.get('/images/:id', async (req, res) => {
+imageLockerRouter.get('/images/:id', async (req: Request, res: Response) => {
   try {
-    const image = await storage.getImageById(parseInt(req.params.id));
+    const id = parseInt(req.params.id);
+    const image = await storage.getImageById(id);
+    
     if (!image) {
-      return res.status(404).json({ error: 'Image not found' });
+      return res.status(404).json({ message: 'Image not found' });
     }
-    res.json(image);
+    
+    return res.status(200).json(image);
   } catch (error) {
     console.error('Error fetching image:', error);
-    res.status(500).json({ error: 'Failed to fetch image' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-router.post('/images', checkAdmin, upload.single('image'), async (req, res) => {
+imageLockerRouter.post('/images', upload.single('image'), async (req: Request, res: Response) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ error: 'No image file provided' });
+      return res.status(400).json({ message: 'No image file provided' });
     }
 
-    // Get the uploaded file information
-    const { filename, path: filePath, size, mimetype } = req.file;
-    const { categoryId, title, description, altText } = req.body;
+    const { title, description, altText, categoryId } = req.body;
+    
+    if (!title) {
+      return res.status(400).json({ message: 'Title is required' });
+    }
 
-    // Create the image record in the database
-    const newImage = await storage.createImage({
-      title: title || filename,
-      description: description || '',
-      file_path: `/uploads/${filename}`,
-      file_size: size,
-      file_type: mimetype,
-      alt_text: altText || '',
+    // Generate public URL for the file
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+    const host = req.headers.host;
+    const baseUrl = `${protocol}://${host}`;
+    const fileUrl = `${baseUrl}/uploads/images/${req.file.filename}`;
+    
+    const imageData = {
+      title,
+      description: description || null,
+      file_path: fileUrl,
+      file_size: req.file.size,
+      file_type: req.file.mimetype,
+      alt_text: altText || null,
       category_id: categoryId ? parseInt(categoryId) : null,
       is_active: true,
       usage_count: 0,
       uploaded_at: new Date(),
-      created_at: new Date(),
-      updated_at: new Date()
-    });
+    };
 
-    res.status(201).json(newImage);
+    const newImage = await storage.createImage(imageData);
+    return res.status(201).json(newImage);
   } catch (error) {
     console.error('Error uploading image:', error);
-    res.status(500).json({ error: 'Failed to upload image' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-router.put('/images/:id', checkAdmin, async (req, res) => {
+imageLockerRouter.put('/images/:id/toggle-active', async (req: Request, res: Response) => {
   try {
-    const updatedImage = await storage.updateImage(parseInt(req.params.id), req.body);
-    if (!updatedImage) {
-      return res.status(404).json({ error: 'Image not found' });
+    const id = parseInt(req.params.id);
+    const image = await storage.toggleImageActive(id);
+    
+    if (!image) {
+      return res.status(404).json({ message: 'Image not found' });
     }
-    res.json(updatedImage);
-  } catch (error) {
-    console.error('Error updating image:', error);
-    res.status(500).json({ error: 'Failed to update image' });
-  }
-});
-
-router.put('/images/:id/toggle-active', checkAdmin, async (req, res) => {
-  try {
-    const updatedImage = await storage.toggleImageActive(parseInt(req.params.id));
-    if (!updatedImage) {
-      return res.status(404).json({ error: 'Image not found' });
-    }
-    res.json(updatedImage);
+    
+    return res.status(200).json(image);
   } catch (error) {
     console.error('Error toggling image active state:', error);
-    res.status(500).json({ error: 'Failed to toggle image active state' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-router.delete('/images/:id', checkAdmin, async (req, res) => {
+imageLockerRouter.delete('/images/:id', async (req: Request, res: Response) => {
   try {
-    const image = await storage.getImageById(parseInt(req.params.id));
+    const id = parseInt(req.params.id);
+    
+    // Get the image first to find file path
+    const image = await storage.getImageById(id);
     if (!image) {
-      return res.status(404).json({ error: 'Image not found' });
+      return res.status(404).json({ message: 'Image not found' });
     }
-
-    // Delete the file from the filesystem
-    if (image.file_path) {
-      const filePath = path.join(process.cwd(), image.file_path.replace(/^\//, ''));
+    
+    // Delete from database
+    const result = await storage.deleteImage(id);
+    if (!result) {
+      return res.status(500).json({ message: 'Failed to delete image from database' });
+    }
+    
+    // Try to delete the actual file (if it exists and is in our uploads directory)
+    try {
+      const urlPath = new URL(image.file_path).pathname;
+      const fileName = path.basename(urlPath);
+      const filePath = path.join(uploadDir, fileName);
+      
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
       }
+    } catch (fileError) {
+      // Log error but don't fail the request if file deletion fails
+      console.error('Error deleting image file:', fileError);
     }
-
-    // Delete the image record from the database
-    const success = await storage.deleteImage(image.id);
-    if (!success) {
-      return res.status(500).json({ error: 'Failed to delete image record' });
-    }
-
-    res.status(204).end();
+    
+    return res.status(200).json({ message: 'Image deleted successfully' });
   } catch (error) {
     console.error('Error deleting image:', error);
-    res.status(500).json({ error: 'Failed to delete image' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-// Image-Page Mappings
-router.get('/pages/:pageId/images', async (req, res) => {
+// Image Page Mapping routes
+imageLockerRouter.get('/images/:imageId/pages', async (req: Request, res: Response) => {
   try {
-    const { usageType, limit, offset } = req.query;
-    const images = await storage.getImagesForPage(
-      parseInt(req.params.pageId),
-      {
-        usageType: usageType as string,
-        limit: limit ? parseInt(limit as string) : undefined,
-        offset: offset ? parseInt(offset as string) : undefined
-      }
-    );
-    res.json(images);
-  } catch (error) {
-    console.error('Error fetching images for page:', error);
-    res.status(500).json({ error: 'Failed to fetch images for page' });
-  }
-});
-
-router.get('/images/:imageId/pages', async (req, res) => {
-  try {
-    const pages = await storage.getPagesForImage(parseInt(req.params.imageId));
-    res.json(pages);
+    const imageId = parseInt(req.params.imageId);
+    const pages = await storage.getPagesForImage(imageId);
+    return res.status(200).json(pages);
   } catch (error) {
     console.error('Error fetching pages for image:', error);
-    res.status(500).json({ error: 'Failed to fetch pages for image' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-router.post('/images/:imageId/pages/:pageId', checkAdmin, async (req, res) => {
+imageLockerRouter.get('/pages/:pageId/images', async (req: Request, res: Response) => {
   try {
-    const { usage_type, position, notes } = req.body;
+    const pageId = parseInt(req.params.pageId);
+    const usageType = req.query.usageType as string | undefined;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+    const offset = req.query.offset ? parseInt(req.query.offset as string) : undefined;
+    
+    const images = await storage.getImagesForPage(pageId, { usageType, limit, offset });
+    return res.status(200).json(images);
+  } catch (error) {
+    console.error('Error fetching images for page:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+imageLockerRouter.post('/images/:imageId/pages/:pageId', async (req: Request, res: Response) => {
+  try {
+    const imageId = parseInt(req.params.imageId);
+    const pageId = parseInt(req.params.pageId);
+    
+    const mappingData = imagePageMappingSchema.parse(req.body);
+    
     const mapping = await storage.createImagePageMapping({
-      image_id: parseInt(req.params.imageId),
-      page_id: parseInt(req.params.pageId),
-      usage_type: usage_type || 'general',
-      position: position || 0,
-      notes: notes || '',
-      created_at: new Date(),
-      updated_at: new Date()
+      image_id: imageId,
+      page_id: pageId,
+      usage_type: mappingData.usage_type || 'general',
+      position: mappingData.position,
+      notes: mappingData.notes || null
     });
-    res.status(201).json(mapping);
+    
+    // Increment usage count
+    await storage.incrementImageUsageCount(imageId);
+    
+    return res.status(201).json(mapping);
   } catch (error) {
+    if (error instanceof ZodError) {
+      return res.status(400).json({ 
+        message: 'Validation error',
+        errors: error.format()
+      });
+    }
     console.error('Error creating image-page mapping:', error);
-    res.status(500).json({ error: 'Failed to create image-page mapping' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-router.put('/images/:imageId/pages/:pageId', checkAdmin, async (req, res) => {
+imageLockerRouter.delete('/images/:imageId/pages/:pageId', async (req: Request, res: Response) => {
   try {
-    const updatedMapping = await storage.updateImagePageMapping(
-      parseInt(req.params.imageId),
-      parseInt(req.params.pageId),
-      req.body
-    );
-    if (!updatedMapping) {
-      return res.status(404).json({ error: 'Mapping not found' });
+    const imageId = parseInt(req.params.imageId);
+    const pageId = parseInt(req.params.pageId);
+    
+    const result = await storage.deleteImagePageMapping(imageId, pageId);
+    
+    if (!result) {
+      return res.status(404).json({ message: 'Mapping not found or could not be deleted' });
     }
-    res.json(updatedMapping);
-  } catch (error) {
-    console.error('Error updating image-page mapping:', error);
-    res.status(500).json({ error: 'Failed to update image-page mapping' });
-  }
-});
-
-router.delete('/images/:imageId/pages/:pageId', checkAdmin, async (req, res) => {
-  try {
-    const success = await storage.deleteImagePageMapping(
-      parseInt(req.params.imageId),
-      parseInt(req.params.pageId)
-    );
-    if (!success) {
-      return res.status(404).json({ error: 'Mapping not found or could not be deleted' });
-    }
-    res.status(204).end();
+    
+    return res.status(200).json({ message: 'Mapping deleted successfully' });
   } catch (error) {
     console.error('Error deleting image-page mapping:', error);
-    res.status(500).json({ error: 'Failed to delete image-page mapping' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-// Tags
-router.get('/tags', async (req, res) => {
+// Tag routes
+imageLockerRouter.get('/tags', async (req: Request, res: Response) => {
   try {
     const tags = await storage.getImageTags();
-    res.json(tags);
+    return res.status(200).json(tags);
   } catch (error) {
-    console.error('Error fetching image tags:', error);
-    res.status(500).json({ error: 'Failed to fetch image tags' });
+    console.error('Error fetching tags:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-router.post('/tags', checkAdmin, async (req, res) => {
+imageLockerRouter.post('/tags', async (req: Request, res: Response) => {
   try {
-    const newTag = await storage.createImageTag(req.body);
-    res.status(201).json(newTag);
+    const tagData = createTagSchema.parse(req.body);
+    const newTag = await storage.createImageTag(tagData);
+    return res.status(201).json(newTag);
   } catch (error) {
-    console.error('Error creating image tag:', error);
-    res.status(500).json({ error: 'Failed to create image tag' });
+    if (error instanceof ZodError) {
+      return res.status(400).json({ 
+        message: 'Validation error',
+        errors: error.format()
+      });
+    }
+    console.error('Error creating tag:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-router.get('/tags/:tagId/images', async (req, res) => {
+imageLockerRouter.get('/images/:imageId/tags', async (req: Request, res: Response) => {
   try {
-    const { limit, offset } = req.query;
-    const images = await storage.getImagesByTag(
-      parseInt(req.params.tagId),
-      {
-        limit: limit ? parseInt(limit as string) : undefined,
-        offset: offset ? parseInt(offset as string) : undefined
-      }
-    );
-    res.json(images);
-  } catch (error) {
-    console.error('Error fetching images by tag:', error);
-    res.status(500).json({ error: 'Failed to fetch images by tag' });
-  }
-});
-
-router.get('/images/:imageId/tags', async (req, res) => {
-  try {
-    const tags = await storage.getTagsForImage(parseInt(req.params.imageId));
-    res.json(tags);
+    const imageId = parseInt(req.params.imageId);
+    const tags = await storage.getTagsForImage(imageId);
+    return res.status(200).json(tags);
   } catch (error) {
     console.error('Error fetching tags for image:', error);
-    res.status(500).json({ error: 'Failed to fetch tags for image' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-router.post('/images/:imageId/tags/:tagId', checkAdmin, async (req, res) => {
+imageLockerRouter.post('/images/:imageId/tags/:tagId', async (req: Request, res: Response) => {
   try {
-    await storage.tagImage(parseInt(req.params.imageId), parseInt(req.params.tagId));
-    res.status(201).json({ success: true });
+    const imageId = parseInt(req.params.imageId);
+    const tagId = parseInt(req.params.tagId);
+    
+    await storage.tagImage(imageId, tagId);
+    return res.status(200).json({ message: 'Tag added to image successfully' });
   } catch (error) {
     console.error('Error tagging image:', error);
-    res.status(500).json({ error: 'Failed to tag image' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-router.delete('/images/:imageId/tags/:tagId', checkAdmin, async (req, res) => {
+imageLockerRouter.delete('/images/:imageId/tags/:tagId', async (req: Request, res: Response) => {
   try {
-    await storage.untagImage(parseInt(req.params.imageId), parseInt(req.params.tagId));
-    res.status(204).end();
+    const imageId = parseInt(req.params.imageId);
+    const tagId = parseInt(req.params.tagId);
+    
+    await storage.untagImage(imageId, tagId);
+    return res.status(200).json({ message: 'Tag removed from image successfully' });
   } catch (error) {
-    console.error('Error untagging image:', error);
-    res.status(500).json({ error: 'Failed to untag image' });
+    console.error('Error removing tag from image:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-export const imageLockerRouter = router;
+// Get images by tag
+imageLockerRouter.get('/tags/:tagId/images', async (req: Request, res: Response) => {
+  try {
+    const tagId = parseInt(req.params.tagId);
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+    const offset = req.query.offset ? parseInt(req.query.offset as string) : undefined;
+    
+    const images = await storage.getImagesByTag(tagId, { limit, offset });
+    return res.status(200).json(images);
+  } catch (error) {
+    console.error('Error fetching images by tag:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
