@@ -377,3 +377,159 @@ export const insertUserPreferencesSchema = createInsertSchema(user_preferences).
 export type InsertUserPreferences = z.infer<typeof insertUserPreferencesSchema>;
 export type UserPreferences = typeof user_preferences.$inferSelect;
 export type UserPreferencesSettings = z.infer<typeof userPreferencesSchema>;
+
+// Image Locker System
+
+// Image Categories 
+export const image_categories = pgTable('image_categories', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull().unique(),
+  description: text('description'),
+  created_at: timestamp('created_at').defaultNow(),
+  updated_at: timestamp('updated_at').defaultNow()
+});
+
+// Application Pages (for associating images with specific pages)
+export const app_pages = pgTable('app_pages', {
+  id: serial('id').primaryKey(), 
+  name: text('name').notNull().unique(),
+  route: text('route').notNull(),
+  description: text('description')
+});
+
+// Main Images table
+export const images = pgTable('images', {
+  id: serial('id').primaryKey(),
+  filename: text('filename').notNull(),
+  original_filename: text('original_filename'),
+  path: text('path').notNull(),
+  size: integer('size'),
+  mimetype: text('mimetype'),
+  width: integer('width'),
+  height: integer('height'),
+  alt_text: text('alt_text'),
+  title: text('title'),
+  category_id: integer('category_id').references(() => image_categories.id),
+  uploaded_by: integer('uploaded_by').references(() => users.id),
+  uploaded_at: timestamp('uploaded_at').defaultNow().notNull(),
+  is_active: boolean('is_active').default(true),
+  usage_count: integer('usage_count').default(0)
+});
+
+// Image-Page association (many-to-many)
+export const image_page_mappings = pgTable('image_page_mappings', {
+  id: serial('id').primaryKey(),
+  image_id: integer('image_id').notNull().references(() => images.id, { onDelete: 'cascade' }),
+  page_id: integer('page_id').notNull().references(() => app_pages.id, { onDelete: 'cascade' }),
+  usage_type: text('usage_type'), // e.g., 'hero', 'background', 'gallery', 'section'
+  position: integer('position'), // For ordering images on a page
+  created_at: timestamp('created_at').defaultNow(),
+  updated_at: timestamp('updated_at').defaultNow()
+});
+
+// Image-Tag association for better searchability
+export const image_tags = pgTable('image_tags', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull().unique()
+});
+
+export const image_tag_mappings = pgTable('image_tag_mappings', {
+  image_id: integer('image_id').notNull().references(() => images.id, { onDelete: 'cascade' }),
+  tag_id: integer('tag_id').notNull().references(() => image_tags.id, { onDelete: 'cascade' })
+});
+
+// Relations
+export const imageCategoriesRelations = relations(image_categories, ({ many }) => ({
+  images: many(images)
+}));
+
+export const imagesRelations = relations(images, ({ one, many }) => ({
+  category: one(image_categories, {
+    fields: [images.category_id],
+    references: [image_categories.id]
+  }),
+  uploader: one(users, {
+    fields: [images.uploaded_by],
+    references: [users.id]
+  }),
+  pageMappings: many(image_page_mappings),
+  tagMappings: many(image_tag_mappings)
+}));
+
+export const appPagesRelations = relations(app_pages, ({ many }) => ({
+  imageMappings: many(image_page_mappings)
+}));
+
+export const imagePageMappingsRelations = relations(image_page_mappings, ({ one }) => ({
+  image: one(images, {
+    fields: [image_page_mappings.image_id],
+    references: [images.id]
+  }),
+  page: one(app_pages, {
+    fields: [image_page_mappings.page_id],
+    references: [app_pages.id]
+  })
+}));
+
+export const imageTagsRelations = relations(image_tags, ({ many }) => ({
+  imageMappings: many(image_tag_mappings)
+}));
+
+export const imageTagMappingsRelations = relations(image_tag_mappings, ({ one }) => ({
+  image: one(images, {
+    fields: [image_tag_mappings.image_id],
+    references: [images.id]
+  }),
+  tag: one(image_tags, {
+    fields: [image_tag_mappings.tag_id],
+    references: [image_tags.id]
+  })
+}));
+
+// Insert schemas
+export const insertImageCategorySchema = createInsertSchema(image_categories).omit({
+  id: true,
+  created_at: true,
+  updated_at: true
+});
+
+export const insertAppPageSchema = createInsertSchema(app_pages).omit({
+  id: true
+});
+
+export const insertImageSchema = createInsertSchema(images).omit({
+  id: true,
+  uploaded_at: true,
+  usage_count: true
+});
+
+export const insertImagePageMappingSchema = createInsertSchema(image_page_mappings).omit({
+  id: true,
+  created_at: true,
+  updated_at: true
+});
+
+export const insertImageTagSchema = createInsertSchema(image_tags).omit({
+  id: true
+});
+
+export const insertImageTagMappingSchema = createInsertSchema(image_tag_mappings);
+
+// Types
+export type ImageCategory = typeof image_categories.$inferSelect;
+export type InsertImageCategory = z.infer<typeof insertImageCategorySchema>;
+
+export type AppPage = typeof app_pages.$inferSelect;
+export type InsertAppPage = z.infer<typeof insertAppPageSchema>;
+
+export type Image = typeof images.$inferSelect;
+export type InsertImage = z.infer<typeof insertImageSchema>;
+
+export type ImagePageMapping = typeof image_page_mappings.$inferSelect;
+export type InsertImagePageMapping = z.infer<typeof insertImagePageMappingSchema>;
+
+export type ImageTag = typeof image_tags.$inferSelect;
+export type InsertImageTag = z.infer<typeof insertImageTagSchema>;
+
+export type ImageTagMapping = typeof image_tag_mappings.$inferSelect;
+export type InsertImageTagMapping = z.infer<typeof insertImageTagMappingSchema>;

@@ -17,7 +17,26 @@ import {
   type InsertSkillCategory,
   type InsertSkillOffering,
   type InsertSkillRequest,
-  type InsertSkillExchange
+  type InsertSkillExchange,
+  // Image Locker system
+  image_categories,
+  app_pages,
+  images,
+  image_page_mappings,
+  image_tags,
+  image_tag_mappings,
+  type ImageCategory,
+  type AppPage,
+  type Image,
+  type ImagePageMapping,
+  type ImageTag,
+  type ImageTagMapping,
+  type InsertImageCategory,
+  type InsertAppPage,
+  type InsertImage,
+  type InsertImagePageMapping,
+  type InsertImageTag,
+  type InsertImageTagMapping
 } from "@shared/schema";
 import { 
   courses, 
@@ -126,6 +145,46 @@ export interface IStorage {
   // Theme preferences methods
   getUserThemePreferences(userId: number): Promise<{ color_scheme: string, theme_mode: string, accent_color: string } | undefined>;
   updateUserThemePreferences(userId: number, preferences: { color_scheme?: string, theme_mode?: string, accent_color?: string }): Promise<User>;
+
+  // Image Locker - Category methods
+  getImageCategories(): Promise<ImageCategory[]>;
+  getImageCategoryById(id: number): Promise<ImageCategory | undefined>;
+  createImageCategory(category: InsertImageCategory): Promise<ImageCategory>;
+  updateImageCategory(id: number, category: Partial<InsertImageCategory>): Promise<ImageCategory | undefined>;
+  deleteImageCategory(id: number): Promise<boolean>;
+
+  // Image Locker - App Pages methods
+  getAppPages(): Promise<AppPage[]>;
+  getAppPageById(id: number): Promise<AppPage | undefined>;
+  getAppPageByName(name: string): Promise<AppPage | undefined>;
+  getAppPageByRoute(route: string): Promise<AppPage | undefined>;
+  createAppPage(page: InsertAppPage): Promise<AppPage>;
+  updateAppPage(id: number, page: Partial<InsertAppPage>): Promise<AppPage | undefined>;
+  deleteAppPage(id: number): Promise<boolean>;
+
+  // Image Locker - Image methods
+  getImages(categoryId?: number, options?: { limit?: number, offset?: number, active?: boolean }): Promise<Image[]>;
+  getImageById(id: number): Promise<Image | undefined>;
+  createImage(image: InsertImage): Promise<Image>;
+  updateImage(id: number, image: Partial<InsertImage>): Promise<Image | undefined>;
+  toggleImageActive(id: number): Promise<Image | undefined>;
+  deleteImage(id: number): Promise<boolean>;
+  incrementImageUsageCount(id: number): Promise<Image | undefined>;
+
+  // Image Locker - Image-Page mappings methods
+  getImagesForPage(pageId: number, options?: { usageType?: string, limit?: number, offset?: number }): Promise<(Image & { mapping: ImagePageMapping })[]>;
+  getPagesForImage(imageId: number): Promise<(AppPage & { mapping: ImagePageMapping })[]>;
+  createImagePageMapping(mapping: InsertImagePageMapping): Promise<ImagePageMapping>;
+  updateImagePageMapping(imageId: number, pageId: number, mapping: Partial<InsertImagePageMapping>): Promise<ImagePageMapping | undefined>;
+  deleteImagePageMapping(imageId: number, pageId: number): Promise<boolean>;
+
+  // Image Locker - Tags methods
+  getImageTags(): Promise<ImageTag[]>;
+  createImageTag(tag: InsertImageTag): Promise<ImageTag>;
+  tagImage(imageId: number, tagId: number): Promise<void>;
+  untagImage(imageId: number, tagId: number): Promise<void>;
+  getImagesByTag(tagId: number, options?: { limit?: number, offset?: number }): Promise<Image[]>;
+  getTagsForImage(imageId: number): Promise<ImageTag[]>;
 }
 
 // Database storage implementation using Drizzle ORM
