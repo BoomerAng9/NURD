@@ -16,8 +16,9 @@ import { ApplyModal } from "@/components/ui/apply-modal";
 import { useCursorInteraction } from "@/hooks/use-cursor-interaction";
 import Favicon from "@/components/ui/Favicon";
 import UpdateNotification from "@/components/ui/update-notification";
+import OrientationAlert from "@/components/ui/orientation-alert";
 import { VERSION } from "@/version";
-import { UserPlus, Calendar, User, MapPin, RefreshCw } from "lucide-react";
+import { UserPlus, Calendar, User, MapPin, RefreshCw, RotateCcw } from "lucide-react";
 import { GlassNav } from "@/components/ui/glass-nav";
 import { ComingSoon } from "@/components/ui/coming-soon";
 import NotFound from "@/pages/not-found";
@@ -456,6 +457,7 @@ const AppContent = () => {
   return (
     <div className="min-h-screen flex flex-col max-w-[100vw] overflow-x-hidden pb-14">
       {isCursorEnabled && <MagicCursor />}
+      <OrientationAlert />
       <GlassNav />
       
       {/* Cursor toggle button */}
