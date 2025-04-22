@@ -44,6 +44,17 @@ interface ExplainContentRequest {
 }
 
 /**
+ * Interface for code narrator request
+ */
+interface CodeNarratorRequest {
+  code: string;
+  language: string;
+  narrationLevel?: 'basic' | 'detailed' | 'teaching';
+  includeAudio?: boolean;
+  voiceStyle?: 'default' | 'clear' | 'slow';
+}
+
+/**
  * Simplify content to make it more accessible
  */
 export async function simplifyContent(req: Request, res: Response) {
@@ -273,6 +284,106 @@ export async function explainContent(req: Request, res: Response) {
     console.error('Error in explainContent:', error);
     return res.status(500).json({
       error: `Failed to explain content: ${error instanceof Error ? error.message : 'Unknown error'}`
+    });
+  }
+}
+
+/**
+ * Generate audio narration for code with step-by-step explanation
+ */
+export async function narrateCode(req: Request, res: Response) {
+  try {
+    const params = req.body as CodeNarratorRequest;
+
+    if (!params.code) {
+      return res.status(400).json({
+        error: 'Missing required parameter: code'
+      });
+    }
+
+    if (!params.language) {
+      return res.status(400).json({
+        error: 'Missing required parameter: language'
+      });
+    }
+
+    // Determine narration level
+    let narrationPrompt = '';
+    switch (params.narrationLevel) {
+      case 'basic':
+        narrationPrompt = 'Provide a brief overview of what this code does in simple, non-technical language. Focus on the main purpose and outcome, not implementation details.';
+        break;
+      case 'detailed':
+        narrationPrompt = 'Provide a detailed step-by-step explanation of how this code works. Explain each important line or block in sequence, describing what it does and why. Use clear non-technical language where possible.';
+        break;
+      case 'teaching':
+        narrationPrompt = 'Create a comprehensive teaching narration of this code. Explain the concepts, patterns, and purpose behind each section. Include best practices, potential pitfalls, and educational context. Make it accessible to beginners while highlighting important programming concepts.';
+        break;
+      default:
+        narrationPrompt = 'Provide a clear, step-by-step explanation of this code that would help someone understand how it works. Focus on readability and accessibility, avoiding unnecessary jargon.';
+    }
+
+    // Append language-specific context
+    narrationPrompt += `\n\nThis is ${params.language} code.`;
+
+    // Call OpenAI API to create the narration
+    const response = await openai.chat.completions.create({
+      model: OPENAI_MODEL,
+      messages: [
+        {
+          role: 'system',
+          content: 'You are an expert programming instructor specializing in accessibility. You create clear, concise narrations of code for users with diverse needs, including those with visual impairments or learning disabilities.'
+        },
+        {
+          role: 'user',
+          content: `${narrationPrompt}\n\nCode to narrate:\n\`\`\`${params.language}\n${params.code}\n\`\`\``
+        }
+      ],
+      temperature: 0.5,
+      max_tokens: 1500,
+    });
+
+    // Extract the narration from the response
+    const narration = response.choices[0].message.content || '';
+
+    // If audio is not requested, return text only
+    if (!params.includeAudio) {
+      return res.status(200).json({
+        narration
+      });
+    }
+
+    // Generate audio if requested
+    let voice = 'alloy'; // default voice
+    let speed = 1.0; // default speed
+
+    if (params.voiceStyle === 'clear') {
+      voice = 'nova'; // clearer voice
+    } else if (params.voiceStyle === 'slow') {
+      speed = 0.8; // slower speed
+    }
+
+    // Call OpenAI API for text-to-speech
+    const mp3 = await openai.audio.speech.create({
+      model: 'tts-1',
+      voice: voice,
+      input: narration,
+      speed: speed,
+    });
+
+    // Convert audio data to base64 for client-side playback
+    const buffer = Buffer.from(await mp3.arrayBuffer());
+    const audioBase64 = buffer.toString('base64');
+
+    // Return both text and audio
+    return res.status(200).json({
+      narration,
+      audioUrl: `data:audio/mpeg;base64,${audioBase64}`
+    });
+  } catch (error) {
+    console.error('Error in narrateCode:', error);
+    return res.status(500).json({
+      error: `Failed to narrate code: ${error instanceof Error ? error.message : 'Unknown error'}`
     });
   }
 }
