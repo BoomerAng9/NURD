@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Loader2, Sparkles, Code, Edit, Settings, Wand2, 
   HelpCircle, Star, Book, LightbulbIcon, Award, Rocket,
-  Info, MessageCircle, Send, Flame, Users
+  Info, MessageCircle, Send, Flame, Users, X
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { getCodeGenerationWithAskCodi, getCodeExplanationWithAskCodi, getCodeCompletionWithAskCodi } from '@/services/askcodi-service';
@@ -236,6 +236,7 @@ export default function VIBE() {
         const savedUsedTabs = localStorage.getItem('vibeUsedTabs');
         const savedLastVisit = localStorage.getItem('vibeLastVisit');
         const savedConsecutiveDays = localStorage.getItem('vibeConsecutiveDays');
+        const savedTokenCount = localStorage.getItem('vibeTokenCount');
         
         if (savedAchievements) {
           setUserAchievements(JSON.parse(savedAchievements));
@@ -255,6 +256,10 @@ export default function VIBE() {
         
         if (savedConsecutiveDays) {
           setConsecutiveDays(parseInt(savedConsecutiveDays, 10));
+        }
+        
+        if (savedTokenCount) {
+          setTokenCount(parseInt(savedTokenCount, 10));
         }
       } catch (error) {
         console.error('Error loading user data:', error);
@@ -454,6 +459,18 @@ export default function VIBE() {
     if (onboardingComplete === 'true') {
       setShowOnboarding(false);
     }
+    
+    // Check login status for token limit handling
+    fetch('/api/user')
+      .then(response => {
+        // If response is successful, user is logged in
+        if (response.ok) {
+          setIsLoggedIn(true);
+        }
+      })
+      .catch(error => {
+        console.error('Error checking login status:', error);
+      });
   }, []);
 
   const handleSubmit = async () => {
@@ -554,6 +571,27 @@ export default function VIBE() {
       // Scroll to result
       if (resultRef.current) {
         resultRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+      
+      // Deduct tokens if not logged in
+      if (!isLoggedIn) {
+        // Calculate token usage based on input and output length
+        // This is a simplified estimation - actual tokens would be calculated by the API
+        const inputLength = tab === 'generate' ? prompt.length : code.length;
+        const outputLength = response.length;
+        const estimatedTokens = Math.ceil((inputLength + outputLength) / 4); // Rough estimation (4 chars ≈ 1 token)
+        
+        // Deduct estimated tokens (minimum 200 tokens per request to prevent exploits)
+        const tokensToDeduct = Math.max(200, estimatedTokens);
+        const newTokenCount = Math.max(0, tokenCount - tokensToDeduct);
+        
+        setTokenCount(newTokenCount);
+        localStorage.setItem('vibeTokenCount', newTokenCount.toString());
+        
+        // Show token notice if it was closed before
+        if (!showTokenNotice && newTokenCount < tokenLimit * 0.3) {
+          setShowTokenNotice(true);
+        }
       }
     } catch (error) {
       console.error(`Error in ${tab} operation:`, error);
