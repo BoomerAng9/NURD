@@ -307,6 +307,78 @@ export async function narrateCode(req: Request, res: Response) {
       });
     }
 
+    // Check user authentication and subscription tier
+    const user = req.user;
+    const isAuthenticated = req.isAuthenticated();
+    
+    // Calculate estimated token consumption for the request
+    // This is an approximation - adjust multipliers based on actual usage patterns
+    const codeLength = params.code.length;
+    const narrationLevelMultiplier = 
+      params.narrationLevel === 'basic' ? 1.0 : 
+      params.narrationLevel === 'detailed' ? 1.5 : 
+      params.narrationLevel === 'teaching' ? 2.0 : 1.2;
+    
+    const audioMultiplier = params.includeAudio ? 1.5 : 1.0;
+    const estimatedTokens = Math.ceil(codeLength * narrationLevelMultiplier * audioMultiplier / 4);
+    
+    // Get user's tier and remaining tokens
+    let userTier = 'free';
+    let remainingTokens = 70000; // Default free tier tokens
+    
+    if (isAuthenticated && user) {
+      try {
+        // Get user's subscription details from database
+        const userSubscription = await getUserSubscription(user.id);
+        if (userSubscription) {
+          userTier = userSubscription.tier;
+          remainingTokens = userSubscription.remainingTokens;
+        }
+      } catch (error) {
+        console.error('Error getting user subscription:', error);
+      }
+    }
+    
+    // Check if user has enough tokens or if tier allows access to this feature
+    if (!isAuthenticated) {
+      // For unauthenticated users, check if they would exceed free token limit
+      if (estimatedTokens > remainingTokens) {
+        return res.status(403).json({
+          error: 'Token limit reached. Please sign up for a subscription tier to continue using this feature.',
+          estimatedTokens,
+          remainingTokens,
+          requiresAuthentication: true
+        });
+      }
+    } else {
+      // Check tier-specific restrictions
+      if (userTier === 'free' && params.narrationLevel === 'teaching') {
+        return res.status(403).json({
+          error: 'Advanced teaching narration is only available in paid subscription tiers.',
+          currentTier: userTier,
+          requiredTier: 'premium'
+        });
+      }
+      
+      if (userTier === 'free' && params.includeAudio) {
+        return res.status(403).json({
+          error: 'Audio narration is only available in paid subscription tiers.',
+          currentTier: userTier,
+          requiredTier: 'standard'
+        });
+      }
+      
+      // Check if authenticated user has enough tokens based on their tier
+      if (estimatedTokens > remainingTokens) {
+        return res.status(403).json({
+          error: 'You have reached your token limit for this billing period.',
+          estimatedTokens,
+          remainingTokens,
+          requiresUpgrade: userTier !== 'premium'
+        });
+      }
+    }
+
     // Determine narration level
     let narrationPrompt = '';
     switch (params.narrationLevel) {
@@ -345,22 +417,38 @@ export async function narrateCode(req: Request, res: Response) {
 
     // Extract the narration from the response
     const narration = response.choices[0].message.content || '';
+    
+    // Update user's token usage if authenticated
+    if (isAuthenticated && user) {
+      try {
+        // Deduct tokens from user's account
+        const actualTokensUsed = estimatedTokens; // This could be adjusted to use the actual token count from the API response
+        await updateUserTokenUsage(user.id, actualTokensUsed);
+      } catch (error) {
+        console.error('Error updating user token usage:', error);
+      }
+    }
 
-    // If audio is not requested, return text only
-    if (!params.includeAudio) {
+    // If audio is not requested or not available on user's tier, return text only
+    if (!params.includeAudio || (isAuthenticated && userTier === 'free')) {
       return res.status(200).json({
-        narration
+        narration,
+        tokensUsed: estimatedTokens,
+        remainingTokens: remainingTokens - estimatedTokens
       });
     }
 
-    // Generate audio if requested
+    // Generate audio if requested and available on user's tier
     let voice = 'alloy'; // default voice
     let speed = 1.0; // default speed
 
-    if (params.voiceStyle === 'clear') {
-      voice = 'nova'; // clearer voice
-    } else if (params.voiceStyle === 'slow') {
-      speed = 0.8; // slower speed
+    // Premium tier gets access to all voice options
+    if (userTier === 'premium') {
+      if (params.voiceStyle === 'clear') {
+        voice = 'nova'; // clearer voice
+      } else if (params.voiceStyle === 'slow') {
+        speed = 0.8; // slower speed
+      }
     }
 
     // Call OpenAI API for text-to-speech
@@ -378,12 +466,52 @@ export async function narrateCode(req: Request, res: Response) {
     // Return both text and audio
     return res.status(200).json({
       narration,
-      audioUrl: `data:audio/mpeg;base64,${audioBase64}`
+      audioUrl: `data:audio/mpeg;base64,${audioBase64}`,
+      tokensUsed: estimatedTokens,
+      remainingTokens: remainingTokens - estimatedTokens
     });
   } catch (error) {
     console.error('Error in narrateCode:', error);
     return res.status(500).json({
       error: `Failed to narrate code: ${error instanceof Error ? error.message : 'Unknown error'}`
     });
+  }
+}
+
+// Placeholder function for retrieving user subscription details
+// Replace with actual implementation connected to your database
+async function getUserSubscription(userId: number) {
+  try {
+    // This would be replaced with an actual database query
+    // Example: const subscription = await db.query.user_subscriptions.findFirst({ where: eq(user_subscriptions.user_id, userId) });
+    
+    // For now we return a mock result - replace this with actual DB query
+    return {
+      userId,
+      tier: 'free', // 'free', 'standard', 'premium'
+      remainingTokens: 70000,
+      maxTokens: 70000,
+      // Other subscription details...
+    };
+  } catch (error) {
+    console.error('Error fetching user subscription:', error);
+    throw error;
+  }
+}
+
+// Placeholder function for updating user token usage
+// Replace with actual implementation connected to your database
+async function updateUserTokenUsage(userId: number, tokensUsed: number) {
+  try {
+    // This would be replaced with an actual database update
+    // Example: await db.update(user_subscriptions)
+    //              .set({ remaining_tokens: sql`remaining_tokens - ${tokensUsed}` })
+    //              .where(eq(user_subscriptions.user_id, userId));
+    
+    console.log(`Updated token usage for user ${userId}: -${tokensUsed} tokens`);
+    return true;
+  } catch (error) {
+    console.error('Error updating user token usage:', error);
+    throw error;
   }
 }

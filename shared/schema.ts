@@ -23,6 +23,7 @@ export const users = pgTable("users", {
   xp: integer("xp").default(0),
   is_admin: boolean("is_admin").default(false),
   is_freelancer: boolean("is_freelancer").default(false),
+  subscriptionTier: text("subscription_tier").default("free"), // Options: free, standard, premium
   color_scheme: text("color_scheme").default("default"), // Options: default, ocean, forest, sunset, space
   theme_mode: text("theme_mode").default("system"), // Options: system, light, dark
   accent_color: text("accent_color").default("#3B82F6"), // Primary accent color
@@ -62,6 +63,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
   email: true,
+  subscriptionTier: true,
   color_scheme: true,
   theme_mode: true,
   accent_color: true,

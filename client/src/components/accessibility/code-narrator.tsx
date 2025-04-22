@@ -2,9 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Volume2, VolumeX, Headphones, Sparkles, CornerDownLeft } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Loader2, Volume2, VolumeX, Headphones, Sparkles, CornerDownLeft, AlertTriangle, Info } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { getNarration, CodeNarrationRequest } from '@/services/accessibility-service';
+import { useAuth } from '@/hooks/use-auth';
 
 interface CodeNarratorProps {
   code: string;
@@ -13,19 +16,67 @@ interface CodeNarratorProps {
   onClose?: () => void;
 }
 
+interface SubscriptionTier {
+  name: string;
+  features: string[];
+  recommended?: boolean;
+}
+
+const subscriptionTiers: SubscriptionTier[] = [
+  {
+    name: 'Standard',
+    features: [
+      'Audio narration',
+      'Detailed explanations',
+      'Higher token limits'
+    ]
+  },
+  {
+    name: 'Premium',
+    features: [
+      'Advanced teaching narration',
+      'All voice styles',
+      'Unlimited tokens',
+      'Priority processing'
+    ],
+    recommended: true
+  }
+];
+
 const CodeNarrator: React.FC<CodeNarratorProps> = ({ 
   code, 
   language, 
   className = '', 
   onClose 
 }) => {
+  const { user, isLoading } = useAuth();
   const [narration, setNarration] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [narrationLevel, setNarrationLevel] = useState<'basic' | 'detailed' | 'teaching'>('basic');
   const [voiceStyle, setVoiceStyle] = useState<'default' | 'clear' | 'slow'>('default');
   const [includeAudio, setIncludeAudio] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [tokenUsage, setTokenUsage] = useState<{used: number, remaining: number} | null>(null);
+  const [needsUpgrade, setNeedsUpgrade] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  
+  // Determine user's subscription tier
+  const userTier = user?.subscriptionTier || 'free';
+  const isAuthenticated = !!user;
+  
+  // Set appropriate defaults based on user tier
+  useEffect(() => {
+    // Teaching narration only for premium tier
+    if (userTier !== 'premium' && narrationLevel === 'teaching') {
+      setNarrationLevel('detailed');
+    }
+    
+    // Audio only for paid tiers
+    if (userTier === 'free' && includeAudio) {
+      setIncludeAudio(false);
+    }
+  }, [userTier, narrationLevel, includeAudio]);
 
   // Clean up audio when component unmounts
   useEffect(() => {
@@ -90,6 +141,10 @@ const CodeNarrator: React.FC<CodeNarratorProps> = ({
       return;
     }
 
+    // Reset error and upgrade states
+    setError(null);
+    setNeedsUpgrade(false);
+    
     try {
       setIsGenerating(true);
       setNarration('');
@@ -115,6 +170,14 @@ const CodeNarrator: React.FC<CodeNarratorProps> = ({
       // Update narration text
       setNarration(response.narration);
       
+      // Track token usage if provided
+      if (response.tokensUsed && response.remainingTokens !== undefined) {
+        setTokenUsage({
+          used: response.tokensUsed,
+          remaining: response.remainingTokens
+        });
+      }
+      
       // Set up audio if available
       if (response.audioUrl && includeAudio) {
         setupAudioElement(response.audioUrl);
@@ -125,13 +188,44 @@ const CodeNarrator: React.FC<CodeNarratorProps> = ({
         description: 'Code narration has been created successfully.',
         variant: 'default'
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error generating narration:', error);
-      toast({
-        title: 'Narration Error',
-        description: error instanceof Error ? error.message : 'Failed to generate code narration',
-        variant: 'destructive'
-      });
+      
+      // Handle specific subscription-related errors
+      if (error.response && error.response.status === 403) {
+        try {
+          const errorData = await error.response.json();
+          
+          if (errorData.requiresAuthentication) {
+            setError('You need to sign up to use this feature with your current token count.');
+            setNeedsUpgrade(true);
+          } else if (errorData.currentTier && errorData.requiredTier) {
+            setError(`This feature requires the ${errorData.requiredTier} tier. You're currently on the ${errorData.currentTier} tier.`);
+            setNeedsUpgrade(true);
+          } else if (errorData.requiresUpgrade) {
+            setError('You\'ve reached your token limit. Please upgrade your subscription tier for more tokens.');
+            setNeedsUpgrade(true);
+          } else {
+            setError(errorData.error || 'Access denied. Please check your subscription tier.');
+          }
+          
+          // Update token usage if provided
+          if (errorData.estimatedTokens !== undefined && errorData.remainingTokens !== undefined) {
+            setTokenUsage({
+              used: errorData.estimatedTokens,
+              remaining: errorData.remainingTokens
+            });
+          }
+        } catch (parseError) {
+          setError('Unable to access this feature with your current subscription tier.');
+        }
+      } else {
+        toast({
+          title: 'Narration Error',
+          description: error.message || 'Failed to generate code narration',
+          variant: 'destructive'
+        });
+      }
     } finally {
       setIsGenerating(false);
     }

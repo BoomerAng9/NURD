@@ -15,6 +15,8 @@ export interface CodeNarrationRequest {
 export interface CodeNarrationResponse {
   narration: string;
   audioUrl?: string;
+  tokensUsed?: number;
+  remainingTokens?: number;
 }
 
 // Text-to-Speech API interface
