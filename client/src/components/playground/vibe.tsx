@@ -131,6 +131,12 @@ export default function VIBE() {
   const [onboardingStep, setOnboardingStep] = useState(0);
   const [userAchievements, setUserAchievements] = useState<string[]>([]);
   
+  // Token usage state
+  const [tokenCount, setTokenCount] = useState(70000);
+  const [tokenLimit, setTokenLimit] = useState(70000);
+  const [showTokenNotice, setShowTokenNotice] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
   // Learning milestone state
   const [totalXP, setTotalXP] = useState(0);
   const [showMilestone, setShowMilestone] = useState(false);
@@ -468,6 +474,16 @@ export default function VIBE() {
       });
       return;
     }
+    
+    // Check token count for non-registered users
+    if (!isLoggedIn && tokenCount <= 0) {
+      toast({
+        title: 'Token limit reached',
+        description: 'You\'ve used all your free tokens. Create an account to continue using V.I.B.E.!',
+        variant: 'destructive',
+      });
+      return;
+    }
 
     setLoading(true);
     setResult('');
@@ -661,6 +677,51 @@ export default function VIBE() {
               </div>
             </div>
           </CardHeader>
+
+          {/* Free Token Notification */}
+          {showTokenNotice && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="px-4 py-3 bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-purple-500/10 border-y border-cyan-500/20 relative overflow-hidden"
+            >
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div className="flex items-start gap-3">
+                  <div className="bg-blue-500/20 rounded-full p-2 flex-shrink-0">
+                    <Flame className="h-5 w-5 text-blue-400" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-sm">70,000 Free Tokens Available</h4>
+                    <p className="text-xs opacity-80">Test out V.I.B.E. without signing up! Create an account to unlock unlimited usage.</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="text-xs">
+                    <div className="flex justify-between mb-1">
+                      <span>Tokens remaining</span>
+                      <span className="font-medium">{tokenCount.toLocaleString()}</span>
+                    </div>
+                    <div className="w-32 h-2 bg-gray-700 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-blue-500 to-purple-500" 
+                        style={{ width: `${Math.max(1, (tokenCount / tokenLimit) * 100)}%` }} 
+                      />
+                    </div>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="text-xs h-8 gap-1 border-cyan-500/30 hover:bg-cyan-500/10"
+                    onClick={() => setShowTokenNotice(false)}
+                  >
+                    <X className="h-3 w-3" />
+                    Close
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          )}
 
           <CardContent>
             {/* Collaboration Panel */}
