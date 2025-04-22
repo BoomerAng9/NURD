@@ -6,14 +6,15 @@
  */
 
 export const VERSION = {
-  number: '1.2.0', // Follow semantic versioning: MAJOR.MINOR.PATCH
+  number: '1.3.0', // Follow semantic versioning: MAJOR.MINOR.PATCH
   name: 'Pooler Edition',
-  date: '2025-04-17',  // Current date in YYYY-MM-DD format
+  date: '2025-04-22',  // Current date in YYYY-MM-DD format
   notes: [
-    'Removed AI Code Tools page (will be reimplemented later with better model selection)',
-    'Fixed social media thumbnail for link sharing',
-    'Improved favicon implementation',
-    'Added version tracking and update notification system'
+    'Added 70,000 free tokens for V.I.B.E. coding environment',
+    'Improved mobile responsiveness across all pages',
+    'Fixed update notification system persistence issue',
+    'Enhanced image locker system for administrators',
+    'Optimized application performance and loading times'
   ]
 };
 

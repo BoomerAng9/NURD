@@ -12,6 +12,17 @@ const UpdateNotification: React.FC = () => {
   const [appVersion, setAppVersion] = useState(VERSION.number);
 
   useEffect(() => {
+    // Check if page was just refreshed
+    const pageJustRefreshed = sessionStorage.getItem('page-just-refreshed') === 'true';
+    
+    if (pageJustRefreshed) {
+      // If page was just refreshed, mark the current version as seen and reset the flag
+      markVersionAsSeen();
+      sessionStorage.removeItem('page-just-refreshed');
+      setIsVisible(false);
+      return;
+    }
+    
     // Get the version from localStorage or use default if not present
     const lastSeenVersion = localStorage.getItem('nurd-last-seen-version') || '0.0.0';
     
@@ -38,6 +49,9 @@ const UpdateNotification: React.FC = () => {
   const handleRefresh = () => {
     // Mark version as seen first
     markVersionAsSeen();
+    
+    // Set flag to indicate page is being refreshed
+    sessionStorage.setItem('page-just-refreshed', 'true');
     
     // Refresh the page to ensure all updates are applied
     window.location.reload();
