@@ -11,12 +11,13 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Loader2, Sparkles, Code, Edit, Settings, Wand2, 
   HelpCircle, Star, Book, LightbulbIcon, Award, Rocket,
-  Info, MessageCircle, Send, Flame, Users, X
+  Info, MessageCircle, Send, Flame, Users, X, Headphones
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { getCodeGenerationWithAskCodi, getCodeExplanationWithAskCodi, getCodeCompletionWithAskCodi } from '@/services/askcodi-service';
 import { getCodeGenerationWithGroq, getCodeExplanationWithGroq, getCodeCompletionWithGroq, getGroqModels } from '@/services/groq-service';
 import CollaborationPanel from './collaboration-panel';
+import CodeNarrator from '@/components/accessibility/code-narrator';
 
 // Helper tooltip component for friendly contextual guidance
 const HelpTooltip = ({ message, children }: { message: string, children: React.ReactNode }) => {
@@ -150,6 +151,9 @@ export default function VIBE() {
   const [assistantMessages, setAssistantMessages] = useState<{message: string, type: 'tip' | 'encouragement' | 'help'}[]>([
     { message: "Welcome to V.I.B.E.! I'm your coding buddy. Need any help?", type: 'encouragement' },
   ]);
+  
+  // Code Narrator accessibility feature
+  const [showCodeNarrator, setShowCodeNarrator] = useState(false);
 
   // Load available models from APIs
   useEffect(() => {
@@ -829,27 +833,38 @@ export default function VIBE() {
                           </div>
                         </HelpTooltip>
                       </div>
-                      <Select value={language} onValueChange={handleLanguageChange}>
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Choose language" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="javascript">JavaScript</SelectItem>
-                          <SelectItem value="python">Python</SelectItem>
-                          <SelectItem value="java">Java</SelectItem>
-                          <SelectItem value="csharp">C#</SelectItem>
-                          <SelectItem value="cpp">C++</SelectItem>
-                          <SelectItem value="go">Go</SelectItem>
-                          <SelectItem value="rust">Rust</SelectItem>
-                          <SelectItem value="ruby">Ruby</SelectItem>
-                          <SelectItem value="php">PHP</SelectItem>
-                          <SelectItem value="swift">Swift</SelectItem>
-                          <SelectItem value="typescript">TypeScript</SelectItem>
-                          <SelectItem value="html">HTML</SelectItem>
-                          <SelectItem value="css">CSS</SelectItem>
-                          <SelectItem value="sql">SQL</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setShowCodeNarrator(!showCodeNarrator)}
+                          className="h-8 gap-1 border-cyan-500/30 hover:bg-cyan-500/10"
+                        >
+                          <Headphones className="h-4 w-4 text-cyan-500" />
+                          Code Narrator
+                        </Button>
+                        <Select value={language} onValueChange={handleLanguageChange}>
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Choose language" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="javascript">JavaScript</SelectItem>
+                            <SelectItem value="python">Python</SelectItem>
+                            <SelectItem value="java">Java</SelectItem>
+                            <SelectItem value="csharp">C#</SelectItem>
+                            <SelectItem value="cpp">C++</SelectItem>
+                            <SelectItem value="go">Go</SelectItem>
+                            <SelectItem value="rust">Rust</SelectItem>
+                            <SelectItem value="ruby">Ruby</SelectItem>
+                            <SelectItem value="php">PHP</SelectItem>
+                            <SelectItem value="swift">Swift</SelectItem>
+                            <SelectItem value="typescript">TypeScript</SelectItem>
+                            <SelectItem value="html">HTML</SelectItem>
+                            <SelectItem value="css">CSS</SelectItem>
+                            <SelectItem value="sql">SQL</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
                     <Textarea
                       placeholder="Found some code online that's confusing? Paste it here and I'll explain what it does in simple terms!"
@@ -860,6 +875,17 @@ export default function VIBE() {
                     <div className="mt-2 text-xs text-purple-400 bg-purple-400/10 p-2 rounded-md">
                       <span className="font-semibold">🔍 What happens:</span> I'll break down the code step-by-step and explain what each part does, without the complicated tech talk!
                     </div>
+                    
+                    {/* Code Narrator Panel */}
+                    {showCodeNarrator && (
+                      <div className="mt-4">
+                        <CodeNarrator 
+                          code={code} 
+                          language={language} 
+                          onClose={() => setShowCodeNarrator(false)}
+                        />
+                      </div>
+                    )}
                   </div>
                 </TabsContent>
 
