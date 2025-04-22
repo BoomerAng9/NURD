@@ -12,6 +12,13 @@ import {
   optimizeCode 
 } from "./ai-code-tools";
 import {
+  simplifyContent,
+  textToSpeech,
+  describeImage,
+  explainContent,
+  narrateCode
+} from "./accessibility";
+import {
   generateCode,
   explainCodeWithAskCodi,
   completeCode,
@@ -1017,6 +1024,13 @@ Follow these guidelines:
   app.post('/api/payments/create-payment-intent', createPaymentIntent);
   app.post('/api/payments/create-subscription', createSubscription);
   app.post('/api/payments/create-customer', createCustomer);
+  
+  // Accessibility Endpoints
+  app.post('/api/accessibility/simplify', simplifyContent);
+  app.post('/api/accessibility/text-to-speech', textToSpeech);
+  app.post('/api/accessibility/describe-image', describeImage);
+  app.post('/api/accessibility/explain-content', explainContent);
+  app.post('/api/accessibility/narrate-code', narrateCode);
 
   const httpServer = createServer(app);
 
