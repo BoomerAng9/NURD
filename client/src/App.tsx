@@ -50,6 +50,10 @@ import CreateCourse from "@/pages/create-course";
 import AccessAI from "@/pages/AccessAI";
 import ModelTest from "@/pages/ModelTest";
 import ImageLocker from "@/pages/ImageLocker";
+import SubscriptionPlans from "@/pages/SubscriptionPlans";
+import Checkout from "@/pages/Checkout";
+import CheckoutSuccess from "@/pages/CheckoutSuccess";
+import LandingPage from "@/pages/LandingPage";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { LayoutDashboard, Send } from "lucide-react";
 
@@ -541,6 +545,10 @@ const AppContent = () => {
             <Route path="/partners/:id" component={ModuleDetail} />
             <Route path="/learning" component={Learning} />
             <Route path="/learn" component={Learning} />
+            <Route path="/subscription-plans" component={SubscriptionPlans} />
+            <Route path="/checkout" component={Checkout} />
+            <Route path="/checkout-success" component={CheckoutSuccess} />
+            <Route path="/bootcamp" component={LandingPage} />
             <Route path="/settings" component={ProfileSettings} />
             <Route path="/join" component={JoinOurTeam} />
             <Route path="/apply" component={JoinOurTeam} />

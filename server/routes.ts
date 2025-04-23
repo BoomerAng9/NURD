@@ -33,7 +33,11 @@ import {
 import { 
   createPaymentIntent,
   createSubscription,
-  createCustomer
+  createCustomer,
+  getOrCreateSubscription,
+  getSubscriptionStatus,
+  cancelSubscription,
+  getPaymentMethods
 } from "./payment-processing";
 import {
   getUserPreferences,
@@ -1021,9 +1025,13 @@ Follow these guidelines:
   app.get('/api/groq/models', getGroqModels);
   
   // Payment Processing Endpoints
-  app.post('/api/payments/create-payment-intent', createPaymentIntent);
-  app.post('/api/payments/create-subscription', createSubscription);
-  app.post('/api/payments/create-customer', createCustomer);
+  app.post('/api/create-payment-intent', createPaymentIntent);
+  app.post('/api/create-subscription', createSubscription);
+  app.post('/api/create-customer', createCustomer);
+  app.post('/api/get-or-create-subscription', getOrCreateSubscription);
+  app.get('/api/subscription-status', getSubscriptionStatus);
+  app.post('/api/cancel-subscription/:subscriptionId', cancelSubscription);
+  app.get('/api/payment-methods', getPaymentMethods);
   
   // Accessibility Endpoints
   app.post('/api/accessibility/simplify', simplifyContent);

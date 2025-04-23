@@ -133,8 +133,8 @@ export default function VIBE() {
   const [userAchievements, setUserAchievements] = useState<string[]>([]);
   
   // Token usage state
-  const [tokenCount, setTokenCount] = useState(70000);
-  const [tokenLimit, setTokenLimit] = useState(70000);
+  const [tokenCount, setTokenCount] = useState(20000);
+  const [tokenLimit, setTokenLimit] = useState(20000);
   const [showTokenNotice, setShowTokenNotice] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   
@@ -734,7 +734,7 @@ export default function VIBE() {
                     <Flame className="h-5 w-5 text-blue-400" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-sm">70,000 Free Tokens Available</h4>
+                    <h4 className="font-semibold text-sm">20,000 Free Tokens Available</h4>
                     <p className="text-xs opacity-80">Test out V.I.B.E. without signing up! Create an account to unlock unlimited usage.</p>
                   </div>
                 </div>

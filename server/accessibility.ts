@@ -324,7 +324,7 @@ export async function narrateCode(req: Request, res: Response) {
     
     // Get user's tier and remaining tokens
     let userTier = 'free';
-    let remainingTokens = 70000; // Default free tier tokens
+    let remainingTokens = 20000; // Default free tier tokens
     
     if (isAuthenticated && user) {
       try {
@@ -489,8 +489,8 @@ async function getUserSubscription(userId: number) {
     return {
       userId,
       tier: 'free', // 'free', 'standard', 'premium'
-      remainingTokens: 70000,
-      maxTokens: 70000,
+      remainingTokens: 20000,
+      maxTokens: 20000,
       // Other subscription details...
     };
   } catch (error) {

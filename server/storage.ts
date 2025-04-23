@@ -145,6 +145,9 @@ export interface IStorage {
   // Theme preferences methods
   getUserThemePreferences(userId: number): Promise<{ color_scheme: string, theme_mode: string, accent_color: string } | undefined>;
   updateUserThemePreferences(userId: number, preferences: { color_scheme?: string, theme_mode?: string, accent_color?: string }): Promise<User>;
+  
+  // Stripe customer and subscription methods
+  updateUserStripeInfo(userId: number, info: { stripeCustomerId?: string, stripeSubscriptionId?: string }): Promise<User>;
 
   // Image Locker - Category methods
   getImageCategories(): Promise<ImageCategory[]>;
@@ -1190,6 +1193,21 @@ export class DatabaseStorage implements IStorage {
       .update(users)
       .set({
         ...preferences,
+        updated_at: new Date()
+      })
+      .where(eq(users.id, userId))
+      .returning();
+      
+    return updatedUser;
+  }
+  
+  // Stripe customer and subscription methods
+  async updateUserStripeInfo(userId: number, info: { stripeCustomerId?: string, stripeSubscriptionId?: string }): Promise<User> {
+    const [updatedUser] = await db
+      .update(users)
+      .set({
+        stripe_customer_id: info.stripeCustomerId || undefined,
+        stripe_subscription_id: info.stripeSubscriptionId || undefined,
         updated_at: new Date()
       })
       .where(eq(users.id, userId))
