@@ -11,7 +11,17 @@ import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 // Internal CheckoutForm component
-const CheckoutForm = ({ planName, planPrice }: { planName: string, planPrice: number }) => {
+const CheckoutForm = ({ 
+  planName, 
+  planPrice, 
+  isOneTime, 
+  isYearly 
+}: { 
+  planName: string, 
+  planPrice: number,
+  isOneTime?: boolean,
+  isYearly?: boolean
+}) => {
   const stripe = useStripe();
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -80,7 +90,14 @@ const CheckoutForm = ({ planName, planPrice }: { planName: string, planPrice: nu
         <PaymentElement />
         
         <div className="text-sm text-gray-400 bg-gray-800/50 rounded-md p-3">
-          <p>Your subscription for the <span className="font-semibold text-white">{planName}</span> plan will begin immediately upon successful payment.</p>
+          {isOneTime ? (
+            <p>Your <span className="font-semibold text-white">{planName}</span> access will begin immediately upon successful payment.</p>
+          ) : (
+            <p>Your subscription for the <span className="font-semibold text-white">{planName}</span> plan will begin immediately upon successful payment.</p>
+          )}
+          {isYearly && (
+            <p className="mt-2 text-teal-400">You've selected the annual plan and saved over 15% compared to monthly billing!</p>
+          )}
         </div>
         
         {message && (
@@ -133,21 +150,29 @@ const Checkout = () => {
   const planId = searchParams.get('plan');
   const clientSecretFromUrl = searchParams.get('client_secret');
   
+  // Get billing cycle from URL params
+  const billingCycle = searchParams.get('billing') || 'monthly';
+  
   // Determine plan name and price
   const getPlanDetails = (planId: string | null) => {
     switch(planId) {
-      case 'basic':
-        return { name: 'Basic Plan', price: 49.99 };
-      case 'standard':
-        return { name: 'Standard Plan', price: 99.99 };
-      case 'premium':
-        return { name: 'Premium Plan', price: 199.99 };
+      case 'subscription':
+        if (billingCycle === 'yearly') {
+          return { name: 'NURD Subscription (Annual)', price: 299, isYearly: true };
+        }
+        return { name: 'NURD Subscription', price: 29, isYearly: false };
+      case 'bootcamp':
+        return { name: 'VIBE Boot Camp', price: 499, isOneTime: true };
       default:
-        return { name: 'Unknown Plan', price: 0 };
+        return { name: 'Unknown Plan', price: 0, isYearly: false };
     }
   };
   
-  const { name: planName, price: planPrice } = getPlanDetails(planId);
+  const planDetails = getPlanDetails(planId);
+  const planName = planDetails.name;
+  const planPrice = planDetails.price;
+  const isOneTime = planDetails.isOneTime || false;
+  const isYearly = planDetails.isYearly || false;
 
   // If both planId and clientSecret are missing, redirect to plans page
   useEffect(() => {
@@ -165,14 +190,30 @@ const Checkout = () => {
       
       // Create a subscription through our API
       import('@/services/stripe-service')
-        .then(({ createSubscription }) => {
-          return createSubscription({
-            plan: planId,
-          });
+        .then(({ createSubscription, createPaymentIntent }) => {
+          if (isOneTime) {
+            // For one-time payments like the bootcamp
+            return createPaymentIntent({
+              amount: planPrice,
+              currency: 'usd',
+              description: planName,
+            });
+          } else {
+            // For subscription plans (monthly or yearly)
+            return createSubscription({
+              plan: planId,
+              billingCycle: billingCycle === 'yearly' ? 'yearly' : 'monthly',
+            });
+          }
         })
         .then((response) => {
-          setClientSecret(response.clientSecret);
-          setLoading(false);
+          // Both payment intent and subscription responses have clientSecret
+          if (response && response.clientSecret) {
+            setClientSecret(response.clientSecret);
+            setLoading(false);
+          } else {
+            throw new Error('Invalid response from payment service');
+          }
         })
         .catch((err) => {
           console.error('Error creating subscription:', err);
@@ -285,16 +326,21 @@ const Checkout = () => {
             <CardTitle className="flex justify-between items-center">
               <span>Checkout</span>
               <span className="text-lg bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-400">
-                ${planPrice.toFixed(2)}/month
+                ${planPrice.toFixed(2)}{isOneTime ? '' : isYearly ? '/year' : '/month'}
               </span>
             </CardTitle>
             <CardDescription>
-              {planName} - Monthly Subscription
+              {planName}{isOneTime ? ' - One-time Payment' : isYearly ? ' - Annual Subscription' : ' - Monthly Subscription'}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Elements stripe={stripePromise} options={stripeOptions}>
-              <CheckoutForm planName={planName} planPrice={planPrice} />
+              <CheckoutForm 
+                planName={planName} 
+                planPrice={planPrice} 
+                isOneTime={isOneTime} 
+                isYearly={isYearly} 
+              />
             </Elements>
           </CardContent>
         </Card>

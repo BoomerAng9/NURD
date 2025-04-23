@@ -165,15 +165,15 @@ export async function getOrCreateSubscription(req: Request, res: Response) {
     }
     
     // Parse plan data from request
-    const { plan } = req.body;
+    const { plan, billingCycle = 'monthly' } = req.body;
     if (!plan) {
       return res.status(400).json({ error: 'Subscription plan is required' });
     }
 
-    // Get the appropriate price ID based on the selected plan
-    const priceId = getPriceIdForPlan(plan);
+    // Get the appropriate price ID based on the selected plan and billing cycle
+    const priceId = getPriceIdForPlan(plan, billingCycle);
     if (!priceId) {
-      return res.status(400).json({ error: 'Invalid subscription plan' });
+      return res.status(400).json({ error: 'Invalid subscription plan or billing cycle' });
     }
 
     // Create or use existing customer
@@ -344,8 +344,21 @@ export async function getPaymentMethods(req: Request, res: Response) {
 /**
  * Helper function to get the Stripe price ID for a plan
  */
-function getPriceIdForPlan(plan: string): string | null {
+function getPriceIdForPlan(plan: string, billingCycle: string = 'monthly'): string | null {
   // In production, these would be environment variables or stored in a database
+  // For the new pricing model with the NURD Subscription and VIBE Boot Camp
+  
+  if (plan === 'subscription') {
+    if (billingCycle === 'yearly') {
+      return process.env.STRIPE_PRICE_SUBSCRIPTION_YEARLY || 'price_subscription_yearly';
+    } else {
+      return process.env.STRIPE_PRICE_SUBSCRIPTION_MONTHLY || 'price_subscription_monthly';
+    }
+  } else if (plan === 'bootcamp') {
+    return process.env.STRIPE_PRICE_BOOTCAMP || 'price_bootcamp';
+  }
+  
+  // Legacy plan options
   switch (plan) {
     case 'basic':
       return process.env.STRIPE_PRICE_BASIC || 'price_basic';

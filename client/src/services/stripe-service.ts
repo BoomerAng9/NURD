@@ -19,6 +19,7 @@ interface PaymentIntentResponse {
 // Define interface for subscription processing
 interface SubscriptionRequest {
   plan: string;
+  billingCycle?: 'monthly' | 'yearly';
   customerId?: string;
 }
 

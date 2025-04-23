@@ -25,21 +25,25 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/hooks/use-toast';
-import { createPaymentIntent } from '@/services/stripe-service';
+import { createPaymentIntent, createSubscription } from '@/services/stripe-service';
 import { 
   Check, 
   Star, 
   Zap, 
   Code,  
   Sparkles, 
-  ThumbsUp, 
+  Users,
   MessageSquare, 
   BookOpen,
-  Crown
+  Crown,
+  Compass,
+  PenTool,
+  Calendar
 } from 'lucide-react';
 
 const SubscriptionPlans = () => {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const [selectedBillingCycle, setSelectedBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [feedbackData, setFeedbackData] = useState({
     name: '',
@@ -48,11 +52,10 @@ const SubscriptionPlans = () => {
     rating: '5',
     wouldRecommend: false,
     interests: {
-      coding: false,
-      promptEngineering: false,
-      aiTools: false,
-      design: false,
-      entrepreneurship: false
+      vibeCoding: false,
+      worldBuilder: false,
+      promptMastery: false,
+      collaborationStudio: false
     }
   });
 
@@ -100,22 +103,28 @@ const SubscriptionPlans = () => {
     }
 
     try {
-      // Get the price amount based on selected plan
-      const priceAmount = 
-        selectedPlan === 'basic' ? 49.99 : 
-        selectedPlan === 'standard' ? 99.99 : 
-        199.99; // premium
-      
-      // Create a payment intent
-      const { clientSecret } = await createPaymentIntent({
-        amount: priceAmount,
-        currency: 'usd',
-        description: `NURD ${selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} Plan`
-      });
-      
-      // Redirect to checkout page with client secret
-      window.location.href = `/checkout?plan=${selectedPlan}&client_secret=${clientSecret}`;
-      
+      if (selectedPlan === 'subscription') {
+        // Get the price amount based on billing cycle
+        const priceAmount = selectedBillingCycle === 'monthly' ? 29 : 299;
+        
+        // Create a subscription
+        const response = await createSubscription({
+          plan: selectedBillingCycle === 'monthly' ? 'monthly' : 'yearly'
+        });
+        
+        // Redirect to checkout page with subscription data
+        window.location.href = `/checkout?plan=${selectedPlan}&billing=${selectedBillingCycle}&client_secret=${response.clientSecret}`;
+      } else if (selectedPlan === 'bootcamp') {
+        // Create a one-time payment intent for boot camp
+        const { clientSecret } = await createPaymentIntent({
+          amount: 499,
+          currency: 'usd',
+          description: 'VIBE Boot Camp - One-time Payment'
+        });
+        
+        // Redirect to checkout page
+        window.location.href = `/checkout?plan=${selectedPlan}&client_secret=${clientSecret}`;
+      }
     } catch (error) {
       console.error("Checkout error:", error);
       toast({
@@ -149,195 +158,168 @@ const SubscriptionPlans = () => {
           />
         </div>
 
-        {/* Subscription Plans */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {/* Basic Plan */}
-          <Card 
-            className={`border-2 transition-all duration-300 hover:shadow-lg ${
-              selectedPlan === 'basic' 
-                ? 'border-blue-500 shadow-blue-500/20' 
-                : 'border-gray-700 hover:border-blue-500/50'
-            }`}
-            onClick={() => handlePlanSelect('basic')}
-          >
-            <CardHeader className="pb-4">
-              <div className="flex justify-between items-center mb-2">
-                <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30">
-                  BASIC
-                </Badge>
-                {selectedPlan === 'basic' && (
-                  <Badge className="bg-blue-500 text-white">Selected</Badge>
-                )}
-              </div>
-              <CardTitle className="text-2xl font-bold">Starter Plan</CardTitle>
-              <CardDescription>For beginners starting their NURD journey</CardDescription>
-              <div className="mt-4">
-                <span className="text-3xl font-bold">$49.99</span>
-                <span className="text-gray-400">/month</span>
-              </div>
-            </CardHeader>
-            <CardContent className="pb-4">
-              <ul className="space-y-3">
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>100,000 tokens per month</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Access to basic AI models</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Code generation & explanation</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Basic code narrator functionality</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Email support</span>
-                </li>
-              </ul>
-            </CardContent>
-            <CardFooter>
-              <Button 
-                className="w-full bg-blue-600 hover:bg-blue-700"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handlePlanSelect('basic');
-                }}
-              >
-                {selectedPlan === 'basic' ? 'Selected' : 'Select Plan'}
-              </Button>
-            </CardFooter>
-          </Card>
+        {/* New Pricing Structure Banner */}
+        <div className="bg-gradient-to-r from-blue-600 via-teal-500 to-green-500 p-4 rounded-lg mb-8 shadow-xl">
+          <p className="text-white text-center text-lg font-semibold">
+            New pricing! Unlimited VIBE access for $29/mo – or join our expert-led Boot Camp for $499.
+          </p>
+        </div>
 
-          {/* Standard Plan */}
+        {/* Subscription Plans */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+          {/* NURD Subscription Plan */}
           <Card 
             className={`border-2 relative transition-all duration-300 hover:shadow-xl ${
-              selectedPlan === 'standard' 
-                ? 'border-teal-500 shadow-teal-500/20 scale-105 z-10' 
-                : 'border-gray-700 hover:border-teal-500/50'
+              selectedPlan === 'subscription' 
+                ? 'border-blue-500 shadow-blue-500/20 scale-105 z-10' 
+                : 'border-gray-700 hover:border-blue-500/50'
             }`}
-            onClick={() => handlePlanSelect('standard')}
+            onClick={() => handlePlanSelect('subscription')}
           >
             <div className="absolute -top-4 left-0 right-0 flex justify-center">
-              <Badge className="bg-gradient-to-r from-teal-400 to-blue-500 px-4 py-1 text-white">
+              <Badge className="bg-gradient-to-r from-blue-400 to-teal-500 px-4 py-1 text-white">
                 MOST POPULAR
               </Badge>
             </div>
             <CardHeader className="pb-4 pt-8">
               <div className="flex justify-between items-center mb-2">
-                <Badge variant="outline" className="bg-teal-500/10 text-teal-400 border-teal-500/30">
-                  STANDARD
+                <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30">
+                  SUBSCRIPTION
                 </Badge>
-                {selectedPlan === 'standard' && (
-                  <Badge className="bg-teal-500 text-white">Selected</Badge>
+                {selectedPlan === 'subscription' && (
+                  <Badge className="bg-blue-500 text-white">Selected</Badge>
                 )}
               </div>
-              <CardTitle className="text-2xl font-bold">Pro Coder</CardTitle>
-              <CardDescription>Perfect for enthusiastic coders</CardDescription>
-              <div className="mt-4">
-                <span className="text-3xl font-bold">$99.99</span>
-                <span className="text-gray-400">/month</span>
+              <CardTitle className="text-2xl font-bold">NURD Subscription</CardTitle>
+              <CardDescription>Unlimited access to all V.I.B.E. features</CardDescription>
+              
+              {/* Billing Toggle */}
+              <div className="mt-4 flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <div 
+                    className={`cursor-pointer px-4 py-2 rounded-l-md flex-1 text-center ${
+                      selectedBillingCycle === 'monthly' 
+                        ? 'bg-blue-600 text-white' 
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    }`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedBillingCycle('monthly');
+                    }}
+                  >
+                    Monthly
+                  </div>
+                  <div 
+                    className={`cursor-pointer px-4 py-2 rounded-r-md flex-1 text-center ${
+                      selectedBillingCycle === 'yearly' 
+                        ? 'bg-blue-600 text-white' 
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    }`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedBillingCycle('yearly');
+                    }}
+                  >
+                    Yearly (Save 20%)
+                  </div>
+                </div>
+                <div className="mt-2">
+                  <span className="text-3xl font-bold">${selectedBillingCycle === 'monthly' ? '29' : '299'}</span>
+                  <span className="text-gray-400">/{selectedBillingCycle === 'monthly' ? 'month' : 'year'}</span>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="pb-4">
               <ul className="space-y-3">
                 <li className="flex items-start">
-                  <Check className="h-5 w-5 text-teal-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>500,000 tokens per month</span>
+                  <Check className="h-5 w-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Unlimited access to VIBE</span>
                 </li>
                 <li className="flex items-start">
-                  <Check className="h-5 w-5 text-teal-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Access to all standard AI models</span>
+                  <Check className="h-5 w-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Step-by-step Vibe Coding Foundations</span>
                 </li>
                 <li className="flex items-start">
-                  <Check className="h-5 w-5 text-teal-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Advanced code analysis & optimization</span>
+                  <Check className="h-5 w-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" />
+                  <span>World Builder Lab for AI-powered world-building</span>
                 </li>
                 <li className="flex items-start">
-                  <Check className="h-5 w-5 text-teal-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Audio narration & detailed explanations</span>
+                  <Check className="h-5 w-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Live Collaboration Studio (real-time coding + chat)</span>
                 </li>
                 <li className="flex items-start">
-                  <Check className="h-5 w-5 text-teal-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Priority email support</span>
+                  <Check className="h-5 w-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Built-in Prompt Coach & token-saving tips</span>
                 </li>
                 <li className="flex items-start">
-                  <Check className="h-5 w-5 text-teal-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Access to exclusive learning resources</span>
+                  <Check className="h-5 w-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Access to all AI models</span>
                 </li>
               </ul>
             </CardContent>
             <CardFooter>
               <Button 
-                className="w-full bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600"
+                className="w-full bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handlePlanSelect('standard');
+                  handlePlanSelect('subscription');
                 }}
               >
-                {selectedPlan === 'standard' ? 'Selected' : 'Select Plan'}
+                {selectedPlan === 'subscription' ? 'Selected' : 'Select Plan'}
               </Button>
             </CardFooter>
           </Card>
 
-          {/* Premium Plan */}
+          {/* VIBE Boot Camp Plan */}
           <Card 
             className={`border-2 transition-all duration-300 hover:shadow-lg ${
-              selectedPlan === 'premium' 
+              selectedPlan === 'bootcamp' 
                 ? 'border-purple-500 shadow-purple-500/20' 
                 : 'border-gray-700 hover:border-purple-500/50'
             }`}
-            onClick={() => handlePlanSelect('premium')}
+            onClick={() => handlePlanSelect('bootcamp')}
           >
             <CardHeader className="pb-4">
               <div className="flex justify-between items-center mb-2">
                 <Badge variant="outline" className="bg-purple-500/10 text-purple-400 border-purple-500/30">
-                  PREMIUM
+                  ONE-TIME
                 </Badge>
-                {selectedPlan === 'premium' && (
+                {selectedPlan === 'bootcamp' && (
                   <Badge className="bg-purple-500 text-white">Selected</Badge>
                 )}
               </div>
-              <CardTitle className="text-2xl font-bold">Ultimate NURD</CardTitle>
-              <CardDescription>For serious developers & AI enthusiasts</CardDescription>
+              <CardTitle className="text-2xl font-bold">VIBE Boot Camp</CardTitle>
+              <CardDescription>Professional training & personalized feedback</CardDescription>
               <div className="mt-4">
-                <span className="text-3xl font-bold">$199.99</span>
-                <span className="text-gray-400">/month</span>
+                <span className="text-3xl font-bold">$499</span>
+                <span className="text-gray-400"> one-time</span>
               </div>
             </CardHeader>
             <CardContent className="pb-4">
               <ul className="space-y-3">
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-purple-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Unlimited tokens</span>
+                  <span>6-week live cohort with professional trainers</span>
                 </li>
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-purple-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Access to all AI models including newest releases</span>
+                  <span>Small-group projects + personalized feedback</span>
                 </li>
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-purple-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>All V.I.B.E. features with no limitations</span>
+                  <span>Deep dive into prompt engineering, AI ethics, and coding</span>
                 </li>
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-purple-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Teaching-level code narration & voice options</span>
+                  <span>Certificate of Completion + demo showcase</span>
                 </li>
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-purple-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Priority 24/7 support</span>
+                  <span>Priority email & chat support</span>
                 </li>
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-purple-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>1-on-1 monthly coaching session</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-purple-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Early access to new features</span>
+                  <span>Includes 3 months of NURD Subscription</span>
                 </li>
               </ul>
             </CardContent>
@@ -346,10 +328,10 @@ const SubscriptionPlans = () => {
                 className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handlePlanSelect('premium');
+                  handlePlanSelect('bootcamp');
                 }}
               >
-                {selectedPlan === 'premium' ? 'Selected' : 'Select Plan'}
+                {selectedPlan === 'bootcamp' ? 'Selected' : 'Select Plan'}
               </Button>
             </CardFooter>
           </Card>
@@ -637,58 +619,48 @@ const SubscriptionPlans = () => {
                 <Separator className="my-2" />
                 <div className="grid grid-cols-4 items-start gap-4">
                   <Label className="text-right pt-2">
-                    Interests
+                    Learning Tracks
                   </Label>
                   <div className="col-span-3 space-y-2">
                     <div className="flex items-center space-x-2">
                       <Checkbox 
-                        id="coding" 
-                        checked={feedbackData.interests.coding}
+                        id="vibeCoding" 
+                        checked={feedbackData.interests.vibeCoding}
                         onCheckedChange={(checked) => 
-                          handleInterestChange('coding', checked as boolean)
+                          handleInterestChange('vibeCoding', checked as boolean)
                         }
                       />
-                      <Label htmlFor="coding">Coding & Development</Label>
+                      <Label htmlFor="vibeCoding">Vibe Coding Foundations</Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Checkbox 
-                        id="promptEngineering" 
-                        checked={feedbackData.interests.promptEngineering}
+                        id="worldBuilder" 
+                        checked={feedbackData.interests.worldBuilder}
                         onCheckedChange={(checked) => 
-                          handleInterestChange('promptEngineering', checked as boolean)
+                          handleInterestChange('worldBuilder', checked as boolean)
                         }
                       />
-                      <Label htmlFor="promptEngineering">Prompt Engineering</Label>
+                      <Label htmlFor="worldBuilder">World Builder Lab</Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Checkbox 
-                        id="aiTools" 
-                        checked={feedbackData.interests.aiTools}
+                        id="promptMastery" 
+                        checked={feedbackData.interests.promptMastery}
                         onCheckedChange={(checked) => 
-                          handleInterestChange('aiTools', checked as boolean)
+                          handleInterestChange('promptMastery', checked as boolean)
                         }
                       />
-                      <Label htmlFor="aiTools">AI Tools & Applications</Label>
+                      <Label htmlFor="promptMastery">Prompt Mastery</Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Checkbox 
-                        id="design" 
-                        checked={feedbackData.interests.design}
+                        id="collaborationStudio" 
+                        checked={feedbackData.interests.collaborationStudio}
                         onCheckedChange={(checked) => 
-                          handleInterestChange('design', checked as boolean)
+                          handleInterestChange('collaborationStudio', checked as boolean)
                         }
                       />
-                      <Label htmlFor="design">Design & Creativity</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="entrepreneurship" 
-                        checked={feedbackData.interests.entrepreneurship}
-                        onCheckedChange={(checked) => 
-                          handleInterestChange('entrepreneurship', checked as boolean)
-                        }
-                      />
-                      <Label htmlFor="entrepreneurship">Tech Entrepreneurship</Label>
+                      <Label htmlFor="collaborationStudio">Collaboration Studio</Label>
                     </div>
                   </div>
                 </div>
