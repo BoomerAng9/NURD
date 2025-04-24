@@ -4,6 +4,7 @@ import { WebSocketServer, WebSocket } from 'ws';
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
 import { setupSSOAuth } from "./sso-auth";
+import { setupAuth as setupReplitAuth } from "./replitAuth";
 import { imageLockerRouter } from "./image-locker";
 import { generateCourse } from "./ai-course-generator";
 import { 
@@ -157,6 +158,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
   setupAuth(app);
   setupSSOAuth(app);
+  // Setup Replit Auth
+  await setupReplitAuth(app);
+  
+  // Auth user info route
+  app.get('/api/auth/user', async (req: any, res) => {
+    try {
+      if (!req.isAuthenticated() || !req.user?.claims?.sub) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      res.json(user);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
   
   // Health check endpoint
   app.get('/api/health', (req, res) => {
@@ -1042,20 +1060,20 @@ Follow these guidelines:
 
   const httpServer = createServer(app);
 
-  // Create a simpler WebSocket server
-  console.log('Setting up WebSocket server on path: /ws');
+  // Create a simpler WebSocket server on its own port (5010)
+  console.log('Setting up WebSocket server on dedicated port: 5010');
   
   // Create a dedicated endpoint for initial WebSocket test
   app.get('/api/websocket-status', (req, res) => {
     return res.status(200).json({
       status: 'ready',
-      message: 'WebSocket server is available at /ws'
+      message: 'WebSocket server is available at ws://localhost:5010'
     });
   });
   
+  // Create a standalone WebSocket server
   const wss = new WebSocketServer({ 
-    server: httpServer, 
-    path: '/ws', 
+    port: 5010,
     // Disable perMessageDeflate to avoid compression issues
     perMessageDeflate: false 
   });

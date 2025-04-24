@@ -36,7 +36,10 @@ import {
   type InsertImage,
   type InsertImagePageMapping,
   type InsertImageTag,
-  type InsertImageTagMapping
+  type InsertImageTagMapping,
+  // Replit Auth
+  type UpsertUser,
+  sessions
 } from "@shared/schema";
 import { 
   courses, 
@@ -62,6 +65,8 @@ import {
 } from "@shared/progress-schema";
 import { db } from "./db";
 import { eq, and, desc, sql, asc, or } from "drizzle-orm";
+import session from "express-session";
+import connectPg from "connect-pg-simple";
 
 // modify the interface with any CRUD methods
 // you might need
@@ -73,17 +78,17 @@ export interface IStorage {
   deleteLandingContent(id: number): Promise<void>;
 
   // User methods
-  getUser(id: number): Promise<User | undefined>;
+  getUser(id: string | number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   getUserByProvider(provider: string, providerId: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   createUserFromSocial(user: Partial<InsertUser> & { email: string }): Promise<User>;
-  linkSocialProvider(userId: number, provider: string, providerId: string): Promise<User>;
+  linkSocialProvider(userId: number | string, provider: string, providerId: string): Promise<User>;
   verifyEmail(token: string): Promise<boolean>;
   requestPasswordReset(email: string): Promise<boolean>;
   resetPassword(token: string, newPassword: string): Promise<boolean>;
-  updateUserXP(userId: number, xpToAdd: number): Promise<User>;
+  updateUserXP(userId: number | string, xpToAdd: number): Promise<User>;
 
   // Course methods
   getCourses(): Promise<Course[]>;
@@ -149,6 +154,10 @@ export interface IStorage {
   // Stripe customer and subscription methods
   updateUserStripeInfo(userId: number, info: { stripeCustomerId?: string, stripeSubscriptionId?: string }): Promise<User>;
 
+  // Replit Auth methods
+  upsertUser(user: UpsertUser): Promise<User>;
+  sessionStore: any;
+
   // Image Locker - Category methods
   getImageCategories(): Promise<ImageCategory[]>;
   getImageCategoryById(id: number): Promise<ImageCategory | undefined>;
@@ -192,6 +201,59 @@ export interface IStorage {
 
 // Database storage implementation using Drizzle ORM
 export class DatabaseStorage implements IStorage {
+  sessionStore: session.Store;
+  
+  constructor() {
+    const PostgresSessionStore = connectPg(session);
+    this.sessionStore = new PostgresSessionStore({
+      conString: process.env.DATABASE_URL,
+      createTableIfMissing: true,
+      tableName: "sessions"
+    });
+  }
+  
+  // Replit Auth methods (overload the getUser method)
+  async getUser(id: string | number): Promise<User | undefined> {
+    if (typeof id === 'string') {
+      const [user] = await db.select().from(users).where(eq(users.id, id));
+      return user;
+    } else {
+      // Handle the legacy numeric IDs
+      const [user] = await db.select().from(users).where(eq(users.id as any, id));
+      return user;
+    }
+  }
+  
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values({
+        id: userData.id,
+        username: userData.username,
+        email: userData.email,
+        first_name: userData.firstName,
+        last_name: userData.lastName,
+        bio: userData.bio,
+        profileImageUrl: userData.profileImageUrl,
+        created_at: new Date(),
+        updated_at: new Date()
+      })
+      .onConflictDoUpdate({
+        target: users.id,
+        set: {
+          username: userData.username,
+          email: userData.email,
+          first_name: userData.firstName,
+          last_name: userData.lastName,
+          bio: userData.bio,
+          profileImageUrl: userData.profileImageUrl,
+          updated_at: new Date()
+        }
+      })
+      .returning();
+      
+    return user;
+  }
   // Landing content methods
   async getLandingContent(): Promise<LandingContent[]> {
     const content = await db
@@ -236,11 +298,7 @@ export class DatabaseStorage implements IStorage {
       .where(eq(landingContent.id, id));
   }
 
-  // User methods
-  async getUser(id: number): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user || undefined;
-  }
+  // User methods - removed duplicate getUser
 
   async getUserByUsername(username: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.username, username));

@@ -1,7 +1,8 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { Switch, Route, Link } from "wouter";
 import { motion } from "framer-motion";
-import { ProtectedRoute } from "@/lib/protected-route";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { PublicRoute } from "@/components/PublicRoute";
 import { AdminProtectedRoute } from "@/lib/admin-protected-route";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -54,6 +55,7 @@ import SubscriptionPlans from "@/pages/SubscriptionPlans";
 import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
 import LandingPage from "@/pages/LandingPage";
+import Account from "@/pages/Account";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { LayoutDashboard, Send } from "lucide-react";
 
@@ -557,6 +559,9 @@ const AppContent = () => {
             <Route path="/avatar" component={AvatarCreator} />
             <Route path="/home" component={Landing} />
             <Route path="/auth" component={AuthPage} />
+            <ProtectedRoute path="/account">
+              <Account />
+            </ProtectedRoute>
             <Route path="/achievers" component={Achievers} />
             <Route path="/access-ai" component={AccessAI} />
             {/* AI Code Tools page hidden for now - functionality under development 

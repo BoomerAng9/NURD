@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, timestamp, boolean, varchar, jsonb, index } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
@@ -6,17 +6,34 @@ import { relations } from "drizzle-orm";
 // This is a simplified schema that contains only what's needed outside the progress tracking
 // For complete progress tracking schema, see progress-schema.ts
 
+// Session storage table for Replit Auth
+export const sessions = pgTable("sessions", {
+  sid: varchar("sid").primaryKey(),
+  sess: jsonb("sess").notNull(),
+  expire: timestamp("expire").notNull(),
+}, (table) => {
+  return {
+    expireIdx: index("IDX_session_expire").on(table.expire),
+  };
+});
+
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  first_name: text("first_name").notNull(),
-  age: integer("age").notNull(),
-  grade_level: text("grade_level").notNull(),
-  user_type: text("user_type").notNull(),
-  gender: text("gender").notNull(),
+  // For Replit Auth, we're using the Replit user ID (sub) as the primary key
+  id: varchar("id").primaryKey().notNull(),
+  username: varchar("username").unique().notNull(),
+  email: varchar("email").unique(),
+  first_name: text("first_name"),
+  last_name: text("last_name"),
+  bio: text("bio"),
+  profileImageUrl: varchar("profile_image_url"),
+  
+  // Original fields from the current schema
+  age: integer("age"),
+  grade_level: text("grade_level"),
+  user_type: text("user_type"),
+  gender: text("gender"),
   path_choice: text("path_choice"),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
-  email: text("email").unique(),
+  password: text("password"),
   avatar_url: text("avatar_url"),
   avatar_svg: text("avatar_svg"),
   level: integer("level").default(1),
@@ -327,6 +344,17 @@ export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type RegistrationForm = z.infer<typeof registrationSchema>;
 export type SSOLoginForm = z.infer<typeof ssoLoginSchema>;
+
+// For Replit Auth
+export type UpsertUser = {
+  id: string;
+  username: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  bio?: string;
+  profileImageUrl?: string;
+};
 export type ThemePreferences = z.infer<typeof themePreferencesSchema>;
 
 export type InsertFriendship = z.infer<typeof insertFriendshipSchema>;
