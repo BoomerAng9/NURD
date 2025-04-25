@@ -4,7 +4,7 @@ import { WebSocketServer, WebSocket } from 'ws';
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
 import { setupSSOAuth } from "./sso-auth";
-import { setupAuth as setupReplitAuth } from "./replitAuth";
+// Replit Auth removed
 import { imageLockerRouter } from "./image-locker";
 import { generateCourse } from "./ai-course-generator";
 import { 
@@ -158,23 +158,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
   setupAuth(app);
   setupSSOAuth(app);
-  // Setup Replit Auth
-  await setupReplitAuth(app);
-  
-  // Auth user info route
-  app.get('/api/auth/user', async (req: any, res) => {
-    try {
-      if (!req.isAuthenticated() || !req.user?.claims?.sub) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
-  });
+  // Replit Auth removed
   
   // Health check endpoint
   app.get('/api/health', (req, res) => {

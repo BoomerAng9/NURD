@@ -559,9 +559,6 @@ const AppContent = () => {
             <Route path="/avatar" component={AvatarCreator} />
             <Route path="/home" component={Landing} />
             <Route path="/auth" component={AuthPage} />
-            <ProtectedRoute path="/account">
-              <Account />
-            </ProtectedRoute>
             <Route path="/achievers" component={Achievers} />
             <Route path="/access-ai" component={AccessAI} />
             {/* AI Code Tools page hidden for now - functionality under development 

@@ -1,16 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+// Replit Auth has been removed
+// This is just a placeholder to avoid breaking existing imports
 import { type User } from "@shared/schema";
 
 export function useAuth() {
-  const { data: user, isLoading, error } = useQuery<User>({
-    queryKey: ["/api/auth/user"],
-    retry: false,
-  });
-
   return {
-    user,
-    isLoading,
-    isAuthenticated: !!user,
-    error
+    user: null,
+    isLoading: false,
+    isAuthenticated: false,
+    error: null
   };
 }
