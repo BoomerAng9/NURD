@@ -465,16 +465,8 @@ export default function VIBE() {
     }
     
     // Check login status for token limit handling
-    fetch('/api/user')
-      .then(response => {
-        // If response is successful, user is logged in
-        if (response.ok) {
-          setIsLoggedIn(true);
-        }
-      })
-      .catch(error => {
-        console.error('Error checking login status:', error);
-      });
+    // After Replit Auth removal, all users are considered logged in
+    setIsLoggedIn(true);
   }, []);
 
   const handleSubmit = async () => {

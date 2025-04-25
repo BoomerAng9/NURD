@@ -40,20 +40,10 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Check if user is authenticated
+  // Authentication check disabled - all users treated as authenticated for preferences
   useEffect(() => {
-    const checkAuthentication = async () => {
-      try {
-        const response = await fetch('/api/user');
-        if (response.ok) {
-          setIsAuthenticated(true);
-        }
-      } catch (error) {
-        console.error('Error checking authentication:', error);
-      }
-    };
-
-    checkAuthentication();
+    // Set authenticated true for all users after Replit Auth removal
+    setIsAuthenticated(true);
   }, []);
 
   // Load preferences on mount (from server if authenticated, otherwise from localStorage)
