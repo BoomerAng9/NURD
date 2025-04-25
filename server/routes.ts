@@ -215,6 +215,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   }, express.static(uploadDir));
   
   // User Routes - Registration handled in auth.ts
+  
+  // Current authenticated user endpoint
+  app.get('/api/user', (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    
+    // Return user data without password
+    const { password, ...userWithoutPassword } = req.user as any;
+    return res.status(200).json(userWithoutPassword);
+  });
 
   app.get('/api/user/:username', async (req, res) => {
     try {
