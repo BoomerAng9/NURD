@@ -231,8 +231,7 @@ export class DatabaseStorage implements IStorage {
       const [user] = await db
         .update(users)
         .set({
-          username: userData.username,
-          email: userData.email,
+          username: userData.username, // Username is also used as email
           updated_at: new Date()
         })
         .where(eq(users.id, userData.id))
@@ -243,8 +242,8 @@ export class DatabaseStorage implements IStorage {
       const [user] = await db
         .insert(users)
         .values({
-          username: userData.username,
-          email: userData.email,
+          id: userData.id,
+          username: userData.username, // Username is also used as email
           created_at: new Date(),
           updated_at: new Date()
         })
@@ -304,8 +303,8 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.email, email));
-    return user || undefined;
+    // In our app, users log in with their username which doubles as email
+    return this.getUserByUsername(email);
   }
 
   async getUserByProvider(provider: string, providerId: string): Promise<User | undefined> {
@@ -395,10 +394,11 @@ export class DatabaseStorage implements IStorage {
   }
 
   async requestPasswordReset(email: string): Promise<boolean> {
+    // In our app, the username is used as email
     const [user] = await db
       .select()
       .from(users)
-      .where(eq(users.email, email));
+      .where(eq(users.username, email));
     
     if (!user) {
       return false;

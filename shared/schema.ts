@@ -20,8 +20,7 @@ export const sessions = pgTable("sessions", {
 export const users = pgTable("users", {
   // Changed back to serial integer ID after removing Replit Auth
   id: serial("id").primaryKey(),
-  username: varchar("username").unique().notNull(),
-  email: text("email").unique(),
+  username: varchar("username").unique().notNull(), // Username is also used as email
   
   // Original fields from the current schema
   age: integer("age"),
@@ -74,9 +73,8 @@ export const insertUserSchema = createInsertSchema(users).pick({
   user_type: true,
   gender: true,
   path_choice: true,
-  username: true,
+  username: true, // Username is used as email
   password: true,
-  email: true,
   subscriptionTier: true,
   color_scheme: true,
   theme_mode: true,
@@ -105,8 +103,7 @@ export const registrationSchema = z.object({
     required_error: "Please select a gender" 
   }),
   path_choice: z.string().optional(),
-  username: z.string().min(3, "Username must be at least 3 characters"),
-  email: z.string().email("Invalid email address").optional(),
+  username: z.string().min(3, "Username must be at least 3 characters").email("Please use a valid email as username"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
@@ -343,8 +340,7 @@ export type SSOLoginForm = z.infer<typeof ssoLoginSchema>;
 // After removing Replit Auth
 export type UpsertUser = {
   id: number;
-  username: string;
-  email?: string;
+  username: string; // Username is also used as email
 };
 export type ThemePreferences = z.infer<typeof themePreferencesSchema>;
 
