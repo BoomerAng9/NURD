@@ -212,47 +212,45 @@ export class DatabaseStorage implements IStorage {
     });
   }
   
-  // Replit Auth methods (overload the getUser method)
+  // Updated user methods after removing Replit Auth
   async getUser(id: string | number): Promise<User | undefined> {
-    if (typeof id === 'string') {
-      const [user] = await db.select().from(users).where(eq(users.id, id));
-      return user;
-    } else {
-      // Handle the legacy numeric IDs
-      const [user] = await db.select().from(users).where(eq(users.id as any, id));
-      return user;
-    }
+    // Convert string id to number if needed - this is to handle potential legacy String IDs
+    const userId = typeof id === 'string' ? parseInt(id, 10) : id;
+    if (isNaN(userId)) return undefined;
+    
+    const [user] = await db.select().from(users).where(eq(users.id, userId));
+    return user;
   }
   
   async upsertUser(userData: UpsertUser): Promise<User> {
-    const [user] = await db
-      .insert(users)
-      .values({
-        id: userData.id,
-        username: userData.username,
-        email: userData.email,
-        first_name: userData.firstName,
-        last_name: userData.lastName,
-        bio: userData.bio,
-        profileImageUrl: userData.profileImageUrl,
-        created_at: new Date(),
-        updated_at: new Date()
-      })
-      .onConflictDoUpdate({
-        target: users.id,
-        set: {
+    // Check if user exists first
+    const existingUser = await this.getUser(userData.id);
+    
+    if (existingUser) {
+      // Update existing user
+      const [user] = await db
+        .update(users)
+        .set({
           username: userData.username,
           email: userData.email,
-          first_name: userData.firstName,
-          last_name: userData.lastName,
-          bio: userData.bio,
-          profileImageUrl: userData.profileImageUrl,
           updated_at: new Date()
-        }
-      })
-      .returning();
-      
-    return user;
+        })
+        .where(eq(users.id, userData.id))
+        .returning();
+      return user;
+    } else {
+      // Insert new user
+      const [user] = await db
+        .insert(users)
+        .values({
+          username: userData.username,
+          email: userData.email,
+          created_at: new Date(),
+          updated_at: new Date()
+        })
+        .returning();
+      return user;
+    }
   }
   // Landing content methods
   async getLandingContent(): Promise<LandingContent[]> {

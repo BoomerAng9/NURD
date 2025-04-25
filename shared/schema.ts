@@ -18,14 +18,10 @@ export const sessions = pgTable("sessions", {
 });
 
 export const users = pgTable("users", {
-  // For Replit Auth, we're using the Replit user ID (sub) as the primary key
-  id: varchar("id").primaryKey().notNull(),
+  // Changed back to serial integer ID after removing Replit Auth
+  id: serial("id").primaryKey(),
   username: varchar("username").unique().notNull(),
-  email: varchar("email").unique(),
-  first_name: text("first_name"),
-  last_name: text("last_name"),
-  bio: text("bio"),
-  profileImageUrl: varchar("profile_image_url"),
+  email: text("email").unique(),
   
   // Original fields from the current schema
   age: integer("age"),
@@ -73,7 +69,6 @@ export const user_preferences = pgTable("user_preferences", {
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
-  first_name: true,
   age: true,
   grade_level: true,
   user_type: true,
@@ -345,15 +340,11 @@ export type User = typeof users.$inferSelect;
 export type RegistrationForm = z.infer<typeof registrationSchema>;
 export type SSOLoginForm = z.infer<typeof ssoLoginSchema>;
 
-// For Replit Auth
+// After removing Replit Auth
 export type UpsertUser = {
-  id: string;
+  id: number;
   username: string;
   email?: string;
-  firstName?: string;
-  lastName?: string;
-  bio?: string;
-  profileImageUrl?: string;
 };
 export type ThemePreferences = z.infer<typeof themePreferencesSchema>;
 
