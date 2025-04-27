@@ -17,6 +17,7 @@ import { X, Plus, Upload, Image as ImageIcon, Tag, FileImage, Info, Edit, Trash2
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { OptimizedImage } from '@/components/ui/optimized-image';
 
 // Define types based on our database schema
 type ImageCategory = {
@@ -569,13 +570,11 @@ export default function ImageLocker() {
                   onClick={() => setSelectedImage(image)}
                 >
                   <div className="relative h-40 bg-muted flex items-center justify-center">
-                    <img 
+                    <OptimizedImage 
                       src={image.file_path} 
                       alt={image.alt_text || image.title} 
                       className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://placehold.co/300x200?text=No+Image';
-                      }}
+                      fallbackSrc='https://placehold.co/300x200?text=No+Image'
                     />
                     {!image.is_active && (
                       <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
@@ -768,13 +767,12 @@ export default function ImageLocker() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col space-y-4">
                   <div className="relative rounded-md overflow-hidden border bg-muted aspect-square flex items-center justify-center">
-                    <img 
+                    <OptimizedImage 
                       src={selectedImage.file_path} 
                       alt={selectedImage.alt_text || selectedImage.title}
                       className="max-w-full max-h-full object-contain"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Error+Loading+Image';
-                      }}
+                      fallbackSrc='https://placehold.co/600x400?text=Error+Loading+Image'
+                      priority={true}
                     />
                   </div>
                   

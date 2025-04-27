@@ -71,8 +71,8 @@ import nurdSkateboardPoolerImg from "@assets/nurd-skateboard-pooler.png";
 import madeInPoolerImg from "./assets/made-in-pooler.png";
 // Made in Pooler green logo
 import madeInPoolerGreenImg from "./assets/made-in-pooler-green.png";
-// Beta stamp image
-import betaStampImg from "./assets/beta-stamp.png";
+// Import BetaStamp component instead of using image
+import { BetaStamp } from "@/components/BetaStamp";
 
 // Simple component for initial testing - updated with glass UI
 const TestComponent = () => {
@@ -492,46 +492,7 @@ const AppContent = () => {
       />
       
       {/* Floating BETA disclaimer stamp */}
-      <motion.div 
-        className="fixed bottom-20 md:bottom-4 right-4 z-50 h-20 w-20 md:h-24 md:w-24 cursor-pointer"
-        initial={{ opacity: 0, scale: 0, rotate: -20, y: 50 }}
-        animate={{ 
-          opacity: 1, 
-          scale: 1,
-          rotate: [-7, 0, -7],
-          y: [0, -5, 0],
-        }}
-        whileHover={{ 
-          scale: 1.1,
-          rotate: [-10, 0, -10],
-          transition: { duration: 0.5 }
-        }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ 
-          delay: 1.5,
-          duration: 0.6, 
-          type: "spring",
-          damping: 12,
-          rotate: {
-            duration: 4,
-            repeat: Infinity,
-            repeatType: "reverse",
-            ease: "easeInOut"
-          },
-          y: {
-            duration: 2.5,
-            repeat: Infinity,
-            repeatType: "reverse",
-            ease: "easeInOut"
-          }
-        }}
-      >
-        <img 
-          src={betaStampImg} 
-          alt="BETA VERSION - WORK IN PROGRESS" 
-          className="w-full h-full object-contain drop-shadow-xl"
-        />
-      </motion.div>
+      <BetaStamp />
       
       <main className="flex-grow w-full max-w-[100vw] overflow-x-hidden px-2 sm:px-4">
         <PageTransition>

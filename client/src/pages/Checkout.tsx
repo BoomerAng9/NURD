@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Component } from 'react';
 import { useLocation } from 'wouter';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,10 +10,39 @@ import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-
 // Load Stripe outside of a component to avoid recreating the Stripe object on renders
 // Make sure we have the key before attempting to load Stripe
 const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
-if (!stripePublicKey) {
-  console.error('Missing Stripe publishable key. Make sure VITE_STRIPE_PUBLIC_KEY is set in your environment.');
+
+// Checking if the key is properly defined and not a string "undefined"
+const isValidKey = stripePublicKey && stripePublicKey !== 'undefined' && stripePublicKey.startsWith('pk_');
+
+// Set up a detailed warning if the key isn't valid
+if (!isValidKey) {
+  console.error('=== STRIPE KEY MISSING OR INVALID ===');
+  console.error('Current value: ', stripePublicKey ? `"${stripePublicKey}"` : 'undefined');
+  console.error('Please make sure VITE_STRIPE_PUBLIC_KEY is set correctly in your environment.');
+  console.error('Valid Stripe publishable keys start with "pk_"');
+  console.error('=====================');
+  
+  // Display a visual warning in the console for easier debugging
+  console.log('%c STRIPE KEY ERROR ', 'background: #ff0000; color: white; font-size: 14px; font-weight: bold; padding: 4px 8px;');
 }
-const stripePromise = loadStripe(stripePublicKey);
+
+// Create a safe wrapper that won't crash the app if the key is invalid
+const stripePromise = (() => {
+  try {
+    // Only load Stripe if we have a valid key
+    if (isValidKey) {
+      return loadStripe(stripePublicKey);
+    } else {
+      // Return a rejected promise with a helpful error message
+      return Promise.reject(
+        new Error('Stripe publishable key is missing or invalid. Check console for details.')
+      );
+    }
+  } catch (err) {
+    console.error('Error initializing Stripe:', err);
+    return Promise.reject(err);
+  }
+})();
 
 // Internal CheckoutForm component
 const CheckoutForm = ({ 
@@ -343,14 +372,33 @@ const Checkout = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Elements stripe={stripePromise} options={stripeOptions}>
-              <CheckoutForm 
-                planName={planName} 
-                planPrice={planPrice} 
-                isOneTime={isOneTime} 
-                isYearly={isYearly} 
-              />
-            </Elements>
+            <ErrorBoundary fallback={
+              <div className="p-4 border border-red-500/30 rounded-md bg-red-950/20 text-red-300">
+                <div className="flex items-center mb-2">
+                  <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
+                  <h3 className="font-medium">Payment System Error</h3>
+                </div>
+                <p className="text-sm">
+                  We're experiencing issues with our payment system. Please try again later or contact support.
+                </p>
+                <Button 
+                  variant="outline" 
+                  className="mt-4 border-red-500/30 hover:bg-red-950/40 text-red-300"
+                  onClick={() => window.location.href = '/subscription-plans'}
+                >
+                  Return to Plans
+                </Button>
+              </div>
+            }>
+              <Elements stripe={stripePromise} options={stripeOptions}>
+                <CheckoutForm 
+                  planName={planName} 
+                  planPrice={planPrice} 
+                  isOneTime={isOneTime} 
+                  isYearly={isYearly} 
+                />
+              </Elements>
+            </ErrorBoundary>
           </CardContent>
         </Card>
 
@@ -390,5 +438,29 @@ const Checkout = () => {
     </div>
   );
 };
+
+// Simple error boundary component
+class ErrorBoundary extends React.Component<{
+  children: React.ReactNode;
+  fallback: React.ReactNode;
+}> {
+  state = { hasError: false };
+  
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  
+  componentDidCatch(error: any) {
+    console.error("Checkout error boundary caught:", error);
+  }
+  
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    
+    return this.props.children;
+  }
+}
 
 export default Checkout;

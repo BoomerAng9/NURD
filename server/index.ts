@@ -3,6 +3,7 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import cors from 'cors';
 import { setupSSOAuth } from "./sso-auth";
+import { securityHeaders } from "./middleware/security-headers";
 
 const app = express();
 
@@ -16,6 +17,10 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Apply security headers to all responses
+app.use(securityHeaders);
+
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH');

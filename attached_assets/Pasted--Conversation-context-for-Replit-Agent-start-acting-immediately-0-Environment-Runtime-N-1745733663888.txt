@@ -1,0 +1,85 @@
+‣ Conversation context for Replit Agent (start acting immediately)
+
+⸻
+
+0 │ Environment
+	•	Runtime: Next.js (React + Tailwind) running inside a Core-tier Replit workspace.
+	•	Data store: Replit Database (key-value) — NOT Supabase.
+	•	Secrets store: Replit “Secrets & Environment Variables”.
+	•	Current pages: / (Landing), /onboarding, /dashboard — all functional but basic.
+
+⸻
+
+1 │ Outstanding Unclear / Risky Items — must clarify / mitigate first
+
+#	Topic	Required clarification / mitigation
+U-1	Realtime transport – Replit DB is key-value and has no native pub/sub.	Decide: (a) use Replit’s built-in @replit/database polling with ETag optimisation, or (b) spin up a lightweight WS server inside the repl for presence + chat.
+U-2	Online-status toggle field	Add is_visible boolean per-user (default true).
+U-3	Brick animation spec	Pure CSS Grid animation; 60 fps target; gracefully degrades to static grid if prefers-reduced-motion.
+U-4	Auth / route protection	Confirm Cookie-based session guard (existing) covers /dashboard and new /workspace.
+R-1	Key leakage	All hard-coded API keys must be purged and stored in Secrets before commit push.
+R-2	Resource limits	Polling / sockets must stay < 200 MB RAM and < 0.5 vCPU sustained (Core quota).
+R-3	Unvalidated chat input	Sanitize message body on insert & render (DOMPurify or simple text-only).
+R-4	No rate-limit	Add naive in-memory rate limiter (IP + user) on chat endpoints.
+R-5	Accessibility	Run axe-core; fix color-contrast, add ARIA labels.
+
+
+
+⸻
+
+2 │ Data-Model Migration (Replit DB)
+
+Create JSON-serialised namespaces:
+
+users:{userId}          -> { firstName, …, is_visible:true }
+workspaces:{wsId}       -> { name, createdBy, createdAt }
+workspace_users:{wsId}  -> [ userId, … ]
+workspace_messages:{wsId}:{msgId}
+                        -> { userId, body, createdAt }
+online:{userId}         -> timestamp (updated every 30 s)
+
+Note: Use replit-db-value > 30 s TTL check to infer offline.
+
+⸻
+
+3 │ Implementation Steps (commit in small chunks)
+	1.	Secrets hygiene
+	•	Remove hard-coded keys; add them via Secrets tab.
+	•	Force-push history rewrite (git filter-repo --path) if needed.
+	2.	User model patch
+	•	Append is_visible flag (default true) to each users:* entry.
+	•	Add toggle UI in /dashboard.
+	3.	Realtime layer decision & setup
+	•	If polling chosen: implement exponential back-off fetch to online:* keys.
+	•	If WebSocket chosen: create server.js using ws package; spawn via npm start. Keep broadcast payloads minimal.
+	4.	/workspace page
+	•	New route app/workspace/page.jsx.
+	•	Features: room list, create/join, presence grid (brick CSS), chat box.
+	•	Animation: bricks (div with brick class) transition using transform: translateY.
+	5.	Rate-limit & XSS safety
+	•	Micro-middleware per POST /api/chat route: 10 msgs / 10 s / user.
+	•	Strip HTML tags server-side; escape on render.
+	6.	Performance / Lighthouse
+	•	Optimize hero images → Next.js <Image> with priority.
+	•	Enable lazy loading everywhere else.
+	•	Add CSP header via next.config.js allowing self, repl.co, teams.microsoft.com, zoom.us.
+	7.	Accessibility pass
+	•	Run npx axe ./out in CI; fix flagged issues.
+	8.	Testing & deploy
+	•	Manual smoke test on mobile (Replit preview).
+	•	Achieve Lighthouse ≥ 90 (mobile profile, 4G throttling).
+
+⸻
+
+4 │ Acceptance Criteria
+	•	Brick-and-cement presence grid renders ≤ 50 ms after user joins.
+	•	Online light updates < 5 s latency.
+	•	Chat round-trip ≤ 1 s (Core plan).
+	•	No critical axe-core violations.
+	•	Lighthouse scores: Perf ≥ 90, Accessibility ≥ 90, Best-Practices ≥ 90, SEO ≥ 90.
+
+⸻
+
+5 │ Proceed
+
+Begin with Step 1 (Secrets hygiene); report “Step 1-done” when finished, then move sequentially.
