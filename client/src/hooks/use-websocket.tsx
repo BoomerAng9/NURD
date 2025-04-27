@@ -19,11 +19,10 @@ export const useWebSocket = () => {
     // Check if running in browser
     if (typeof window === 'undefined') return;
 
-    // Connect to the dedicated WebSocket server on port 5030
+    // Connect to the WebSocket server on the /ws endpoint (same host and port as the app)
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    // Extract hostname without port
-    const hostname = window.location.hostname;
-    const wsUrl = `${protocol}//${hostname}:5030`;
+    const host = window.location.host; // Includes hostname and port
+    const wsUrl = `${protocol}//${host}/ws`;
     
     console.log('Attempting to connect to WebSocket server at:', wsUrl);
     

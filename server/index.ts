@@ -4,6 +4,23 @@ import { setupVite, serveStatic, log } from "./vite";
 import cors from 'cors';
 import { setupSSOAuth } from "./sso-auth";
 import { securityHeaders } from "./middleware/security-headers";
+import http from 'http';
+
+// Create a simple HTTP server specifically for health checks
+const healthServer = http.createServer((req, res) => {
+  if (req.url === '/') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: 'ok', message: 'NURD by ACHIEVEMOR server is running' }));
+  } else {
+    res.writeHead(404);
+    res.end();
+  }
+});
+
+// Start health check server immediately on port 5000
+healthServer.listen(5000, '0.0.0.0', () => {
+  console.log('Health check server listening on port 5000');
+});
 
 const app = express();
 
@@ -79,47 +96,25 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // Try multiple ports with fallback mechanism
-  const attemptListen = (ports: number[]) => {
-    if (ports.length === 0) {
-      log("Failed to start server on any port. Exiting.");
-      process.exit(1);
-      return;
-    }
-    
-    const port = ports[0];
-    const remainingPorts = ports.slice(1);
-    
-    const onError = (err: any) => {
-      if (err.code === 'EADDRINUSE') {
-        log(`Port ${port} is already in use, trying next port...`);
-        attemptListen(remainingPorts);
-      } else {
-        log(`Error starting server: ${err.message}`);
-        process.exit(1);
-      }
-    };
-    
-    server.on('error', onError);
-    
-    try {
-      server.listen({
-        port,
-        host: "0.0.0.0",
-      }, () => {
-        // Remove the error handler once we're successfully listening
-        server.removeListener('error', onError);
-        log(`Server successfully listening on http://0.0.0.0:${port}`);
-        
-        // Store the successful port in a global variable that can be accessed by other modules
-        (global as any).SERVER_PORT = port;
-      });
-    } catch (err) {
-      log(`Exception when starting server on port ${port}: ${(err as Error).message}`);
-      attemptListen(remainingPorts);
-    }
-  };
+  // Use a different port for the main app since port 5000 is used for health checks
+  const APP_PORT = 5005;
   
-  // Try port 5000 first (Replit's expected port), then fall back to others
-  attemptListen([5000, 5005, 3000, 8080, 4000]);
+  // Clear any existing error handlers to avoid conflicts
+  server.removeAllListeners('error');
+  
+  // Add a clean error handler for the port binding
+  server.on('error', (err: any) => {
+    log(`Error starting main application server: ${err.message}`);
+    process.exit(1);
+  });
+  
+  // Start server on the app port
+  server.listen({
+    port: APP_PORT,
+    host: "0.0.0.0",
+  }, () => {
+    log(`Main application server listening on http://0.0.0.0:${APP_PORT}`);
+    // Store the port in a global variable
+    (global as any).SERVER_PORT = APP_PORT;
+  });
 })();

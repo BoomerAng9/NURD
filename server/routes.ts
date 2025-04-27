@@ -160,7 +160,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   setupSSOAuth(app);
   // Replit Auth removed
   
-  // Health check endpoint
+  // Health check endpoints (root and api)
+  app.get('/', (req, res) => {
+    return res.status(200).json({
+      status: 'ok',
+      message: 'NURD by ACHIEVEMOR server is running',
+      timestamp: new Date().toISOString()
+    });
+  });
+  
   app.get('/api/health', (req, res) => {
     return res.status(200).json({
       status: 'ok',
@@ -1055,20 +1063,21 @@ Follow these guidelines:
 
   const httpServer = createServer(app);
 
-  // Create a simpler WebSocket server on its own port (5030)
-  console.log('Setting up WebSocket server on dedicated port: 5030');
+  // Create a WebSocket server on the same HTTP server (no separate port)
+  console.log('Setting up WebSocket server on the HTTP server');
   
   // Create a dedicated endpoint for initial WebSocket test
   app.get('/api/websocket-status', (req, res) => {
     return res.status(200).json({
       status: 'ready',
-      message: 'WebSocket server is available at ws://localhost:5030'
+      message: 'WebSocket server is available at /ws endpoint'
     });
   });
   
-  // Create a standalone WebSocket server
+  // Create a WebSocket server that shares the HTTP server instance
   const wss = new WebSocketServer({ 
-    port: 5030,
+    server: httpServer,
+    path: '/ws',
     // Disable perMessageDeflate to avoid compression issues
     perMessageDeflate: false 
   });
