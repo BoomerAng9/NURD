@@ -8,7 +8,12 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 // Load Stripe outside of a component to avoid recreating the Stripe object on renders
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+// Make sure we have the key before attempting to load Stripe
+const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
+if (!stripePublicKey) {
+  console.error('Missing Stripe publishable key. Make sure VITE_STRIPE_PUBLIC_KEY is set in your environment.');
+}
+const stripePromise = loadStripe(stripePublicKey);
 
 // Internal CheckoutForm component
 const CheckoutForm = ({ 
@@ -190,19 +195,23 @@ const Checkout = () => {
       
       // Create a subscription through our API
       import('@/services/stripe-service')
-        .then(({ createSubscription, createPaymentIntent }) => {
+        .then((stripeService) => {
           if (isOneTime) {
             // For one-time payments like the bootcamp
-            return createPaymentIntent({
+            return stripeService.createPaymentIntent({
               amount: planPrice,
               currency: 'usd',
               description: planName,
+            }).then(response => {
+              return { clientSecret: response.clientSecret };
             });
           } else {
             // For subscription plans (monthly or yearly)
-            return createSubscription({
-              plan: planId,
+            return stripeService.createSubscription({
+              plan: planId as string,
               billingCycle: billingCycle === 'yearly' ? 'yearly' : 'monthly',
+            }).then(response => {
+              return { clientSecret: response.clientSecret };
             });
           }
         })

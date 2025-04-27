@@ -1055,20 +1055,20 @@ Follow these guidelines:
 
   const httpServer = createServer(app);
 
-  // Create a simpler WebSocket server on its own port (5010)
-  console.log('Setting up WebSocket server on dedicated port: 5010');
+  // Create a simpler WebSocket server on its own port (5020)
+  console.log('Setting up WebSocket server on dedicated port: 5020');
   
   // Create a dedicated endpoint for initial WebSocket test
   app.get('/api/websocket-status', (req, res) => {
     return res.status(200).json({
       status: 'ready',
-      message: 'WebSocket server is available at ws://localhost:5010'
+      message: 'WebSocket server is available at ws://localhost:5020'
     });
   });
   
   // Create a standalone WebSocket server
   const wss = new WebSocketServer({ 
-    port: 5010,
+    port: 5020,
     // Disable perMessageDeflate to avoid compression issues
     perMessageDeflate: false 
   });

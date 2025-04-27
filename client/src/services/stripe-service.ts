@@ -13,7 +13,7 @@ interface PaymentIntentRequest {
 // Define interface for payment intent response
 interface PaymentIntentResponse {
   clientSecret: string;
-  id: string;
+  id?: string; // Made optional since some API responses may not include it
 }
 
 // Define interface for subscription processing

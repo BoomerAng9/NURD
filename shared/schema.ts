@@ -48,7 +48,7 @@ export const users = pgTable("users", {
   verification_token: text("verification_token"),
   reset_password_token: text("reset_password_token"),
   reset_password_expires: timestamp("reset_password_expires"),
-  last_login: timestamp("last_login"),
+  // last_login field removed - doesn't exist in database
   stripe_customer_id: text("stripe_customer_id"),
   stripe_subscription_id: text("stripe_subscription_id"),
   created_at: timestamp("created_at").defaultNow(),
