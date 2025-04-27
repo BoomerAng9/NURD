@@ -6,22 +6,6 @@ import { setupSSOAuth } from "./sso-auth";
 import { securityHeaders } from "./middleware/security-headers";
 import http from 'http';
 
-// Create a simple HTTP server specifically for health checks
-const healthServer = http.createServer((req, res) => {
-  if (req.url === '/') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 'ok', message: 'NURD by ACHIEVEMOR server is running' }));
-  } else {
-    res.writeHead(404);
-    res.end();
-  }
-});
-
-// Start health check server immediately on port 5000
-healthServer.listen(5000, '0.0.0.0', () => {
-  console.log('Health check server listening on port 5000');
-});
-
 const app = express();
 
 // Enable CORS for all routes
@@ -96,25 +80,25 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // Use a different port for the main app since port 5000 is used for health checks
-  const APP_PORT = 5005;
+  // Consistently use port 5000 in development
+  const PORT = 5000;
   
   // Clear any existing error handlers to avoid conflicts
   server.removeAllListeners('error');
   
   // Add a clean error handler for the port binding
   server.on('error', (err: any) => {
-    log(`Error starting main application server: ${err.message}`);
+    log(`Error starting server: ${err.message}`);
     process.exit(1);
   });
   
-  // Start server on the app port
+  // Start server on port 5000
   server.listen({
-    port: APP_PORT,
+    port: PORT,
     host: "0.0.0.0",
   }, () => {
-    log(`Main application server listening on http://0.0.0.0:${APP_PORT}`);
+    log(`Server listening on http://0.0.0.0:${PORT}`);
     // Store the port in a global variable
-    (global as any).SERVER_PORT = APP_PORT;
+    (global as any).SERVER_PORT = PORT;
   });
 })();
