@@ -31,6 +31,12 @@ import {
   completeCodeWithGroq,
   getGroqModels
 } from "./groq-service";
+import {
+  runCodeInModal,
+  runFunctionInModal,
+  runAIInference,
+  getAvailableModels
+} from "./modal-service";
 import { 
   createPaymentIntent,
   createSubscription,
@@ -1044,6 +1050,12 @@ Follow these guidelines:
   app.post('/api/groq/explain', explainCodeWithGroq);
   app.post('/api/groq/complete', completeCodeWithGroq);
   app.get('/api/groq/models', getGroqModels);
+  
+  // Modal API Endpoints
+  app.post('/api/modal/run-code', runCodeInModal);
+  app.post('/api/modal/run-function', runFunctionInModal);
+  app.post('/api/modal/run-inference', runAIInference);
+  app.get('/api/modal/models', getAvailableModels);
   
   // Payment Processing Endpoints
   app.post('/api/create-payment-intent', createPaymentIntent);
