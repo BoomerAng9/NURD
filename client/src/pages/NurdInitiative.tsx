@@ -91,7 +91,7 @@ const NurdInitiative: React.FC = () => {
               <Card className="shadow-lg border-t-4 border-secondary">
                 <CardHeader>
                   <CardTitle className="flex items-center text-2xl">
-                    <Sparkles className="h-6 w-6 mr-2 text-secondary" />
+                    <Sparkles className="h-6 w-6 mr-2 text-amber-400" />
                     Our Vision
                   </CardTitle>
                 </CardHeader>
@@ -166,7 +166,7 @@ const NurdInitiative: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                   <div className="order-2 md:order-1 rounded-lg overflow-hidden shadow-xl">
                     <OptimizedImage
-                      src="/assets/learning-tracks.png" 
+                      src="/attached_assets/Untitled design.png" 
                       alt="NURD Learning Tracks"
                       width={600}
                       height={400}
@@ -258,11 +258,11 @@ const NurdInitiative: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                   <div className="order-2 md:order-1 rounded-lg overflow-hidden shadow-xl">
                     <OptimizedImage
-                      src="/assets/global-impact.png" 
-                      alt="Global Impact"
+                      src="/attached_assets/05C73D24-9170-4A97-8C71-3720E11BBED3.png" 
+                      alt="NURD Logo - I'm cool like that"
                       width={600}
                       height={400}
-                      className="object-cover w-full h-full"
+                      className="object-contain w-full h-full"
                     />
                   </div>
                   <div className="order-1 md:order-2">
