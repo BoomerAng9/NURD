@@ -8,8 +8,8 @@ import { Section } from '@/components/ui/section';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChevronRight, Award, BookOpen, Users, Sparkles, Globe } from 'lucide-react';
 import { Link } from 'wouter';
-import OptimizedImage from '@/components/ui/optimized-image';
-import BetaStamp from '@/components/BetaStamp';
+import { OptimizedImage } from '@/components/ui/optimized-image';
+import { BetaStamp } from '@/components/BetaStamp';
 
 const NurdInitiative: React.FC = () => {
   return (
