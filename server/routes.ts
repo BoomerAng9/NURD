@@ -166,19 +166,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   setupSSOAuth(app);
   // Replit Auth removed
   
-  // Health check endpoints (root and api)
-  app.get('/', (req, res) => {
-    return res.status(200).json({
-      status: 'ok',
-      message: 'NURD by ACHIEVEMOR server is running',
-      timestamp: new Date().toISOString()
-    });
-  });
-  
+  // Health check endpoints - moved to /api/health only
   app.get('/api/health', (req, res) => {
     return res.status(200).json({
       status: 'ok',
-      message: 'Server is running',
+      message: 'NURD by ACHIEVEMOR server is running',
       timestamp: new Date().toISOString()
     });
   });
