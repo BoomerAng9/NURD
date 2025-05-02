@@ -57,6 +57,7 @@ import CheckoutSuccess from "@/pages/CheckoutSuccess";
 import LandingPage from "@/pages/LandingPage";
 import Account from "@/pages/Account";
 import NurdInitiative from "@/pages/NurdInitiative";
+import AdvancedCheckout from "@/pages/AdvancedCheckout";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { LayoutDashboard, Send } from "lucide-react";
 

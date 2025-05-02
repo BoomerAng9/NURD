@@ -6,15 +6,16 @@
  */
 
 export const VERSION = {
-  number: '1.4.0', // Follow semantic versioning: MAJOR.MINOR.PATCH
-  name: 'Pooler Edition',
+  number: '1.5.0', // Follow semantic versioning: MAJOR.MINOR.PATCH
+  name: 'Pooler Premium',
   date: '2025-05-02',  // Current date in YYYY-MM-DD format
   notes: [
     'Added advanced subscription checkout page with multiple development tiers',
-    'Created a dedicated NURD Initiative page',
+    'Created a dedicated NURD Initiative page with interactive learning paths',
     'Integrated Daytona, Modal, and Tavily services for enhanced AI capabilities',
-    'Fixed database schema inconsistencies for improved application stability',
-    'Reduced free token limit to 20,000 for V.I.B.E. coding environment'
+    'Improved navigation with better organization of learning resources',
+    'Added detailed program elements to the NURD Initiative page',
+    'Enhanced mobile experience with optimized layouts'
   ]
 };
 
