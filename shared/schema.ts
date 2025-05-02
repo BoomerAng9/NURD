@@ -23,6 +23,7 @@ export const users = pgTable("users", {
   username: varchar("username").unique().notNull(), // Username is also used as email
   
   // Original fields from the current schema
+  first_name: text("first_name"), // Added based on database schema
   age: integer("age"),
   grade_level: text("grade_level"),
   user_type: text("user_type"),
@@ -35,7 +36,6 @@ export const users = pgTable("users", {
   xp: integer("xp").default(0),
   is_admin: boolean("is_admin").default(false),
   is_freelancer: boolean("is_freelancer").default(false),
-  // subscription_tier removed - field doesn't exist in database
   color_scheme: text("color_scheme").default("default"), // Options: default, ocean, forest, sunset, space
   theme_mode: text("theme_mode").default("system"), // Options: system, light, dark
   accent_color: text("accent_color").default("#3B82F6"), // Primary accent color
@@ -48,11 +48,9 @@ export const users = pgTable("users", {
   verification_token: text("verification_token"),
   reset_password_token: text("reset_password_token"),
   reset_password_expires: timestamp("reset_password_expires"),
-  // last_login field removed - doesn't exist in database
   stripe_customer_id: text("stripe_customer_id"),
   stripe_subscription_id: text("stripe_subscription_id"),
-  created_at: timestamp("created_at").defaultNow(),
-  updated_at: timestamp("updated_at").defaultNow(),
+  // Removed created_at and updated_at as they don't exist in the database
 });
 
 // New table for user accessibility preferences
@@ -68,6 +66,7 @@ export const user_preferences = pgTable("user_preferences", {
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
+  first_name: true,
   age: true,
   grade_level: true,
   user_type: true,
@@ -75,7 +74,6 @@ export const insertUserSchema = createInsertSchema(users).pick({
   path_choice: true,
   username: true, // Username is used as email
   password: true,
-  // subscriptionTier field removed
   color_scheme: true,
   theme_mode: true,
   accent_color: true,
