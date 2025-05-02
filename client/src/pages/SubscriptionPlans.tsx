@@ -38,7 +38,8 @@ import {
   Crown,
   Compass,
   PenTool,
-  Calendar
+  Calendar,
+  ChevronRight
 } from 'lucide-react';
 
 const SubscriptionPlans = () => {
@@ -372,17 +373,30 @@ const SubscriptionPlans = () => {
           </div>
         </div>
 
-        {/* Checkout Button */}
+        {/* Checkout Buttons */}
         <div className="flex flex-col items-center justify-center mb-16">
-          <Button 
-            className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-8 py-6 text-xl rounded-xl hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 shadow-xl"
-            onClick={handleCheckout}
-            disabled={!selectedPlan}
-          >
-            {selectedPlan ? 'Continue to Checkout' : 'Select a Plan to Continue'}
-          </Button>
+          <div className="flex flex-col md:flex-row gap-4 items-center">
+            <Button 
+              className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-8 py-6 text-xl rounded-xl hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 shadow-xl"
+              onClick={handleCheckout}
+              disabled={!selectedPlan}
+            >
+              {selectedPlan ? 'Continue to Checkout' : 'Select a Plan to Continue'}
+            </Button>
+            
+            <Link href="/advanced-checkout">
+              <Button 
+                variant="outline" 
+                className="border-2 border-blue-500/50 text-blue-400 px-8 py-6 text-xl rounded-xl hover:bg-blue-600/10 hover:border-blue-500 transition-all duration-300"
+              >
+                View Advanced Development Tiers
+                <ChevronRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
           <p className="text-gray-400 mt-4 text-center">
-            Secure payments powered by Stripe. Cancel anytime.
+            Secure payments powered by Stripe. Cancel anytime.<br />
+            <span className="text-sm">For more options with additional features, check out our Advanced Development Tiers.</span>
           </p>
         </div>
 
