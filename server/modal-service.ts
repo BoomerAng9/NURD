@@ -298,13 +298,35 @@ export async function runAIInference(req: Request, res: Response) {
  * Get available AI models in Modal
  */
 export async function getAvailableModels(req: Request, res: Response) {
-  if (!checkModalConfiguration(res)) return;
+  if (!checkModalConfiguration(res)) {
+    // If no API key, return fallback models
+    return res.status(200).json({ 
+      models: [
+        { id: "gpt-4", name: "GPT-4" },
+        { id: "llama-3-70b", name: "Llama 3 70B" },
+        { id: "mistral-7b", name: "Mistral 7B" },
+        { id: "claude-3-opus", name: "Claude 3 Opus" }
+      ]
+    });
+  }
   
   try {
-    await initializeModalClient(); // This will always succeed now with our changes
+    await initializeModalClient();
     
     // Get available models
     const models = await modalClient!.listModels();
+    
+    // If models is empty or not in expected format, use fallback
+    if (!models || typeof models !== 'object' || !Array.isArray(models)) {
+      return res.status(200).json({ 
+        models: [
+          { id: "gpt-4", name: "GPT-4" },
+          { id: "llama-3-70b", name: "Llama 3 70B" },
+          { id: "mistral-7b", name: "Mistral 7B" },
+          { id: "claude-3-opus", name: "Claude 3 Opus" }
+        ]
+      });
+    }
     
     return res.status(200).json({
       models
