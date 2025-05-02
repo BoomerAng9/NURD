@@ -37,7 +37,9 @@ import {
   ChevronRight,
   Globe,
   BookOpen,
-  Puzzle
+  Puzzle,
+  Loader2,
+  ArrowLeft
 } from 'lucide-react';
 
 // Define the development tier features

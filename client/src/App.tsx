@@ -511,6 +511,7 @@ const AppContent = () => {
             <Route path="/learning" component={Learning} />
             <Route path="/learn" component={Learning} />
             <Route path="/subscription-plans" component={SubscriptionPlans} />
+            <Route path="/advanced-checkout" component={AdvancedCheckout} />
             <Route path="/checkout" component={Checkout} />
             <Route path="/checkout-success" component={CheckoutSuccess} />
             <Route path="/bootcamp" component={LandingPage} />
