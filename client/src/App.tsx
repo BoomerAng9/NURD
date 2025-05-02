@@ -534,10 +534,8 @@ const AppContent = () => {
             <AdminProtectedRoute path="/model-test" component={ModelTest} />
             <AdminProtectedRoute path="/image-locker" component={ImageLocker} />
             
-            {/* Coming Soon placeholder pages */}
-            <Route path="/summer-initiative">
-              <ComingSoon title="NURD by: ACHIEVEMOR" description="Our summer program is coming soon! Check back for details on our exciting NURD Initiative for 2025." />
-            </Route>
+            {/* Initiative pages */}
+            <Route path="/summer-initiative" component={NurdInitiative} />
             <Route path="/weekend-workshops">
               <ComingSoon title="Weekend Workshops" description="Hands-on weekend workshops focused on tech and creativity coming soon!" />
             </Route>
