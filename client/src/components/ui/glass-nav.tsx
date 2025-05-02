@@ -12,6 +12,7 @@ import {
   Menu, 
   X,
   UserPlus,
+  Calendar,
   GalleryVertical,
   LayoutDashboard,
   FileText,
@@ -52,6 +53,7 @@ const navigation: NavItem[] = [
     children: [
       { name: 'About NURD', path: '/about', icon: <Info className="h-4 w-4 mr-2" /> },
       { name: 'Reinvestment', path: '/reinvestment', icon: <Heart className="h-4 w-4 mr-2" /> },
+      { name: 'NURD Initiative', path: '/summer-initiative', icon: <Calendar className="h-4 w-4 mr-2" /> },
     ]
   },
   { name: 'ACHIEVERS', path: '/achievers', icon: <Award className="h-4 w-4 mr-2" /> },
