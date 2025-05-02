@@ -12,6 +12,9 @@ const UpdateNotification: React.FC = () => {
   const [appVersion, setAppVersion] = useState(VERSION.number);
 
   useEffect(() => {
+    // On component mount, check if the notification was already shown in this session
+    const notificationShownInSession = sessionStorage.getItem('notification-shown-in-session') === 'true';
+    
     // Check if page was just refreshed
     const pageJustRefreshed = sessionStorage.getItem('page-just-refreshed') === 'true';
     
@@ -19,6 +22,14 @@ const UpdateNotification: React.FC = () => {
       // If page was just refreshed, mark the current version as seen and reset the flag
       markVersionAsSeen();
       sessionStorage.removeItem('page-just-refreshed');
+      // Also set that notification has been shown in this session
+      sessionStorage.setItem('notification-shown-in-session', 'true');
+      setIsVisible(false);
+      return;
+    }
+    
+    // If notification was already shown in this session, don't show it again
+    if (notificationShownInSession) {
       setIsVisible(false);
       return;
     }
@@ -34,6 +45,8 @@ const UpdateNotification: React.FC = () => {
       // Show the notification with a slight delay
       const timer = setTimeout(() => {
         setIsVisible(true);
+        // Mark that we've shown the notification in this session
+        sessionStorage.setItem('notification-shown-in-session', 'true');
       }, 2000);
       
       return () => clearTimeout(timer);
@@ -43,6 +56,8 @@ const UpdateNotification: React.FC = () => {
   const handleDismiss = () => {
     // Mark this version as seen when dismissed
     markVersionAsSeen();
+    // Mark that we've shown the notification in this session (and dismissed it)
+    sessionStorage.setItem('notification-shown-in-session', 'true');
     setIsVisible(false);
   };
 
@@ -52,6 +67,8 @@ const UpdateNotification: React.FC = () => {
     
     // Set flag to indicate page is being refreshed
     sessionStorage.setItem('page-just-refreshed', 'true');
+    // This ensures the notification doesn't reappear after refresh
+    sessionStorage.setItem('notification-shown-in-session', 'true');
     
     // Refresh the page to ensure all updates are applied
     window.location.reload();
