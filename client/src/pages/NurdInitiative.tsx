@@ -11,6 +11,10 @@ import { Link } from 'wouter';
 import { OptimizedImage } from '@/components/ui/optimized-image';
 import { BetaStamp } from '@/components/BetaStamp';
 
+// Import the images directly
+import nurdBoySkateboardImg from '../assets/Untitled design.png';
+import nurdLogoSticker from '../assets/05C73D24-9170-4A97-8C71-3720E11BBED3.png';
+
 const NurdInitiative: React.FC = () => {
   return (
     <>
@@ -91,7 +95,7 @@ const NurdInitiative: React.FC = () => {
               <Card className="shadow-lg border-t-4 border-secondary">
                 <CardHeader>
                   <CardTitle className="flex items-center text-2xl">
-                    <Sparkles className="h-6 w-6 mr-2 text-amber-400" />
+                    <Sparkles className="h-6 w-6 mr-2 text-yellow-500" />
                     Our Vision
                   </CardTitle>
                 </CardHeader>
@@ -166,7 +170,7 @@ const NurdInitiative: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                   <div className="order-2 md:order-1 rounded-lg overflow-hidden shadow-xl">
                     <OptimizedImage
-                      src="/attached_assets/Untitled design.png" 
+                      src={nurdBoySkateboardImg} 
                       alt="NURD Learning Tracks"
                       width={600}
                       height={400}
@@ -258,7 +262,7 @@ const NurdInitiative: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                   <div className="order-2 md:order-1 rounded-lg overflow-hidden shadow-xl">
                     <OptimizedImage
-                      src="/attached_assets/05C73D24-9170-4A97-8C71-3720E11BBED3.png" 
+                      src={nurdLogoSticker} 
                       alt="NURD Logo - I'm cool like that"
                       width={600}
                       height={400}
