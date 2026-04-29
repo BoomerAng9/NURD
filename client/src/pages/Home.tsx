@@ -48,7 +48,7 @@ export default function Home() {
                     Made in Pooler.
                   </p>
                   <h1 className="text-6xl md:text-7xl font-bold text-foreground leading-[1.05] tracking-tighter">
-                    NURDS CODE.
+                    NurdsCode
                   </h1>
                 </div>
 
@@ -75,9 +75,6 @@ export default function Home() {
                   <h2 className="text-2xl md:text-3xl font-medium text-foreground">
                     An FOAI Space for Modern Dreamers.
                   </h2>
-                  <p className="text-lg text-foreground/95 max-w-md pt-4 tracking-tight">
-                    Build the world you want to live in.
-                  </p>
                 </div>
               </div>
             </div>
@@ -160,7 +157,10 @@ export default function Home() {
 
       {/* ============== FOOTER ============== */}
       <footer className="border-t border-border">
-        <div className="container py-10 md:py-12">
+        <div className="container py-10 md:py-14 space-y-8">
+          <p className="text-center font-sans text-2xl md:text-3xl font-light text-foreground/90 tracking-tight">
+            Build the world you want to live in.
+          </p>
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <img
               src={madeInPoolerImg}
