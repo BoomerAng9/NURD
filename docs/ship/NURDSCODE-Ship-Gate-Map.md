@@ -2,10 +2,13 @@
 
 ## Current Status
 
-Project State: Existing Build redirected to vNext
-Current Gate: **Gate 0 — PARTIAL PASS** (directive package present, Self-Check Kit BLOCKED owner-side)
-Last update: 2026-04-29
-Application Release Status: Not release-eligible until evidence exists
+Project State: Existing Build redirected to vNext — **PHASE 1 LIVE** as of 2026-04-29
+Current Gates passing: 1, 2, 5 (PASS evidence-backed); 0 PARTIAL (Self-Check Kit BLOCKED owner-side)
+Live URL: **https://nurdscode.com** — auth round-trip verified, valid Let's Encrypt TLS
+Last update: 2026-04-29 (Phase 1 LIVE deploy via PRs #1-#7 + Neon database creation + Drizzle migration)
+Application Release Status: Phase 1 surface SHIPPED. Phase 2 (V.I.B.E. + Carrier Interface) and Phase 1.5 cleanup remain next.
+
+See `docs/ship/receipts/PHASE_1_LIVE_2026_04_29.md` for full evidence.
 
 ## Gate 0 - Directive Package and Self-Check
 
@@ -24,12 +27,35 @@ Application Release Status: Not release-eligible until evidence exists
 
 | Item | Status | Evidence |
 |---|---|---|
-| Single command start | **PASS (LOCAL)** | `docker run --env-file .env.local nurdscode:phase1-test` boots; logs `[express] Server listening on http://0.0.0.0:3000` |
-| Environment variables documented | **PASS** | `.env.example` rewritten 2026-04-28 from grep of actual `process.env.*` reads |
-| No hardcoded secrets | **PARTIAL** | No secrets in committed files; `.env.local` gitignored; placeholder fallback `SESSION_SECRET = 'nurd-secret-key'` in `server/auth.ts:39` flagged for Phase 1.5 removal |
-| Database migrations run | UNVERIFIED | `npm run db:push` requires owner-supplied `DATABASE_URL` |
-| Health endpoint works | **PASS** | `GET /api/health` → 200 OK from inside container with valid JSON; evidence in `docs/SHIP_RECEIPTS/PHASE_1_BATCH_3_2026_04_28.md` |
-| Error handling exists | **PARTIAL** | Server-side error handler present at `server/index.ts`; bug noted (re-throws after 500 response — Phase 1.5 fix) |
+| Single command start | **PASS (LIVE)** | Container `nurdscode` Up healthy on myclaw-vps; logs `[express] Server listening on http://0.0.0.0:3000` |
+| Environment variables documented | **PASS** | `.env.example` rewritten from grep of actual `process.env.*` reads; live `.env.local` composed from openclaw-sop5 |
+| No hardcoded secrets | **PASS** | No secrets in committed files; `.env.local` gitignored; SESSION_SECRET fallback removed in PR #3 (production guard throws if unset) |
+| Database migrations run | **PASS** | `npm run db:push` ran 2026-04-29 against `nurdscode_db` in shared FOAI Neon project; 16 tables created (note: progress-schema.ts excluded — Phase 1.5 schema consolidation) |
+| Health endpoint works | **PASS** | `GET https://nurdscode.com/api/health` → 200 OK with valid JSON |
+| Error handling exists | **PARTIAL** | Server-side error handler present; re-throws after 500 response (Phase 1.5 fix); `/api/register` empty-body 500 instead of 400 (Phase 1.5 input validation) |
+
+## Gate 2 - Can Someone Sign Up?
+
+| Item | Status | Evidence |
+|---|---|---|
+| Landing page loads | **PASS** | `GET https://nurdscode.com/` → 200 HTML |
+| Sign-up flow works | **PASS** | `POST /api/register` → 201 with user JSON, full smoke test 2026-04-29 |
+| Login flow works | **PASS** | `POST /api/login` → 200 with user JSON, scrypt comparePasswords verified |
+| Password reset works | UNVERIFIED | EMAIL_* env not configured (deferred per B+C); reset flow exists in code but won't deliver mail |
+| Session management works | **PASS** | Session cookie issued on register/login, `/api/user` reads it correctly, `/api/logout` clears it |
+| OAuth/SSO works if offered | DEFERRED | Google/GitHub/Facebook/Microsoft client IDs not configured (B+C plan); login page hides those buttons gracefully |
+| Email verification works | DEFERRED | EMAIL_* env not configured; verification email won't deliver |
+
+## Gate 5 - Is It Deployed?
+
+| Item | Status | Evidence |
+|---|---|---|
+| Production URL responds | **PASS** | `https://nurdscode.com` 200 + `https://www.nurdscode.com` 200 |
+| TLS cert valid | **PASS** | Let's Encrypt cert auto-issued by Traefik, ssl_verify=0 |
+| Container healthy | **PASS** | `docker ps` shows `Up X minutes (healthy)`, HEALTHCHECK passing |
+| Logging works | **PASS** | Docker `json-file` driver, max 10m × 3 files |
+| Rollback path exists | **PASS** | `docker compose down` + `git checkout <prev-sha>` + `up` |
+| Monitoring | UNVERIFIED | No external uptime monitor wired (Phase 1.5+) |
 
 ## Gate 2 - Can Someone Sign Up?
 
