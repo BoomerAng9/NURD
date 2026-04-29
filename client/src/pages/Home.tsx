@@ -122,35 +122,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ============== THE COMMITMENT. ============== */}
+      {/* ============== WHAT IS A NURD? ============== */}
       <section className="border-t border-border">
         <div className="container py-16 md:py-20 max-w-3xl">
-          <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground mb-2">
-            02 Commitment
+          <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground mb-4">
+            02 What is a NURD?
           </p>
-          <h2 className="font-sans font-semibold tracking-tight text-3xl md:text-4xl mb-8">
-            Made in Pooler.
+          <h2 className="font-sans font-semibold tracking-tight text-4xl md:text-5xl lg:text-6xl mb-10 leading-[1.1]">
+            Naturally Unstoppable<br />
+            Resourceful Dreamers.
           </h2>
-          <div className="space-y-5 text-lg leading-relaxed text-foreground/90">
-            <p>
-              NURD lives where it was raised. Pooler, GA. The skateboard, the drip, the dreamers &mdash;
-              all of it carries forward.
-            </p>
-            <p>
-              We&rsquo;re a vertical of the <span className="font-medium">FOAI ecosystem</span> &mdash;
-              siblings to{" "}
-              <a
-                href="https://brewing.foai.cloud"
-                className="underline underline-offset-4 decoration-border hover:decoration-foreground"
-              >
-                Coastal Brewing Co.
-              </a>{" "}
-              and others. Same discipline. Different products. Same town.
-            </p>
-            <p className="text-muted-foreground">
-              No fake counters. No machinery shown. Only the work, only the receipts.
-            </p>
-          </div>
+          <p className="font-sans text-2xl md:text-3xl text-foreground/90 font-light">
+            Is that you?
+          </p>
         </div>
       </section>
 
@@ -164,8 +148,7 @@ export default function Home() {
               className="h-12 md:h-14 object-contain"
             />
             <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground text-center md:text-right">
-              NURD &middot; Naturally Unstoppable Resourceful Dreamers<br />
-              powered by ACHIEVEMOR
+              Powered by: A.I.M.S.
             </p>
           </div>
         </div>
