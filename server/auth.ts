@@ -32,14 +32,24 @@ async function comparePasswords(supplied: string, stored: string) {
   return timingSafeEqual(hashedBuf, suppliedBuf);
 }
 
+function resolveSessionSecret(): string {
+  const v = process.env.SESSION_SECRET;
+  if (v && v.length > 0) return v;
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('SESSION_SECRET must be set in production');
+  }
+  // Dev-only placeholder. NEVER ship without SESSION_SECRET in env.
+  return 'nurd-secret-key-DEV-ONLY';
+}
+
 export function setupAuth(app: Express) {
   const PostgresSessionStore = connectPg(session);
 
   const sessionSettings: session.SessionOptions = {
-    secret: process.env.SESSION_SECRET || 'nurd-secret-key',
+    secret: resolveSessionSecret(),
     resave: false,
     saveUninitialized: false,
-    store: new PostgresSessionStore({ 
+    store: new PostgresSessionStore({
       pool,
       createTableIfMissing: true
     }),

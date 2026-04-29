@@ -5,9 +5,18 @@ import OpenAI from 'openai';
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
 const OPENAI_MODEL = 'gpt-4o';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || '',
-});
+// Lazy singleton — boot must succeed even if OPENAI_API_KEY is unset.
+// First call to a route in this module is where the missing-key error surfaces.
+let _openai: OpenAI | null = null;
+function getOpenAI(): OpenAI {
+  if (!_openai) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('OPENAI_API_KEY is not configured');
+    }
+    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  }
+  return _openai;
+}
 
 /**
  * Interface for simplify content request
@@ -91,7 +100,7 @@ export async function simplifyContent(req: Request, res: Response) {
     }
 
     // Call OpenAI API
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: OPENAI_MODEL,
       messages: [
         {
@@ -145,7 +154,7 @@ export async function textToSpeech(req: Request, res: Response) {
     }
 
     // Call OpenAI API for text-to-speech
-    const mp3 = await openai.audio.speech.create({
+    const mp3 = await getOpenAI().audio.speech.create({
       model: 'tts-1',
       voice: voice,
       input: params.content,
@@ -187,7 +196,7 @@ export async function describeImage(req: Request, res: Response) {
       : 'Describe this image concisely, focusing on the main subjects and actions.';
 
     // Call OpenAI API with the image
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: 'gpt-4o',
       messages: [
         {
@@ -258,7 +267,7 @@ export async function explainContent(req: Request, res: Response) {
     }
 
     // Call OpenAI API
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: OPENAI_MODEL,
       messages: [
         {
@@ -399,7 +408,7 @@ export async function narrateCode(req: Request, res: Response) {
     narrationPrompt += `\n\nThis is ${params.language} code.`;
 
     // Call OpenAI API to create the narration
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: OPENAI_MODEL,
       messages: [
         {
@@ -452,7 +461,7 @@ export async function narrateCode(req: Request, res: Response) {
     }
 
     // Call OpenAI API for text-to-speech
-    const mp3 = await openai.audio.speech.create({
+    const mp3 = await getOpenAI().audio.speech.create({
       model: 'tts-1',
       voice: voice,
       input: narration,

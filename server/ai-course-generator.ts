@@ -4,10 +4,18 @@ import { Request, Response } from 'express';
 // the newest Anthropic model is "claude-3-7-sonnet-20250219" which was released February 24, 2025
 const ANTHROPIC_MODEL = 'claude-3-7-sonnet-20250219';
 
-// Create Anthropic instance
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-});
+// Lazy singleton — boot must succeed even if ANTHROPIC_API_KEY is unset.
+// First call to a route in this module is where the missing-key error surfaces.
+let _anthropic: Anthropic | null = null;
+function getAnthropic(): Anthropic {
+  if (!_anthropic) {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new Error('ANTHROPIC_API_KEY is not configured');
+    }
+    _anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  }
+  return _anthropic;
+}
 
 /**
  * Structure of a course generation request
@@ -89,7 +97,7 @@ export async function generateCourse(req: Request, res: Response) {
       setTimeout(() => reject(new Error('API request timed out after 25 seconds')), 25000);
     });
     
-    const apiPromise = anthropic.messages.create({
+    const apiPromise = getAnthropic().messages.create({
       model: ANTHROPIC_MODEL,
       max_tokens: 4000,
       temperature: 0.7,
