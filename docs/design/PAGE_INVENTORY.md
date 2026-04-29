@@ -56,7 +56,7 @@ Mapping every IMG_1841.zip mockup to its proposed route in the NURD CODE app. Re
 
 | Route | Source mockup(s) | Tier |
 |---|---|---|
-| `/` (Landing) | IMG_1862 (canonical hero), IMG_1842 (alt), IMG_1869 (alt), IMG_1875 (mid-CTA), IMG_1836 (capabilities), IMG_1839 (tribe section), IMG_1864 (projects), IMG_1873 (pricing preview), IMG_1879 (final CTA) | T1 |
+| `/` (Landing) | **Kokonut hero (light theme, NURD Kid image)** — canonical, NOT from IMG_1841.zip. Below-the-hero section modules optional from: IMG_1875 (mid-CTA), IMG_1836 (capabilities), IMG_1839 (tribe-preview), IMG_1864 (projects-preview), IMG_1873 (pricing-preview), IMG_1879 (final-CTA). IMG_1862/1842/1869 are NOT the Landing — alt heroes for other surfaces. | T1 |
 | `/auth` | IMG_1870 | T1 |
 | `/pricing` | IMG_1873 | T1 |
 | `/tribe` (or `/community`) | IMG_1839 | T1 |
