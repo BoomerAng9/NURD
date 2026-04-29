@@ -28,29 +28,31 @@
 
 @layer base {
   :root {
-    /* Light theme — NURD-drip-identity (cream/white base, multi-color drip accents) */
-    --background: 36 25% 96%;       /* #f8f4ec cream — bright, near-white */
-    --foreground: 30 15% 9%;        /* #1a1612 warm near-black */
-    --card: 0 0% 100%;
-    --card-foreground: 30 15% 9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 30 15% 9%;
-    --primary: 30 15% 9%;
-    --primary-foreground: 36 25% 96%;
-    --secondary: 36 18% 90%;
-    --secondary-foreground: 30 15% 9%;
-    --muted: 36 18% 90%;
-    --muted-foreground: 33 8% 39%;  /* #6a665d */
-    --accent: 30 15% 9%;             /* default accent = primary; drip colors below */
-    --accent-foreground: 36 25% 96%;
-    --destructive: 0 70% 40%;
-    --destructive-foreground: 36 25% 96%;
-    --border: 33 25% 80%;            /* #d8d2c4 hairline */
-    --input: 33 25% 80%;
-    --ring: 33 8% 39%;
-    --radius: 0;                     /* hairline-only, sharp corners */
+    /* Light theme — Claude commercial retro palette: warm paper, terracotta accent.
+     * Editorial / hand-crafted / 70s-magazine print feel. Surfaces that don't opt
+     * into [data-theme="deep"] inherit this. */
+    --background: 40 30% 92%;        /* #F0EEE6 warm cream paper */
+    --foreground: 25 14% 11%;        /* #1F1B17 warm dark brown */
+    --card: 38 40% 96%;              /* #F8F2E5 slightly warmer paper */
+    --card-foreground: 25 14% 11%;
+    --popover: 38 40% 96%;
+    --popover-foreground: 25 14% 11%;
+    --primary: 25 14% 11%;
+    --primary-foreground: 40 30% 92%;
+    --secondary: 38 25% 86%;
+    --secondary-foreground: 25 14% 11%;
+    --muted: 38 25% 86%;
+    --muted-foreground: 33 17% 31%;  /* #5C5142 warm tan-grey */
+    --accent: 17 64% 60%;            /* #DA7756 Claude terracotta */
+    --accent-foreground: 40 30% 92%;
+    --destructive: 0 65% 45%;
+    --destructive-foreground: 40 30% 92%;
+    --border: 38 26% 77%;            /* #D4C9B5 warm tan hairline */
+    --input: 38 26% 77%;
+    --ring: 17 64% 60%;              /* terracotta focus ring */
+    --radius: 0;                      /* hairline-only, sharp corners */
 
-    /* NURD-drip-identity accents — first-class brand colors in the light theme */
+    /* NURD-drip-identity accents — brand colors retained on top of the warm-paper base */
     --nurd-drip-green: 132 78% 56%;   /* #3DE053 — V.I.B.E. / code-execution */
     --nurd-drip-orange: 31 100% 50%;  /* #FF8A00 — ACHIEVERS / events */
     --nurd-drip-blue: 191 73% 56%;    /* #3EC6E0 — Skill Marketplace */
@@ -58,27 +60,28 @@
   }
 
   .dark {
-    /* Dark mode (legacy class-based) — kept for component compatibility.
-     * Primary dark surface is [data-theme="deep"] below — the deeper-build canon. */
-    --background: 0 0% 4%;           /* #0a0a0a near-black */
-    --foreground: 40 16% 89%;        /* #e8e6e0 off-white */
-    --card: 30 7% 5%;                /* #0f0e0d */
-    --card-foreground: 40 16% 89%;
-    --popover: 30 7% 5%;
-    --popover-foreground: 40 16% 89%;
-    --primary: 40 16% 89%;
-    --primary-foreground: 0 0% 4%;
-    --secondary: 30 7% 9%;
-    --secondary-foreground: 40 16% 89%;
-    --muted: 30 7% 9%;
-    --muted-foreground: 35 12% 60%;  /* #a09c92 */
-    --accent: 132 78% 56%;            /* drip-green highlight */
-    --accent-foreground: 0 0% 4%;
+    /* Dark theme — Claude commercial retro palette: warm dim, cream off-white,
+     * same terracotta accent. NOT pure black. Editorial-night feel.
+     * (Distinct from [data-theme="deep"] below, which is the deeper-build neon canon.) */
+    --background: 25 14% 11%;        /* #1F1B17 warm deep brown */
+    --foreground: 38 33% 86%;        /* #E8DFD0 cream off-white */
+    --card: 25 14% 15%;              /* #2A2520 slightly lifted */
+    --card-foreground: 38 33% 86%;
+    --popover: 25 14% 15%;
+    --popover-foreground: 38 33% 86%;
+    --primary: 38 33% 86%;
+    --primary-foreground: 25 14% 11%;
+    --secondary: 25 14% 18%;
+    --secondary-foreground: 38 33% 86%;
+    --muted: 25 14% 18%;
+    --muted-foreground: 36 13% 60%;  /* #A89F8E warm tan-mid */
+    --accent: 17 64% 60%;            /* #DA7756 same Claude terracotta */
+    --accent-foreground: 25 14% 11%;
     --destructive: 0 70% 50%;
-    --destructive-foreground: 40 16% 89%;
-    --border: 24 6% 10%;             /* #1a1816 */
-    --input: 24 6% 10%;
-    --ring: 35 12% 60%;
+    --destructive-foreground: 38 33% 86%;
+    --border: 28 16% 20%;            /* #3A322A warm dim border */
+    --input: 28 16% 20%;
+    --ring: 17 64% 60%;
   }
 }
 
