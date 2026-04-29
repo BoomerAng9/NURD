@@ -35,9 +35,7 @@ services:
         max-size: "10m"
         max-file: "3"
 
-# Traefik network — same external network used by perform, cti-hub, etc.
-# Confirm name on myclaw-vps with: docker network ls | grep traefik
-networks:
-  default:
-    name: traefik
-    external: true
+# Traefik on myclaw-vps runs in host network mode and routes by label via the
+# Docker socket — apps do NOT share a bridge network with Traefik. Letting
+# compose create the default `nurdscode_default` bridge is the canonical FOAI
+# pattern (matches perform_default, chicken-hawk_default, voice_relay_default).
