@@ -6,6 +6,8 @@ This design system governs the **deeper-build** identity — the platform-level 
 
 > **Identity rule (owner directive 2026-04-29):** NURD CODE has its own identity. Do NOT frame any NURD asset, theme, code, component, palette, typography, or copy as "Coastal-aligned" or "Coastal-Brewing-aligned." Coastal Brewing Co. is a sibling FOAI vertical in the company sense, NOT in design language. The 30 mockups in IMG_1841.zip have ZERO Coastal aesthetic.
 
+> **Landing exception (owner directive 2026-04-29):** The `/` Landing is the **Kokonut two-column hero** (light theme, NURD Kid image right, motion pillar list left, "An FOAI Space for Modern Dreamers." tagline, "Build the world you want to live in." footer). It is **separate from the 30 IMG_1841.zip mockups** — the deeper-build hero candidates (IMG_1862 / IMG_1842 / IMG_1869) are NOT for the Landing. They apply to other surfaces only. Do NOT propose to "rebuild the Landing from IMG_1862." The Coastal-branded cup + bag in the Landing hero image are owner-curated cross-vertical art, approved on customer copy.
+
 ---
 
 ## 1. The thesis
@@ -290,11 +292,13 @@ This canon doc is the source of truth for the deeper-build implementation. Imple
 
 **Recommended Tier 1 implementation order:**
 
+> NOTE: `/` Landing is the **Kokonut hero (light theme)** — already live, do NOT rebuild from IMG_1862. The deeper-build heroes (IMG_1862 / IMG_1842 / IMG_1869 / IMG_1875 / IMG_1879) are reusable below the Kokonut hero as section-level modules ("capabilities", "mid-page CTA", "final CTA") OR on alt routes (e.g., `/build`), but they are NOT the Landing hero.
+
 1. **Global components** (NavBar, SiteFooter, DripLogo SVG, NeonDeviceFrame, CircuitBackground, MadeInPLRBadge)
 2. **Asset extraction** (Tier 1 image list above) — done in parallel with global components
 3. **Theme toggle infrastructure** — `[data-theme="deep"]` vs `[data-theme="initiative"]` root attribute, route-based default
-4. **Move existing `/` content to `/initiative`** as the youth-program landing
-5. **Build new `/` Landing** — hero (IMG_1862) + capabilities (IMG_1836) + tribe section (IMG_1839) + featured projects (IMG_1864) + pricing (IMG_1873) + final CTA (IMG_1879)
+4. **`/initiative` section** — light theme NURD-drip-identity (re-derive from IMG_1861/1866/1871/1878), separate from Landing
+5. **Optional Landing enrichment** — extend the Kokonut Landing with deeper-build section modules below the hero (capabilities IMG_1836, tribe-preview IMG_1839, featured-projects IMG_1864, pricing-preview IMG_1873, final-CTA IMG_1879). The Kokonut hero stays at the top.
 6. **Build `/auth`** with ACHEEVY chat assist (IMG_1870)
 7. **Build `/pricing`** standalone (IMG_1873)
 8. **Build `/tribe`** standalone (IMG_1839)
