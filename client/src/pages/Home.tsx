@@ -63,11 +63,14 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* Block 3 — bottom tagline (replaces kokonut "SUMMER 2025") */}
+              {/* Block 3 — bottom tagline (links to the manifesto) */}
               <div>
-                <h2 className="font-serif text-2xl md:text-3xl italic font-normal text-foreground/90 tracking-tight">
+                <Link
+                  href="/dreamers"
+                  className="font-serif text-2xl md:text-3xl italic font-normal text-foreground/90 tracking-tight hover:text-foreground transition-colors inline-block"
+                >
                   An FOAI Space for Modern Dreamers.
-                </h2>
+                </Link>
               </div>
             </div>
           </div>
@@ -128,28 +131,50 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Col 2 — The Build Path */}
+            {/* Col 2 — What you can do */}
             <div className="bg-background p-6 md:p-8 flex flex-col">
               <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground mb-3">
-                02 The Build Path
+                02 What you can do
               </p>
-              <h3 className="font-sans font-semibold tracking-tight text-xl md:text-2xl mb-4 text-foreground">
-                Mockup → page.
+              <h3 className="font-serif font-medium tracking-tight text-xl md:text-2xl mb-4 text-foreground">
+                The workbench.
               </h3>
               <p className="text-sm md:text-base text-muted-foreground leading-relaxed mb-6">
-                Surfaces from the owner mockup canon. Live or coming.
+                AI-paired tools, paths, and people for builders.
               </p>
-              <ul className="space-y-2 mb-2 text-sm">
-                <BuildPathRow href="/pricing"  label="Pricing"  img="IMG_1873" status="live" />
-                <BuildPathRow href="/tribe"    label="Tribe"    img="IMG_1839" status="live" />
-                <BuildPathRow href="/services" label="Services" img="IMG_1880" status="live" />
-                <BuildPathRow href="#"         label="Auth"     img="IMG_1870" status="coming" />
-                <BuildPathRow href="#"         label="Chat"     img="IMG_1865" status="coming" />
-                <BuildPathRow href="#"         label="Learn"    img="IMG_1841" status="coming" />
-                <BuildPathRow href="#"         label="Build"    img="IMG_1858" status="coming" />
-                <BuildPathRow href="#"         label="Projects" img="IMG_1864" status="coming" />
-                <BuildPathRow href="#"         label="Account"  img="IMG_1867" status="coming" />
+              <ul className="space-y-2 mb-8 text-sm">
+                <li>
+                  <Link href="/access-ai" className="text-foreground/90 hover:underline underline-offset-4">
+                    → Build with V.I.B.E.
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/code-playground" className="text-foreground/90 hover:underline underline-offset-4">
+                    → Code Playground
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/skill-marketplace" className="text-foreground/90 hover:underline underline-offset-4">
+                    → Skill Marketplace
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/services" className="text-foreground/90 hover:underline underline-offset-4">
+                    → Services
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/about" className="text-foreground/90 hover:underline underline-offset-4">
+                    → Tour the FOAI verticals
+                  </Link>
+                </li>
               </ul>
+              <Link
+                href="/access-ai"
+                className="mt-auto font-mono uppercase tracking-wordmark text-[10px] text-foreground hover:underline underline-offset-4"
+              >
+                Open the workbench →
+              </Link>
             </div>
 
             {/* Col 3 — The Billing Matrix */}
@@ -204,38 +229,6 @@ export default function Home() {
         </div>
       </footer>
     </div>
-  );
-}
-
-interface BuildPathRowProps {
-  href: string;
-  label: string;
-  img: string;
-  status: "live" | "coming";
-}
-
-function BuildPathRow({ href, label, img, status }: BuildPathRowProps) {
-  const isLive = status === "live";
-  return (
-    <li className="flex items-baseline gap-3">
-      {isLive ? (
-        <Link href={href} className="text-foreground/90 hover:underline underline-offset-4">
-          {label}
-        </Link>
-      ) : (
-        <span className="text-foreground/70">{label}</span>
-      )}
-      <span className="font-mono text-[9px] text-muted-foreground/70">{img}</span>
-      <span
-        className={`ml-auto font-mono uppercase tracking-wordmark text-[9px] ${
-          isLive
-            ? "text-[hsl(var(--nurd-drip-green))]"
-            : "text-muted-foreground"
-        }`}
-      >
-        {isLive ? "Live" : "Coming"}
-      </span>
-    </li>
   );
 }
 
