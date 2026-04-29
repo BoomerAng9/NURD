@@ -1,10 +1,18 @@
 import { Request, Response } from 'express';
 import OpenAI from 'openai';
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+// Lazy singleton — boot must succeed even if OPENAI_API_KEY is unset.
+// First call to a route in this module is where the missing-key error surfaces.
+let _openai: OpenAI | null = null;
+function getOpenAI(): OpenAI {
+  if (!_openai) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('OPENAI_API_KEY is not configured');
+    }
+    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  }
+  return _openai;
+}
 
 /**
  * Interface for code suggestion request
@@ -49,7 +57,7 @@ export async function generateCodeSuggestion(req: Request, res: Response) {
       systemMessage += ` The user wants code in ${language}. Provide only the code without explanations unless asked.`;
     }
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: systemMessage },
@@ -85,7 +93,7 @@ export async function explainCode(req: Request, res: Response) {
     }
     systemMessage += ` Explain the code in a way that helps beginners understand the concepts. Break down complex parts.`;
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: systemMessage },
@@ -132,7 +140,7 @@ export async function optimizeCode(req: Request, res: Response) {
         systemMessage += ` Optimize the code for performance, readability, and security while maintaining its functionality.`;
     }
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: systemMessage },
