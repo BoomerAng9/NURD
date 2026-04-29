@@ -1,0 +1,89 @@
+# Universal Ecosystem Tool Warehouse - Google AI Backbone Tool Cards
+# Release: NURDSCODE vNext Add-On 02
+
+tools:
+  - tool_id: gemini_enterprise_platform
+    canonical_name: Gemini Enterprise Platform
+    shelf: Enterprise Agent Governance
+    classification: Enterprise Agent Control Plane
+    status: Approved Strategic Integration
+    primary_use:
+      - agent gallery
+      - organization agent governance
+      - ADK agent registration
+      - A2A agent registration
+      - Google-made agent access
+      - enterprise agent sharing
+    blocked_use:
+      - default beginner app-builder UI
+      - bypassing NURDSCODE customer experience
+      - bypassing Tool House governance
+
+  - tool_id: gemini_adk
+    canonical_name: Gemini Agent Development Kit
+    shelf: Agent Frameworks
+    classification: Google-Native Agent Framework
+    status: Approved Google AI Backbone Tool
+    primary_use:
+      - code-first agent creation
+      - Vertex AI Agent Engine deployment
+      - Gemini model agents
+      - tool-using agents
+      - enterprise agents
+    blocked_use:
+      - production deployment without Self-Check
+      - customer data access without privacy label
+
+  - tool_id: gemini_cli
+    canonical_name: Gemini CLI
+    shelf: Code Generation & Coding Agents
+    classification: Google-Native Terminal Agent
+    status: Approved Internal Delivery Lane
+    license: Apache-2.0
+    primary_use:
+      - terminal agent work
+      - repo tasks
+      - GCP/Firebase/Vertex helper workflows
+      - MCP integrations
+      - file and shell operations
+    blocked_use:
+      - unsupervised production changes
+      - bypassing OpenHands/Warp receipts
+      - bypassing privacy gates
+
+  - tool_id: gemini_interactions_api
+    canonical_name: Gemini Interactions API
+    shelf: Agent Interaction APIs
+    classification: Beta Agent Interaction Layer
+    status: Approved Beta / Feature-Flag Only
+    primary_use:
+      - stateful agent interactions
+      - background research tasks
+      - streaming builder feedback
+      - multimodal interaction experiments
+    privacy_rules:
+      - store_false_for_private_non_background_tasks
+      - background_requires_storage_disclosure
+      - production_default_generateContent_until_stable
+    blocked_use:
+      - default stable production inference
+      - hidden storage of sensitive paid customer interactions
+
+  - tool_id: gemini_embeddings
+    canonical_name: Gemini Embeddings
+    shelf: Data, Memory & Retrieval
+    classification: Semantic Memory Layer
+    status: Approved
+    primary_use:
+      - repo memory
+      - Tool House search
+      - OpenKlass retrieval
+      - app spec search
+      - semantic matching
+    stable_model:
+      - gemini-embedding-001
+    preview_model:
+      - Gemini Embedding 2 for multimodal retrieval
+    blocked_use:
+      - embedding customer private data without workspace consent
+      - mixing customer vector stores across tenants
