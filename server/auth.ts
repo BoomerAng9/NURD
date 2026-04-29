@@ -49,9 +49,15 @@ export function setupAuth(app: Express) {
     secret: resolveSessionSecret(),
     resave: false,
     saveUninitialized: false,
+    // Use the Drizzle-managed `sessions` table (defined in shared/schema.ts).
+    // connect-pg-simple defaults to creating a `session` (singular) table with
+    // index `IDX_session_expire` — same index name as Drizzle's, so leaving
+    // createTableIfMissing=true causes a CREATE INDEX collision and 500s every
+    // auth route on first call. Pointing at the existing table fixes it.
     store: new PostgresSessionStore({
       pool,
-      createTableIfMissing: true
+      tableName: 'sessions',
+      createTableIfMissing: false,
     }),
     cookie: {
       secure: process.env.NODE_ENV === 'production',
