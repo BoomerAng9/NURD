@@ -1,0 +1,10 @@
+{
+  "google_ai_backbone": {
+    "gemini_embedding_model": "gemini-embedding-001",
+    "multimodal_embedding_enabled": false,
+    "gemini_enterprise_agent_registered": false,
+    "vertex_agent_engine_used": false,
+    "adk_agent_ids": [],
+    "privacy_mode": "private_paid"
+  }
+}
