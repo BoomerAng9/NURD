@@ -28,8 +28,7 @@ export default function Home() {
               An FOAI Space for Modern Dreamers.
             </p>
             <p className="text-base md:text-lg text-muted-foreground max-w-prose leading-relaxed">
-              Build platform from Pooler, GA. AI-paired coding through V.I.B.E., peer skill exchange,
-              and cohort programs for youth. A vertical of the FOAI ecosystem.
+              Build the world you want to live in.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
               <Link
