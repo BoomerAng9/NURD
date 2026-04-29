@@ -1,0 +1,43 @@
+# ============================================================================
+# NURDSCODE — myclaw-vps Traefik service definition
+# ============================================================================
+# Brings the container up on the FOAI Traefik network at:
+#   - https://nurdscode.com
+#   - https://www.nurdscode.com
+#
+# .env.local must exist and be populated from openclaw-sop5-openclaw-1.
+# Volume /opt/foai-data/nurdscode/uploads/ must exist on the host before `up`.
+# ============================================================================
+
+services:
+  nurdscode:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nurdscode
+    restart: unless-stopped
+    env_file: .env.local
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+    volumes:
+      - /opt/foai-data/nurdscode/uploads:/app/uploads
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nurdscode.rule=Host(`nurdscode.com`) || Host(`www.nurdscode.com`)"
+      - "traefik.http.routers.nurdscode.entrypoints=websecure"
+      - "traefik.http.routers.nurdscode.tls.certresolver=letsencrypt"
+      - "traefik.http.services.nurdscode.loadbalancer.server.port=3000"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# Traefik network — same external network used by perform, cti-hub, etc.
+# Confirm name on myclaw-vps with: docker network ls | grep traefik
+networks:
+  default:
+    name: traefik
+    external: true
