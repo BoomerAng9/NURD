@@ -36,6 +36,24 @@ This file pins the operating doctrine, repo identity, target architecture, and k
 
 The Phase 1 substrate documented below is the **deployed reality** (single container at `nurdscode.com` on myclaw-vps). vNext is the **target direction**. Phase 1 ships, then Phase 1.5 modularizes, then Phase 2/3/vNext layers on. See the directive docs for the full vNext path.
 
+### Voice integration is non-negotiable for the chat interface (Phase 2)
+
+Owner directive 2026-04-29: NURDSCODE chat / A.I.M.S. Carrier Interface MUST ship with voice. The carrier metaphor (Flip Phone Mode = voice-first PTT, Two-Way Pager Mode = text fallback) collapses without voice — it's not a "ship without voice, add later" surface.
+
+**Verified canon** (per `~/.claude/skills/open-mind/references/voice-routing.md`, dated 2026-04-19):
+
+| Lane | Default | Fallback |
+|---|---|---|
+| Realtime voice + function calling | `gemini-3.1-flash-live-preview` | Inworld + Spinner |
+| Pre-recorded TTS / narration | `gemini-3.1-flash-tts-preview` | — |
+| Text agentic reasoning | Gemini 3.1 Flash (text) | — |
+
+**Wire don't build** — production-shaped voice service already exists at `~/foai/voice_relay/` (FastAPI WebSocket relay, deployed at `wss://voice.foai.cloud`, Gemini Live, function-calling dispatch, ACHEEVY persona). NURD reuses this; no new service needed.
+
+Phase 2 wiring details: `docs/VOICE_INTEGRATION.md`.
+
+Memory pointer: `feedback_voice_integration_nurd_chat_non_negotiable.md`.
+
 ---
 
 ## Identity
