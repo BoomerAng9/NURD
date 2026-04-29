@@ -1,8 +1,9 @@
 import type { Config } from "tailwindcss";
 
 /**
- * NURD tailwind config — FOAI vertical, Coastal-Brewing-aligned.
- * Same HSL var pattern, same sharp-corner default, same wordmark tracking.
+ * NurdsCode tailwind config — FOAI vertical, NURD-drip-identity canon.
+ * HSL token system from client/src/index.css, sharp-corner default,
+ * wordmark tracking utility (0.18em) for mono-cap eyebrows / nav / footer.
  */
 export default {
   darkMode: ["class"],

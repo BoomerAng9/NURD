@@ -1,15 +1,15 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import madeInPoolerImg from "@/assets/made-in-pooler.png";
-import nurdCoastalHeroImg from "@/assets/nurd-coastal-hero.png";
+import nurdHeroImg from "@/assets/nurd-hero.png";
 
 /**
- * NURD CODE — Home page.
+ * NurdsCode — Home page.
  *
  * FOAI vertical. Hero adapts the kokonut-style two-column layout (owner-supplied
  * pattern 2026-04-29): image right, content left with hover-lift pillar list,
- * H1 + section heading + body. Owner-supplied hero image (NURD x Coastal scene
- * with Pooler palms + lowcountry storks) anchors the right column.
+ * H1 + section heading + body. Owner-supplied hero image (NURD-drip-identity
+ * scene with Pooler palms) anchors the right column.
  *
  * Below the hero: "What is a NURD?" / "Is that you?" / Footer with
  * "Powered by: A.I.M.S."
@@ -34,7 +34,7 @@ export default function Home() {
             <div className="md:order-2 relative">
               <div className="absolute -z-10 w-72 h-72 rounded-full bg-foreground/5 blur-3xl opacity-60 -top-10 -left-10"></div>
               <img
-                src={nurdCoastalHeroImg}
+                src={nurdHeroImg}
                 alt="NURD CODE — Made in Pooler, lowcountry scene"
                 className="rounded-2xl shadow-2xl w-full object-cover"
               />

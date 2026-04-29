@@ -3,27 +3,33 @@
 @tailwind utilities;
 
 /* ===========================================================================
- * NURD by ACHIEVEMOR — design tokens (FOAI vertical, Coastal-Brewing-aligned)
+ * NURD by ACHIEVEMOR — design tokens (FOAI vertical, NURD-drip-identity)
  *
- * NURD is a sibling to Coastal Brewing Co. in the FOAI ecosystem. Both are
- * Made in Pooler. Both share the same monochrome warm base, sharp corners,
- * Inter grotesk + Fraunces serif + JBMono utility, no decorative gradients,
- * no glass panels.
+ * NURD CODE has its own visual identity — a Pooler-rooted drip canon expressed
+ * in two complementary themes. Source: 30 owner-supplied mockups (IMG_1841.zip,
+ * studied 2026-04-29). See docs/design/DEEPER_BUILD.md for the full system.
  *
- * NURD's distinguishing motifs (used SPARINGLY, the way Coastal uses sage for
- * matcha and wood-stork line art for lowcountry):
- *   --nurd-drip-green   — RESERVED for V.I.B.E. / code-execution surfaces
- *   --nurd-drip-orange  — RESERVED for ACHIEVERS program / event accents
- *   --nurd-drip-blue    — RESERVED for Skill Marketplace exchange surfaces
+ *   Light theme (default, this :root block) — drip-stickered, multi-color,
+ *   bright graphic-pop. Cream/white base + drip-color accents (green / orange /
+ *   purple / cyan) used as primary identity, not as restraint.
  *
- * Default radius is 0 (sharp hairline corners) to match Coastal canon.
- * Default theme is light (lowcountry editorial). Dark mode opt-in via .dark.
+ *   Deeper-build theme ([data-theme="deep"], below) — black + neon-on-dark,
+ *   circuit-board, character-led, builder-grade.
+ *
+ * NURD signature accents (drip-color family — usable as primary identity in
+ * the light theme, reserved per surface in the deeper-build theme):
+ *   --nurd-drip-green   — V.I.B.E. / code-execution surfaces
+ *   --nurd-drip-orange  — ACHIEVERS program / event accents
+ *   --nurd-drip-blue    — Skill Marketplace exchange surfaces
+ *   --nurd-drip-purple  — drip-sticker badge accent
+ *
+ * Default radius is 0 (sharp hairline corners). Dark mode opt-in via .dark.
  * =========================================================================== */
 
 @layer base {
   :root {
-    /* Light theme — lowcountry editorial cream / warm-near-black (Coastal canon) */
-    --background: 36 25% 92%;       /* #f3efe6 cream — same as Coastal */
+    /* Light theme — NURD-drip-identity (cream/white base, multi-color drip accents) */
+    --background: 36 25% 96%;       /* #f8f4ec cream — bright, near-white */
     --foreground: 30 15% 9%;        /* #1a1612 warm near-black */
     --card: 0 0% 100%;
     --card-foreground: 30 15% 9%;
@@ -31,28 +37,30 @@
     --popover-foreground: 30 15% 9%;
     --primary: 30 15% 9%;
     --primary-foreground: 36 25% 96%;
-    --secondary: 36 18% 87%;
+    --secondary: 36 18% 90%;
     --secondary-foreground: 30 15% 9%;
-    --muted: 36 18% 87%;
+    --muted: 36 18% 90%;
     --muted-foreground: 33 8% 39%;  /* #6a665d */
-    --accent: 30 15% 9%;             /* default accent = primary; reserved colors below */
+    --accent: 30 15% 9%;             /* default accent = primary; drip colors below */
     --accent-foreground: 36 25% 96%;
     --destructive: 0 70% 40%;
     --destructive-foreground: 36 25% 96%;
     --border: 33 25% 80%;            /* #d8d2c4 hairline */
     --input: 33 25% 80%;
     --ring: 33 8% 39%;
-    --radius: 0;                     /* hairline-only, sharp corners — Coastal canon §8 */
+    --radius: 0;                     /* hairline-only, sharp corners */
 
-    /* NURD signature accents — RESERVED. Use only on the surface they belong to. */
-    --nurd-drip-green: 132 78% 56%;  /* #3DE053 — V.I.B.E. / code-execution only */
-    --nurd-drip-orange: 31 100% 50%; /* #FF8A00 — ACHIEVERS / events only */
-    --nurd-drip-blue: 191 73% 56%;   /* #3EC6E0 — Skill Marketplace exchange only */
+    /* NURD-drip-identity accents — first-class brand colors in the light theme */
+    --nurd-drip-green: 132 78% 56%;   /* #3DE053 — V.I.B.E. / code-execution */
+    --nurd-drip-orange: 31 100% 50%;  /* #FF8A00 — ACHIEVERS / events */
+    --nurd-drip-blue: 191 73% 56%;    /* #3EC6E0 — Skill Marketplace */
+    --nurd-drip-purple: 268 56% 36%;  /* #5B2A8A — drip-sticker badge */
   }
 
   .dark {
-    /* Dark theme — primary surface (matte warm black / off-white) — Coastal canon */
-    --background: 0 0% 4%;           /* #0a0a0a warm matte black */
+    /* Dark mode (legacy class-based) — kept for component compatibility.
+     * Primary dark surface is [data-theme="deep"] below — the deeper-build canon. */
+    --background: 0 0% 4%;           /* #0a0a0a near-black */
     --foreground: 40 16% 89%;        /* #e8e6e0 off-white */
     --card: 30 7% 5%;                /* #0f0e0d */
     --card-foreground: 40 16% 89%;
@@ -64,7 +72,7 @@
     --secondary-foreground: 40 16% 89%;
     --muted: 30 7% 9%;
     --muted-foreground: 35 12% 60%;  /* #a09c92 */
-    --accent: 38 38% 60%;            /* taupe #c0a572 — reserved highlight (Coastal canon) */
+    --accent: 132 78% 56%;            /* drip-green highlight */
     --accent-foreground: 0 0% 4%;
     --destructive: 0 70% 50%;
     --destructive-foreground: 40 16% 89%;
@@ -88,8 +96,8 @@
     font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
   }
 
-  /* Headlines use Inter (grotesk default per Coastal canon §3). Fraunces serif
-   * is reserved for editorial / about / lowcountry-storytelling pages. */
+  /* Headlines use Inter grotesk (default). Fraunces serif is reserved for
+   * editorial / about / long-form storytelling pages. */
   h1, h2, h3, h4, h5, h6 {
     @apply font-sans tracking-tight;
   }
@@ -107,9 +115,8 @@
 }
 
 @layer components {
-  /* NURD-drip ornament — sparing decorative use. Parallel to Coastal's palm
-   * silhouette / wood stork line art. Apply to small corner ornaments only,
-   * never to body text or primary CTAs. */
+  /* NURD-drip ornament — drip-sticker decorative. Used as character-adjacent
+   * stickers, badge accents, and corner ornaments. */
   .nurd-drip-ornament {
     color: hsl(var(--nurd-drip-green));
     filter: drop-shadow(0 0 4px hsl(var(--nurd-drip-green) / 0.3));

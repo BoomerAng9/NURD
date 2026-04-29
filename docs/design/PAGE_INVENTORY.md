@@ -17,21 +17,21 @@ Mapping every IMG_1841.zip mockup to its proposed route in the NURD CODE app. Re
 | IMG_1854 | Execution Dashboard (botanical / forest-glade) | deeper-build (botanical variant) | `/owner/execution` (operator-only) | MEDIUM-LOW |
 | IMG_1858 | V.I.B.E. vs Professional Code Editor split | deeper-build | `/build` lane comparison module OR `/learn` lane intro | MEDIUM |
 | IMG_1859 | Build features matrix — Professional Development Tools | deeper-build | `/build` features section | MEDIUM |
-| IMG_1861 | "Think It / Prompt It / Let's Build It" 3-step flow | initiative-cream (light) | `/think` → `/` ("How it works" rail, light island within deeper) | HIGH |
+| IMG_1861 | "Think It / Prompt It / Let's Build It" 3-step flow | initiative-light (light) | `/think` → `/` ("How it works" rail, light island within deeper) | HIGH |
 | IMG_1862 | Landing hero — skater on hover-pad (drip headline) | deeper-build | `/` Landing hero (CANONICAL deeper-build hero) | MEDIUM |
 | IMG_1863 | Voice Assistant agent demo — Sockeye Financial phone mock | deeper-build | `/agents` / `/showcase` ("What you can build" sample) | HIGH |
 | IMG_1864 | Featured Projects gallery (dark) | deeper-build | `/projects` (deeper-build) | HIGH |
 | IMG_1865 | Chat with ACHEEVY — IDE shell layout | deeper-build | `/chat` (Carrier Interface Builder mode) | HIGH |
-| IMG_1866 | About NurdsCode — Mission/Values + Team grid | initiative-cream | `/about` or `/initiative/about` | HIGH |
+| IMG_1866 | About NurdsCode — Mission/Values + Team grid | initiative-light | `/about` or `/initiative/about` | HIGH |
 | IMG_1867 | Profile Settings dashboard | deeper-build | `/account/settings` (with sub-routes) | HIGH |
 | IMG_1868 | "Sockeye OS — Deep Water" decorative HUD | deeper-build (cyan variant) | raw asset / decorative bg only | LOW |
 | IMG_1869 | Landing hero — split devices + audience pills | deeper-build | `/` Landing hero alt (same family as IMG_1862) | HIGH |
 | IMG_1870 | Auth screen — Login + 3-step Register + ACHEEVY chat | deeper-build | `/auth` (or `/login` + `/register`) | HIGH |
-| IMG_1871 | API & Integration documentation overview | initiative-cream (light) | `/initiative/docs/api` or `/docs/integrations` | HIGH |
+| IMG_1871 | API & Integration documentation overview | initiative-light (light) | `/initiative/docs/api` or `/docs/integrations` | HIGH |
 | IMG_1873 | Pricing tiers — Curious / Growing / Expert Nurd | deeper-build | `/pricing` | HIGH |
 | IMG_1875 | Mid-page CTA section — "Join Thousands of Nurds" | deeper-build | `/` (below hero, before pricing) | HIGH |
 | IMG_1876 | Site footer (5-col + newsletter + sister-sites) | deeper-build | Global `<SiteFooter>` component | HIGH |
-| IMG_1878 | Featured Projects grid (cream) | initiative-cream | `/initiative/projects` | HIGH |
+| IMG_1878 | Featured Projects grid (cream) | initiative-light | `/initiative/projects` | HIGH |
 | IMG_1879 | Final CTA banner — "Ready to Think It..." | deeper-build | `/` (final CTA section) | HIGH |
 | IMG_1880 | "OUR SERVICES" 3-tile grid | deeper-build | `/services` | HIGH |
 | IMG_1882 | Site footer (4-col, alt variant) | deeper-build | Global `<SiteFooter>` component (alt) | HIGH |
@@ -69,11 +69,11 @@ Mapping every IMG_1841.zip mockup to its proposed route in the NURD CODE app. Re
 | `/build` (V.I.B.E. lane) | IMG_1858, IMG_1859 | T2 |
 | `/chat` (ACHEEVY) | IMG_1865 | T2 |
 
-### Initiative Cream surfaces (light theme default)
+### Initiative-Light NURD-drip-identity surfaces (light theme)
 
 | Route | Source mockup(s) | Tier |
 |---|---|---|
-| `/initiative` (Landing — preserves current Coastal-aligned home) | (current PR #16 hero) | T1 |
+| `/initiative` (Landing — preserves current NURD-drip-identity light home) | (current PR #16 hero) | T1 |
 | `/initiative/about` | IMG_1866 | T1 |
 | `/initiative/projects` | IMG_1878 | T1 |
 | `/initiative/docs/api` | IMG_1871 | T2 (after tool-name scrub) |
