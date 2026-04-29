@@ -22,7 +22,7 @@ export default function Home() {
               Made in Pooler.
             </p>
             <h1 className="font-sans font-semibold tracking-tight text-[clamp(40px,7vw,80px)] leading-[1.05] text-foreground">
-              NURDSCODE.
+              NURDS CODE.
             </h1>
             <p className="text-2xl md:text-3xl text-foreground/90 font-light leading-tight max-w-prose">
               An FOAI Space for Modern Dreamers.
