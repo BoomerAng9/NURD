@@ -1,4 +1,6 @@
 import { Link } from "wouter";
+import { Sun, Moon } from "lucide-react";
+import { useTheme } from "@/providers/theme-provider";
 import madeInPlrImg from "@/assets/made-in-pooler-green.png";
 import nurdHeroImg from "@/assets/nurd-hero.png";
 
@@ -9,6 +11,9 @@ import nurdHeroImg from "@/assets/nurd-hero.png";
  * justify-between 3-block rhythm: NurdsCode. wordmark / What is a NURD? middle
  * block / An FOAI Space for Modern Dreamers. tagline at bottom).
  *
+ * Theme: Claude-commercial retro warm-paper palette (cream + warm dark + terracotta
+ * accent). Both light + dark via :root / .dark in index.css. Theme toggle below.
+ *
  * Below the hero: "The platform" — Initiative path / Build path (mockup → page) /
  * Billing matrix. Footer: pipe-separated, vertically centered row, PLR logo.
  */
@@ -16,7 +21,8 @@ export default function Home() {
   return (
     <div className="bg-background text-foreground">
       {/* ============== HERO (kokonut two-column) ============== */}
-      <section>
+      <section className="relative">
+        <ThemeToggle />
         <div className="container py-12 md:py-24">
           <div className="grid md:grid-cols-2 gap-8 relative overflow-x-hidden">
             {/* Right column: owner-supplied hero image */}
@@ -37,7 +43,7 @@ export default function Home() {
                   <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground mb-4">
                     Made in Pooler.
                   </p>
-                  <h1 className="text-6xl md:text-7xl font-bold text-foreground leading-[1.05] tracking-tighter">
+                  <h1 className="font-serif text-6xl md:text-7xl font-semibold text-foreground leading-[1.02] tracking-tight">
                     NurdsCode.
                   </h1>
                 </div>
@@ -47,7 +53,7 @@ export default function Home() {
                   <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground mb-3">
                     02 What is a NURD?
                   </p>
-                  <h2 className="font-sans font-semibold tracking-tight text-3xl md:text-4xl text-foreground leading-[1.1] mb-3">
+                  <h2 className="font-serif font-medium tracking-tight text-3xl md:text-4xl text-foreground leading-[1.1] mb-3">
                     Naturally Unstoppable<br />
                     Resourceful Dreamers.
                   </h2>
@@ -58,7 +64,7 @@ export default function Home() {
 
                 {/* Block 3 — bottom tagline (replaces kokonut "SUMMER 2025") */}
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-medium text-foreground mt-auto tracking-tight">
+                  <h2 className="font-serif text-2xl md:text-3xl italic font-normal text-foreground/90 mt-auto tracking-tight">
                     An FOAI Space for Modern Dreamers.
                   </h2>
                 </div>
@@ -75,7 +81,7 @@ export default function Home() {
             <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground mb-2">
               01 The platform.
             </p>
-            <h2 className="font-sans font-semibold tracking-tight text-3xl md:text-4xl lg:text-5xl">
+            <h2 className="font-serif font-medium tracking-tight text-3xl md:text-4xl lg:text-5xl">
               What we're building.
             </h2>
           </div>
@@ -248,5 +254,29 @@ function TierRow({ name, price, cadence }: TierRowProps) {
         <span className="text-muted-foreground"> / {cadence}</span>
       </span>
     </div>
+  );
+}
+
+/**
+ * ThemeToggle — flips between light + dark Claude-warm-paper palettes.
+ * Uses the existing ThemeProvider (sets `.dark` on documentElement).
+ */
+function ThemeToggle() {
+  const { themeMode, setThemeMode } = useTheme();
+  const isDark =
+    themeMode === "dark" ||
+    (themeMode === "system" &&
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+  return (
+    <button
+      type="button"
+      onClick={() => setThemeMode(isDark ? "light" : "dark")}
+      aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+      className="absolute right-4 top-4 md:right-8 md:top-8 z-10 inline-flex h-10 w-10 items-center justify-center border border-border bg-card text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+    >
+      {isDark ? <Sun className="h-4 w-4" strokeWidth={1.75} /> : <Moon className="h-4 w-4" strokeWidth={1.75} />}
+    </button>
   );
 }
