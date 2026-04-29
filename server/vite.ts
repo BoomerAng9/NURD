@@ -1,12 +1,7 @@
 import express, { type Express } from "express";
 import fs from "fs";
 import path from "path";
-import { createServer as createViteServer, createLogger } from "vite";
 import { type Server } from "http";
-import viteConfig from "../vite.config";
-import { nanoid } from "nanoid";
-
-const viteLogger = createLogger();
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -20,15 +15,30 @@ export function log(message: string, source = "express") {
 }
 
 export async function setupVite(app: Express, server: Server) {
-  if (process.env.NODE_ENV !== 'development') return;
-  const serverOptions = {
-    middlewareMode: true,
-    hmr: { server },
-    allowedHosts: true,
-  };
+  if (process.env.NODE_ENV !== "development") return;
+
+  // Dynamic imports keep vite/plugin-react/nanoid out of the production bundle.
+  // They are devDependencies; the prod-deps stage prunes them. Importing
+  // vite.config.ts at runtime would also bundle vite into dist/index.js
+  // (esbuild hoists its static `import "vite"` to the bundle root), so the
+  // necessary config is duplicated inline below.
+  const { createServer: createViteServer, createLogger } = await import("vite");
+  const reactPlugin = (await import("@vitejs/plugin-react")).default;
+  const { nanoid } = await import("nanoid");
+
+  const viteLogger = createLogger();
+  const repoRoot = path.resolve(import.meta.dirname, "..");
 
   const vite = await createViteServer({
-    ...viteConfig,
+    plugins: [reactPlugin()],
+    resolve: {
+      alias: {
+        "@": path.resolve(repoRoot, "client", "src"),
+        "@shared": path.resolve(repoRoot, "shared"),
+        "@assets": path.resolve(repoRoot, "attached_assets"),
+      },
+    },
+    root: path.resolve(repoRoot, "client"),
     configFile: false,
     customLogger: {
       ...viteLogger,
@@ -37,7 +47,11 @@ export async function setupVite(app: Express, server: Server) {
         process.exit(1);
       },
     },
-    server: serverOptions,
+    server: {
+      middlewareMode: true,
+      hmr: { server },
+      allowedHosts: true,
+    },
     appType: "custom",
   });
 
@@ -47,13 +61,11 @@ export async function setupVite(app: Express, server: Server) {
 
     try {
       const clientTemplate = path.resolve(
-        import.meta.dirname,
-        "..",
+        repoRoot,
         "client",
         "index.html",
       );
 
-      // always reload the index.html file from disk incase it changes
       let template = await fs.promises.readFile(clientTemplate, "utf-8");
       template = template.replace(
         `src="/src/main.tsx"`,

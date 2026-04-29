@@ -80,8 +80,8 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // Consistently use port 5000 in development
-  const PORT = 5000;
+  // FOAI canon: container port 3000 (override via PORT env var)
+  const PORT = parseInt(process.env.PORT || "3000", 10);
   
   // Clear any existing error handlers to avoid conflicts
   server.removeAllListeners('error');
