@@ -21,8 +21,8 @@ interface ThemeContextType {
 
 const defaultTheme: ThemePreferences = {
   color_scheme: 'default',
-  theme_mode: 'system',
-  accent_color: '#3B82F6'
+  theme_mode: 'light',
+  accent_color: '#DA7756'
 };
 
 const ThemeContext = createContext<ThemeContextType>({

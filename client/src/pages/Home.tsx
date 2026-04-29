@@ -35,39 +35,39 @@ export default function Home() {
               />
             </div>
 
-            {/* Left column: kokonut justify-between 3-block rhythm */}
-            <div className="md:order-1 flex flex-col justify-between">
-              <div className="flex flex-col h-full justify-between gap-10 md:gap-0">
-                {/* Block 1 — wordmark */}
-                <div>
-                  <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground mb-4">
-                    Made in Pooler.
-                  </p>
-                  <h1 className="font-serif text-6xl md:text-7xl font-semibold text-foreground leading-[1.02] tracking-tight">
-                    NurdsCode.
-                  </h1>
-                </div>
+            {/* Left column: kokonut visual shape, natural gap stacking
+             * (literal justify-between dropped — it stretches over a tall image
+             * and produces empty space that doesn't read as design rhythm). */}
+            <div className="md:order-1 flex flex-col justify-center gap-8 md:gap-10">
+              {/* Block 1 — wordmark */}
+              <div>
+                <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground mb-4">
+                  Made in Pooler.
+                </p>
+                <h1 className="font-serif text-6xl md:text-7xl font-semibold text-foreground leading-[1.02] tracking-tight">
+                  NurdsCode.
+                </h1>
+              </div>
 
-                {/* Block 2 — What is a NURD? (replaces kokonut fashion list) */}
-                <div>
-                  <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground mb-3">
-                    02 What is a NURD?
-                  </p>
-                  <h2 className="font-serif font-medium tracking-tight text-3xl md:text-4xl text-foreground leading-[1.1] mb-3">
-                    Naturally Unstoppable<br />
-                    Resourceful Dreamers.
-                  </h2>
-                  <p className="font-sans text-xl md:text-2xl text-foreground/90 font-light">
-                    Is that you?
-                  </p>
-                </div>
+              {/* Block 2 — What is a NURD? (replaces kokonut fashion list) */}
+              <div>
+                <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground mb-3">
+                  02 What is a NURD?
+                </p>
+                <h2 className="font-serif font-medium tracking-tight text-3xl md:text-4xl text-foreground leading-[1.1] mb-3">
+                  Naturally Unstoppable<br />
+                  Resourceful Dreamers.
+                </h2>
+                <p className="font-sans text-xl md:text-2xl text-foreground/90 font-light">
+                  Is that you?
+                </p>
+              </div>
 
-                {/* Block 3 — bottom tagline (replaces kokonut "SUMMER 2025") */}
-                <div>
-                  <h2 className="font-serif text-2xl md:text-3xl italic font-normal text-foreground/90 mt-auto tracking-tight">
-                    An FOAI Space for Modern Dreamers.
-                  </h2>
-                </div>
+              {/* Block 3 — bottom tagline (replaces kokonut "SUMMER 2025") */}
+              <div>
+                <h2 className="font-serif text-2xl md:text-3xl italic font-normal text-foreground/90 tracking-tight">
+                  An FOAI Space for Modern Dreamers.
+                </h2>
               </div>
             </div>
           </div>
