@@ -1,0 +1,91 @@
+tool_id: "tool_slug_unique"
+canonical_name: "Tool Name"
+aliases:
+  - "alternate name"
+  - "implementation alias"
+description: "Short evidence-backed description."
+
+category:
+  shelf_id: "shelf_04"
+  shelf_name: "Sandbox & Runtime Isolation"
+  capability_tags:
+    - "sandbox"
+    - "code_execution"
+    - "agent_runtime"
+
+source:
+  homepage_url: ""
+  repo_url: ""
+  docs_url: ""
+  package_url: ""
+  vendor_or_project: ""
+  owner_named_in_public_source: false
+
+licensing:
+  license_type: "OSS | SaaS | Commercial | Unknown | Mixed"
+  license_name: ""
+  commercial_use_status: "allowed | restricted | unknown | blocked"
+  license_review_status: "not_started | reviewed | needs_legal | blocked"
+
+runtime:
+  runtime_type: "api | cli | sdk | docker | browser_extension | hosted_saas | local_app"
+  install_method: "npm | pip | docker | binary | api_only | manual"
+  install_command: ""
+  supported_languages:
+    - "typescript"
+    - "python"
+  supported_platforms:
+    - "web"
+    - "ios"
+    - "android"
+    - "linux"
+    - "macos"
+
+security:
+  data_access_scope: "none | project | user | org | external_web | filesystem | browser | secrets"
+  sandbox_required: true
+  network_policy: "deny_by_default | allowlist | unrestricted"
+  secret_requirements:
+    - "API_KEY"
+  risk_tier: "low | medium | high | critical"
+  security_review_status: "raw | candidate | sandbox_verified | approved | blocked"
+
+governance:
+  readiness_status: "raw_material"
+  evidence_level: "none | metadata | install_test | smoke_test | integration_test | release_evidence"
+  last_verified_at: null
+  verified_by_role: "Security Reviewer"
+  approval_required:
+    - "Quality Gatekeeper"
+    - "Security Reviewer"
+
+routing:
+  router_tags:
+    - "research"
+    - "browser_automation"
+  selector_notes: ""
+  default_use_cases:
+    - "multi-step research"
+    - "browser task automation"
+  blocked_use_cases:
+    - "handling secrets outside sandbox"
+
+automation:
+  stepper_recipe_id: ""
+  smoke_test_command: ""
+  health_check_url: ""
+  rollback_recipe_id: ""
+
+cost:
+  pricing_model: "free | usage | subscription | enterprise | unknown"
+  unit_cost_public: ""
+  estimated_internal_cost: ""
+  cost_visibility: "public | internal | restricted"
+
+evidence:
+  sbom_url: ""
+  security_scan_url: ""
+  test_log_url: ""
+  receipt_url: ""
+  known_failures:
+    - ""
