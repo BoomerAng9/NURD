@@ -1,227 +1,204 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'wouter';
-import Navbar from '@/components/ui/navbar';
-import Footer from '@/components/sections/footer';
-import SummerExperienceSection from '@/components/sections/summer-experience-section';
-import RegistrationSection from '@/components/sections/registration-section';
-import NurdLogo from '@/components/ui/nurd-logo';
-import DripEffect from '@/components/ui/drip-effect';
-import nurdLogoGreen from '@assets/2C98236B-53D8-48A4-9DB3-E47C7540F061.png';
-import kidComputerImage from '@assets/4288A514-4A16-4431-944E-9130EC4BCC2F.png';
+import { Link } from "wouter";
+import nurdSkateboardImg from "@/assets/nurd-skateboard.png";
+import madeInPoolerImg from "@/assets/made-in-pooler.png";
 
-const Home: React.FC = () => {
+/**
+ * NURD by ACHIEVEMOR — Home page.
+ *
+ * FOAI vertical, Coastal-Brewing-aligned. Same Pooler discipline, distinct
+ * skateboard motif. No glass, no gradient text, no fake animated counters.
+ * Operator-grade voice: V.I.B.E. is a serious build environment for builders;
+ * NURD Summer Initiative + ACHIEVERS Program are the youth verticals (8-18)
+ * inside the broader platform.
+ */
+export default function Home() {
   return (
-    <div className="relative min-h-screen w-full bg-gray-50">
-      <Navbar />
-      
-      {/* Hero Section - Redesigned for instant engagement */}
-      <section className="relative pt-20 overflow-hidden bg-gradient-to-b from-[#121645] to-[#6A2FF8]/90 text-white">
-        <div className="absolute inset-0 z-0 opacity-10 bg-gradient-to-br from-[#121645] to-[#6A2FF8] bg-cover bg-center"></div>
-        
-        <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-center lg:text-left order-2 lg:order-1"
-            >
-              <div className="mb-6 inline-block">
-                <img src={nurdLogoGreen} alt="NURD Logo" className="w-48 md:w-56 mx-auto lg:mx-0" />
-              </div>
-              
-              <motion.h1 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="font-heading font-extrabold text-4xl md:text-6xl mb-6 leading-tight"
+    <div className="bg-background text-foreground">
+      {/* ============== HERO ============== */}
+      <section className="container py-16 md:py-24 lg:py-32">
+        <div className="grid gap-12 md:gap-16 md:grid-cols-12 items-center">
+          <div className="md:col-span-7 space-y-6">
+            <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground">
+              NURD by ACHIEVEMOR &middot; Made in Pooler.
+            </p>
+            <h1 className="font-sans font-semibold tracking-tight text-[clamp(40px,7vw,80px)] leading-[1.05] text-foreground">
+              Naturally Unstoppable<br />
+              Resourceful Dreamers.
+            </h1>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-prose leading-relaxed">
+              Build platform from Pooler, GA. AI-paired coding through V.I.B.E., peer skill exchange,
+              and cohort programs for youth. A vertical of the FOAI ecosystem.
+            </p>
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Link
+                href="/access-ai"
+                className="inline-flex items-center gap-2 px-5 py-3 bg-foreground text-background border border-foreground font-sans text-sm font-medium hover:bg-background hover:text-foreground transition-colors vibe-surface"
               >
-                Where Tech <span className="text-[#3DE053]">Meets</span> Creativity
-              </motion.h1>
-              
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="text-xl text-white/90 mb-10 max-w-2xl mx-auto lg:mx-0"
+                Open V.I.B.E.
+              </Link>
+              <Link
+                href="/auth"
+                className="inline-flex items-center gap-2 px-5 py-3 border border-border bg-transparent text-foreground font-sans text-sm font-medium hover:border-foreground transition-colors"
               >
-                Join our transformative summer program designed to empower young minds through technology, creativity, and skill development.
-              </motion.p>
-              
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+                Sign in / Register
+              </Link>
+              <Link
+                href="/achievers"
+                className="inline-flex items-center gap-2 px-5 py-3 border border-border bg-transparent text-foreground font-sans text-sm font-medium hover:border-foreground transition-colors achievers-surface"
               >
-                <Link href="/register">
-                  <div className="btn-nurd text-center text-lg px-10 py-4 cursor-pointer">
-                    Join the Summer Initiative
-                  </div>
-                </Link>
-                <Link href="/about">
-                  <div className="py-4 px-10 rounded-lg border-2 border-[#FF8A00] text-[#FF8A00] font-heading font-bold hover:bg-[#FF8A00] hover:text-white transition-all duration-300 text-lg cursor-pointer">
-                    Learn More
-                  </div>
-                </Link>
-              </motion.div>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="order-1 lg:order-2 relative"
-            >
-              <div className="relative z-10 max-w-md mx-auto">
-                <div className="bg-[#3DE053]/20 backdrop-blur-sm rounded-2xl p-3 rotate-3 shadow-xl">
-                  <img 
-                    src={kidComputerImage} 
-                    alt="Person with NURD laptop sticker" 
-                    className="rounded-xl shadow-lg w-full"
-                  />
-                </div>
-                
-                <div className="absolute -bottom-8 -right-8 bg-white p-4 rounded-lg shadow-lg max-w-xs rotate-2 z-20">
-                  <p className="italic text-gray-700 text-sm font-medium">
-                    "I'm cool like that! Learning to code with NURD changed my whole perspective."
-                  </p>
-                  <p className="text-[#6A2FF8] font-medium text-sm mt-2">— NURD Student</p>
-                </div>
-              </div>
-            </motion.div>
+                ACHIEVERS Program
+                <span className="font-mono text-[10px] uppercase tracking-wordmark text-muted-foreground">
+                  ages 8-18
+                </span>
+              </Link>
+            </div>
+          </div>
+
+          <div className="md:col-span-5">
+            <img
+              src={nurdSkateboardImg}
+              alt="NURD skateboard — Made in Pooler, GA"
+              className="w-full max-w-md mx-auto"
+            />
           </div>
         </div>
-        
-        <div className="absolute -bottom-1 left-0 w-full overflow-hidden">
-          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="h-20 w-full fill-gray-50">
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.72C57.95,96.29,158.79,91.58,244.22,77.87c28.39-4.6,56.76-8.59,77.17-21.43Z"></path>
-          </svg>
-        </div>
-        
-        <DripEffect color="green" count={6} />
       </section>
-      
-      {/* Features Highlights */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-4xl font-bold mb-6">Why Join NURD?</h2>
-            <p className="text-xl text-gray-600">
-              Our program is designed to inspire, challenge, and transform young minds.
+
+      {/* ============== THE PILLARS. ============== */}
+      <section className="border-t border-border">
+        <div className="container py-16 md:py-20">
+          <div className="mb-10 md:mb-14">
+            <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground mb-2">
+              01 Foundations
+            </p>
+            <h2 className="font-sans font-semibold tracking-tight text-3xl md:text-4xl lg:text-5xl">
+              The pillars.
+            </h2>
+          </div>
+
+          <div className="grid gap-px bg-border md:grid-cols-2 lg:grid-cols-3">
+            <PillarCell
+              eyebrow="01 Build"
+              title="V.I.B.E."
+              description="Vibrant Imagination Build Environment. AI-paired coding for builders. Operator-grade workbench, not a wizard."
+              href="/access-ai"
+              motifClass="vibe-surface"
+            />
+            <PillarCell
+              eyebrow="02 Iterate"
+              title="Code Playground"
+              description="Interactive editor for fast iteration. Real execution, real feedback."
+              href="/code-playground"
+            />
+            <PillarCell
+              eyebrow="03 Exchange"
+              title="Skill Marketplace"
+              description="Peers swap skills. Bridges between builders get built and rated."
+              href="/skill-marketplace"
+              motifClass="marketplace-surface"
+            />
+            <PillarCell
+              eyebrow="04 Cohort"
+              title="ACHIEVERS Program"
+              description="Structured cohorts for ages 8-18. Real projects, real outcomes."
+              href="/achievers"
+              motifClass="achievers-surface"
+            />
+            <PillarCell
+              eyebrow="05 Initiative"
+              title="NURD Summer Initiative"
+              description="Flagship youth program (8-18). Cohort applications open by season."
+              href="/summer-initiative"
+              motifClass="achievers-surface"
+            />
+            <PillarCell
+              eyebrow="06 Plans"
+              title="Subscriptions"
+              description="Tiered access for individuals, families, and schools. Cancel anytime."
+              href="/subscription-plans"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ============== THE COMMITMENT. ============== */}
+      <section className="border-t border-border">
+        <div className="container py-16 md:py-20 max-w-3xl">
+          <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground mb-2">
+            02 Commitment
+          </p>
+          <h2 className="font-sans font-semibold tracking-tight text-3xl md:text-4xl mb-8">
+            Made in Pooler.
+          </h2>
+          <div className="space-y-5 text-lg leading-relaxed text-foreground/90">
+            <p>
+              NURD lives where it was raised. Pooler, GA. The skateboard, the drip, the dreamers &mdash;
+              all of it carries forward.
+            </p>
+            <p>
+              We&rsquo;re a vertical of the <span className="font-medium">FOAI ecosystem</span> &mdash;
+              siblings to{" "}
+              <a
+                href="https://brewing.foai.cloud"
+                className="underline underline-offset-4 decoration-border hover:decoration-foreground"
+              >
+                Coastal Brewing Co.
+              </a>{" "}
+              and others. Same discipline. Different products. Same town.
+            </p>
+            <p className="text-muted-foreground">
+              No fake counters. No machinery shown. Only the work, only the receipts.
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-xl shadow-lg border-t-4 border-[#3DE053] hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-[#3DE053]/10 rounded-full flex items-center justify-center mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#3DE053]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold mb-4">Innovative Learning</h3>
-              <p className="text-gray-600">
-                Cutting-edge curriculum that combines hands-on projects with AI-powered learning tools
-              </p>
-            </div>
-            
-            <div className="bg-white p-8 rounded-xl shadow-lg border-t-4 border-[#6A2FF8] hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-[#6A2FF8]/10 rounded-full flex items-center justify-center mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#6A2FF8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold mb-4">Expert Mentorship</h3>
-              <p className="text-gray-600">
-                Guidance from industry professionals who are passionate about nurturing the next generation
-              </p>
-            </div>
-            
-            <div className="bg-white p-8 rounded-xl shadow-lg border-t-4 border-[#FF8A00] hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-[#FF8A00]/10 rounded-full flex items-center justify-center mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#FF8A00]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold mb-4">Flexible Structure</h3>
-              <p className="text-gray-600">
-                Choose between in-person workshops in Atlanta/Pooler or virtual sessions from anywhere
-              </p>
-            </div>
-          </div>
         </div>
       </section>
-      
-      {/* Program Highlights */}
-      <SummerExperienceSection />
-      
-      {/* Testimonials Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-[#6A2FF8] font-medium tracking-wider text-sm uppercase">Success Stories</span>
-            <h2 className="text-4xl font-bold mt-2 mb-4">Hear From Our Community</h2>
-            <p className="text-lg text-gray-600">
-              See the impact NURD has had on students and families.
+
+      {/* ============== FOOTER ============== */}
+      <footer className="border-t border-border">
+        <div className="container py-10 md:py-12">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <img
+              src={madeInPoolerImg}
+              alt="Made in Pooler, GA"
+              className="h-12 md:h-14 object-contain"
+            />
+            <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground text-center md:text-right">
+              NURD &middot; Naturally Unstoppable Resourceful Dreamers<br />
+              powered by ACHIEVEMOR
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-              <div className="flex items-center mb-6">
-                <div className="w-12 h-12 bg-[#3DE053]/20 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-lg font-bold text-[#3DE053]">J</span>
-                </div>
-                <div>
-                  <h3 className="font-medium">Jordan, 14</h3>
-                  <p className="text-sm text-gray-500">Student</p>
-                </div>
-              </div>
-              <blockquote className="text-gray-600 italic">
-                "Before NURD, I thought coding was boring. Now I'm building games and apps I actually want to use! The mentors make learning feel like fun, not work."
-              </blockquote>
-            </div>
-            
-            <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-              <div className="flex items-center mb-6">
-                <div className="w-12 h-12 bg-[#6A2FF8]/20 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-lg font-bold text-[#6A2FF8]">M</span>
-                </div>
-                <div>
-                  <h3 className="font-medium">Michelle, 42</h3>
-                  <p className="text-sm text-gray-500">Parent</p>
-                </div>
-              </div>
-              <blockquote className="text-gray-600 italic">
-                "The growth I've seen in my daughter is incredible. She's not just learning tech skills—she's developing confidence, creativity, and better problem-solving abilities."
-              </blockquote>
-            </div>
-            
-            <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-              <div className="flex items-center mb-6">
-                <div className="w-12 h-12 bg-[#FF8A00]/20 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-lg font-bold text-[#FF8A00]">T</span>
-                </div>
-                <div>
-                  <h3 className="font-medium">Tyrone, 16</h3>
-                  <p className="text-sm text-gray-500">Student</p>
-                </div>
-              </div>
-              <blockquote className="text-gray-600 italic">
-                "NURD helped me discover what I want to do after high school. The projects we built look great in my portfolio, and I've already started freelancing!"
-              </blockquote>
-            </div>
-          </div>
         </div>
-      </section>
-      
-      {/* CTA Registration */}
-      <RegistrationSection />
-      
-      <Footer />
+      </footer>
     </div>
   );
-};
+}
 
-export default Home;
+interface PillarCellProps {
+  eyebrow: string;
+  title: string;
+  description: string;
+  href: string;
+  motifClass?: string;
+}
+
+function PillarCell({ eyebrow, title, description, href, motifClass }: PillarCellProps) {
+  return (
+    <Link
+      href={href}
+      className={`block bg-background p-6 md:p-8 hover:bg-secondary transition-colors group ${
+        motifClass || ""
+      }`}
+    >
+      <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground mb-3">
+        {eyebrow}
+      </p>
+      <h3 className="font-sans font-semibold tracking-tight text-xl md:text-2xl mb-3 text-foreground">
+        {title}
+      </h3>
+      <p className="text-sm md:text-base text-muted-foreground leading-relaxed">{description}</p>
+      <p className="mt-6 font-mono uppercase tracking-wordmark text-[10px] text-foreground/70 group-hover:text-foreground transition-colors">
+        Open &rarr;
+      </p>
+    </Link>
+  );
+}

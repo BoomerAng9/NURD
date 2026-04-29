@@ -1,9 +1,78 @@
-/* Import custom preference styles */
-@import './styles/preferences.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ===========================================================================
+ * NURD by ACHIEVEMOR — design tokens (FOAI vertical, Coastal-Brewing-aligned)
+ *
+ * NURD is a sibling to Coastal Brewing Co. in the FOAI ecosystem. Both are
+ * Made in Pooler. Both share the same monochrome warm base, sharp corners,
+ * Inter grotesk + Fraunces serif + JBMono utility, no decorative gradients,
+ * no glass panels.
+ *
+ * NURD's distinguishing motifs (used SPARINGLY, the way Coastal uses sage for
+ * matcha and wood-stork line art for lowcountry):
+ *   --nurd-drip-green   — RESERVED for V.I.B.E. / code-execution surfaces
+ *   --nurd-drip-orange  — RESERVED for ACHIEVERS program / event accents
+ *   --nurd-drip-blue    — RESERVED for Skill Marketplace exchange surfaces
+ *
+ * Default radius is 0 (sharp hairline corners) to match Coastal canon.
+ * Default theme is light (lowcountry editorial). Dark mode opt-in via .dark.
+ * =========================================================================== */
+
+@layer base {
+  :root {
+    /* Light theme — lowcountry editorial cream / warm-near-black (Coastal canon) */
+    --background: 36 25% 92%;       /* #f3efe6 cream — same as Coastal */
+    --foreground: 30 15% 9%;        /* #1a1612 warm near-black */
+    --card: 0 0% 100%;
+    --card-foreground: 30 15% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 30 15% 9%;
+    --primary: 30 15% 9%;
+    --primary-foreground: 36 25% 96%;
+    --secondary: 36 18% 87%;
+    --secondary-foreground: 30 15% 9%;
+    --muted: 36 18% 87%;
+    --muted-foreground: 33 8% 39%;  /* #6a665d */
+    --accent: 30 15% 9%;             /* default accent = primary; reserved colors below */
+    --accent-foreground: 36 25% 96%;
+    --destructive: 0 70% 40%;
+    --destructive-foreground: 36 25% 96%;
+    --border: 33 25% 80%;            /* #d8d2c4 hairline */
+    --input: 33 25% 80%;
+    --ring: 33 8% 39%;
+    --radius: 0;                     /* hairline-only, sharp corners — Coastal canon §8 */
+
+    /* NURD signature accents — RESERVED. Use only on the surface they belong to. */
+    --nurd-drip-green: 132 78% 56%;  /* #3DE053 — V.I.B.E. / code-execution only */
+    --nurd-drip-orange: 31 100% 50%; /* #FF8A00 — ACHIEVERS / events only */
+    --nurd-drip-blue: 191 73% 56%;   /* #3EC6E0 — Skill Marketplace exchange only */
+  }
+
+  .dark {
+    /* Dark theme — primary surface (matte warm black / off-white) — Coastal canon */
+    --background: 0 0% 4%;           /* #0a0a0a warm matte black */
+    --foreground: 40 16% 89%;        /* #e8e6e0 off-white */
+    --card: 30 7% 5%;                /* #0f0e0d */
+    --card-foreground: 40 16% 89%;
+    --popover: 30 7% 5%;
+    --popover-foreground: 40 16% 89%;
+    --primary: 40 16% 89%;
+    --primary-foreground: 0 0% 4%;
+    --secondary: 30 7% 9%;
+    --secondary-foreground: 40 16% 89%;
+    --muted: 30 7% 9%;
+    --muted-foreground: 35 12% 60%;  /* #a09c92 */
+    --accent: 38 38% 60%;            /* taupe #c0a572 — reserved highlight (Coastal canon) */
+    --accent-foreground: 0 0% 4%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 40 16% 89%;
+    --border: 24 6% 10%;             /* #1a1816 */
+    --input: 24 6% 10%;
+    --ring: 35 12% 60%;
+  }
+}
 
 @layer base {
   * {
@@ -15,335 +84,49 @@
   }
 
   body {
-    @apply font-sans antialiased bg-[#2d2d2d] text-foreground;
-    background-image: 
-      radial-gradient(circle at 20% 30%, rgba(var(--accent-color-rgb), 0.05) 0%, transparent 25%),
-      radial-gradient(circle at 80% 70%, rgba(var(--secondary-color-rgb), 0.05) 0%, transparent 25%);
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
   }
 
-  /* Base theme variables */
-  :root {
-    --nurd-blue: #3EC6E0;
-    --nurd-purple: #6A2FF8;
-    --nurd-orange: #FF8A00;
-    --nurd-green: #3DE053;
-    --nurd-dark: #121645;
-    --nurd-silver: #F1F5F9;
-    
-    /* Default theme */
-    --color-primary: #3760ff;
-    --color-accent: #6638e8;
-    
-    /* Adaptive color scheme variables */
-    --accent-color: var(--color-primary);
-    --accent-color-rgb: 55, 96, 255;
-    --secondary-color: var(--color-accent);
-    --secondary-color-rgb: 102, 56, 232;
-    --highlight-color: var(--color-primary);
-    --muted-color: #94A3B8;
-    
-    /* CSS variable for primary color in Tailwind */
-    --primary: 220 100% 66%;
-    --primary-foreground: 0 0% 100%;
+  /* Headlines use Inter (grotesk default per Coastal canon §3). Fraunces serif
+   * is reserved for editorial / about / lowcountry-storytelling pages. */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans tracking-tight;
   }
 
-  /* Color scheme: Ocean */
-  [data-color-scheme="ocean"] {
-    --accent-color: var(--color-primary);
-    --accent-color-rgb: 8, 145, 178;
-    --secondary-color: var(--color-accent);
-    --secondary-color-rgb: 37, 99, 235;
-    --highlight-color: var(--color-primary);
-    --muted-color: #64748B;
-    
-    /* Update Tailwind primary color */
-    --primary: 197 100% 37%;
-    --primary-foreground: 0 0% 100%;
+  /* Mono utility — uppercase tracked-out small caps for nav/footer labels */
+  .font-mono-label {
+    @apply font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground;
   }
 
-  /* Color scheme: Forest */
-  [data-color-scheme="forest"] {
-    --accent-color: var(--color-primary);
-    --accent-color-rgb: 22, 163, 74;
-    --secondary-color: var(--color-accent);
-    --secondary-color-rgb: 5, 150, 105;
-    --highlight-color: var(--color-primary);
-    --muted-color: #84CC16;
-    
-    /* Update Tailwind primary color */
-    --primary: 142 76% 36%;
-    --primary-foreground: 0 0% 100%;
-  }
-
-  /* Color scheme: Sunset */
-  [data-color-scheme="sunset"] {
-    --accent-color: var(--color-primary);
-    --accent-color-rgb: 234, 88, 12;
-    --secondary-color: var(--color-accent);
-    --secondary-color-rgb: 220, 38, 38;
-    --highlight-color: var(--color-primary);
-    --muted-color: #FDE68A;
-    
-    /* Update Tailwind primary color */
-    --primary: 24 95% 48%;
-    --primary-foreground: 0 0% 100%;
-  }
-
-  /* Color scheme: Space */
-  [data-color-scheme="space"] {
-    --accent-color: var(--color-primary);
-    --accent-color-rgb: 124, 58, 237;
-    --secondary-color: var(--color-accent);
-    --secondary-color-rgb: 79, 70, 229;
-    --highlight-color: var(--color-primary);
-    --muted-color: #7C3AED;
-    
-    /* Update Tailwind primary color */
-    --primary: 265 89% 58%;
-    --primary-foreground: 0 0% 100%;
-  }
-
-  /* Dark mode adjustments */
-  .dark {
-    --foreground-rgb: 255, 255, 255;
-    --background-rgb: 17, 24, 39;
-  }
-
-  /* Custom scrollbar for glass UI */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 4px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.25);
-  }
+  /* Scrollbars — minimal, monochrome */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 0; }
+  ::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.5); }
 }
 
 @layer components {
-  .bg-gradient-nurd {
-    background: linear-gradient(135deg, var(--nurd-purple) 0%, var(--nurd-blue) 50%, var(--nurd-orange) 100%);
+  /* NURD-drip ornament — sparing decorative use. Parallel to Coastal's palm
+   * silhouette / wood stork line art. Apply to small corner ornaments only,
+   * never to body text or primary CTAs. */
+  .nurd-drip-ornament {
+    color: hsl(var(--nurd-drip-green));
+    filter: drop-shadow(0 0 4px hsl(var(--nurd-drip-green) / 0.3));
   }
 
-  .text-gradient {
-    background: linear-gradient(to right, var(--nurd-green), var(--nurd-blue));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  /* V.I.B.E. coding surfaces — green permitted */
+  .vibe-surface {
+    --accent: var(--nurd-drip-green);
   }
 
-  .logo-gradient {
-    background: linear-gradient(to bottom, var(--nurd-green) 0%, var(--nurd-green) 65%, var(--nurd-orange) 65%, var(--nurd-orange) 100%);
+  /* ACHIEVERS / event surfaces — orange permitted */
+  .achievers-surface {
+    --accent: var(--nurd-drip-orange);
   }
 
-  .drip-path {
-    filter: drop-shadow(0 0 8px rgba(61, 224, 83, 0.7));
+  /* Skill Marketplace exchange surfaces — blue permitted */
+  .marketplace-surface {
+    --accent: var(--nurd-drip-blue);
   }
-
-  .nurd-drip {
-    background-color: var(--nurd-green);
-    position: relative;
-    border-radius: 5px;
-    overflow: visible;
-  }
-
-  .nurd-drip::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 0;
-    right: 0;
-    height: 10px;
-    background-color: var(--nurd-orange);
-    clip-path: polygon(
-      0% 0%, 8% 30%, 16% 0%, 24% 30%, 32% 0%, 40% 30%, 
-      48% 0%, 56% 30%, 64% 0%, 72% 30%, 80% 0%, 88% 30%, 
-      96% 0%, 100% 0%, 100% 100%, 0% 100%
-    );
-  }
-
-  .input-nurd {
-    @apply border-2 border-gray-200 bg-white bg-opacity-90 p-3 rounded-lg text-gray-900 focus:border-blue-500 focus:outline-none transition duration-300 w-full;
-  }
-
-  .btn-nurd {
-    @apply relative bg-gradient-to-r from-[#6A2FF8] to-[#3EC6E0] text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:from-[#3DE053] hover:to-[#3EC6E0] transition-all duration-300 overflow-hidden;
-  }
-
-  .btn-nurd::after {
-    content: '';
-    @apply absolute bottom-0 left-0 right-0 h-1.5 bg-[#FF8A00] transform scale-x-0 transition-transform duration-300 origin-bottom-left;
-  }
-
-  .btn-nurd:hover::after {
-    @apply scale-x-100;
-  }
-
-  .section-title {
-    @apply font-bold text-3xl md:text-4xl lg:text-5xl mb-6 text-gray-100;
-  }
-
-  .card-nurd {
-    @apply bg-white bg-opacity-90 backdrop-blur-md rounded-xl shadow-xl p-6 transition-all duration-300 border-t-4 hover:shadow-2xl;
-  }
-
-  /* Glass UI Components */
-  .glass-card {
-    @apply bg-white/70 backdrop-blur-md border border-gray-200/50 rounded-xl shadow-lg overflow-hidden;
-    transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-  }
-
-  .glass-card:hover {
-    @apply shadow-xl border-primary/20;
-    transform: translateY(-5px);
-  }
-
-  .glass-button {
-    @apply px-4 py-2 bg-white/60 backdrop-blur-md border border-gray-300/50 rounded-md text-gray-800;
-    @apply hover:bg-primary/10 hover:border-primary/30 transition-all duration-300;
-    @apply focus:ring-2 focus:ring-primary/30 focus:outline-none;
-  }
-
-  .glass-input {
-    @apply bg-white/60 backdrop-blur-md border border-gray-300/50 rounded-md p-2 text-gray-800;
-    @apply focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/50;
-    @apply transition-all duration-300;
-  }
-
-  .glass-nav-item {
-    @apply relative overflow-hidden px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 text-gray-800;
-    @apply bg-white/60 backdrop-blur-md border border-gray-300/30;
-    @apply hover:bg-primary/10 hover:border-primary/30;
-    @apply transform hover:scale-105 hover:rotate-1;
-  }
-
-  .glass-container {
-    @apply bg-white/70 backdrop-blur-lg border border-gray-200/50 rounded-xl p-6 shadow-lg;
-  }
-}
-
-@keyframes drip {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(5px);
-  }
-}
-
-@keyframes glow {
-  0%, 100% {
-    filter: brightness(100%);
-  }
-  50% {
-    filter: brightness(120%);
-  }
-}
-
-@keyframes dripping {
-  0% {
-    transform: scale(0.5, 1.2);
-    opacity: 0;
-  }
-  25% {
-    transform: scale(1, 1);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(20px) scale(0.9, 0.9);
-    opacity: 0;
-  }
-}
-
-@keyframes glass-float {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-8px) rotate(1deg);
-  }
-}
-
-@keyframes glass-shuffle {
-  0% {
-    transform: perspective(1000px) rotateY(0) rotateX(0) translateY(0);
-  }
-  50% {
-    transform: perspective(1000px) rotateY(5deg) rotateX(-2deg) translateY(-5px);
-  }
-  100% {
-    transform: perspective(1000px) rotateY(0) rotateX(0) translateY(0);
-  }
-}
-
-@keyframes glass-splatter {
-  0% {
-    opacity: 1;
-    transform: scale(0);
-  }
-  50% {
-    opacity: 0.8;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(2.5);
-  }
-}
-
-@keyframes glass-shine {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.animate-drip {
-  animation: drip 3s ease-in-out infinite;
-}
-
-.animate-glow {
-  animation: glow 2s ease-in-out infinite;
-}
-
-.animate-pulse-slow {
-  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.drip {
-  position: absolute;
-  bottom: -20px;
-  background: currentColor;
-  border-radius: 50%;
-  transform-origin: 50% 0%;
-  animation: dripping 2s ease-in-out infinite;
-  opacity: 0;
-}
-
-.drip-container {
-  position: relative;
-  overflow: visible;
-}
-
-/* Font Families */
-body {
-  font-family: 'Inter', sans-serif;
-}
-
-h1, h2, h3, h4, h5, h6, .font-heading {
-  font-family: 'Poppins', sans-serif;
-}
-
-.font-accent {
-  font-family: 'Space Grotesk', monospace;
 }
