@@ -116,7 +116,7 @@ Per memory canon:
 - "powered by ACHIEVEMOR" (legacy)
 - "Powered by: A.I.M.S." (current PR #15)
 - "Made with [heart] by ACHIEVEMOR team" (IMG_1870 auth footer)
-**Owner decision needed:** which footer signature lives in deeper-build vs initiative-cream surfaces?
+**Owner decision needed:** which footer signature lives in deeper-build vs initiative-light surfaces?
 
 ---
 

@@ -2,7 +2,9 @@
 
 **Source of truth.** Extracted from owner-supplied IMG_1841.zip (28 valid mockup images, studied 2026-04-29 via parallel agents).
 
-This design system governs the **deeper-build** identity — the platform-level theme. The existing **initiative-cream** identity (Coastal-Brewing-aligned warm monochrome) is preserved on `/initiative` and youth-program surfaces. **Both themes coexist.** The platform Home, Build, Learn, Tribe, Pricing, Auth, Chat, Projects, Services, Account surfaces use deeper-build. The /initiative section + About + API docs use initiative-cream.
+This design system governs the **deeper-build** identity — the platform-level theme. The complementary **initiative-light NURD-drip-identity** (drip-stickered, multi-color, bright graphic-pop on cream/white) lives on `/initiative` and youth-program surfaces. **Both themes coexist.** The platform Home, Build, Learn, Tribe, Pricing, Auth, Chat, Projects, Services, Account surfaces use deeper-build. The /initiative section + About + API docs use initiative-light.
+
+> **Identity rule (owner directive 2026-04-29):** NURD CODE has its own identity. Do NOT frame any NURD asset, theme, code, component, palette, typography, or copy as "Coastal-aligned" or "Coastal-Brewing-aligned." Coastal Brewing Co. is a sibling FOAI vertical in the company sense, NOT in design language. The 30 mockups in IMG_1841.zip have ZERO Coastal aesthetic.
 
 ---
 
@@ -13,7 +15,7 @@ NURD CODE has **two complementary themes** sharing one Pooler-rooted identity:
 | Theme | Surface | Mood |
 |---|---|---|
 | **Deeper-Build** (primary) | `/`, `/learn`, `/build`, `/tribe`, `/pricing`, `/auth`, `/chat`, `/projects`, `/services`, `/account`, `/owner/*` | Confident, neon-on-dark, circuit-board, character-led, gamified, builder-grade |
-| **Initiative-Cream** (alternate) | `/initiative`, `/initiative/about`, `/initiative/projects`, `/initiative/docs/*`, `/about` | Warm, paper-textured, drip-motif, youth-program-friendly, Coastal-Brewing-aligned |
+| **Initiative-Light NURD-drip-identity** (alternate) | `/initiative`, `/initiative/about`, `/initiative/projects`, `/initiative/docs/*`, `/about` | Cream/white base, drip-sticker badges (green/orange/purple), multi-color borders, bright graphic-pop typography, drip-icon family, character art |
 
 **What both themes share:**
 - The NURD wordmark + drip motif (different palettes, same gesture)
@@ -48,7 +50,7 @@ NURD CODE has **two complementary themes** sharing one Pooler-rooted identity:
 | `--accent-magenta` | **#D04AC2** / **#c43a7a** | "Think It" hero gradient run, Premium plan progress, special features |
 
 ### Usage rules
-- **Photography is NOT the visual hero here** (different from Coastal). Character renders + circuit traces + neon glow ARE the visual hero.
+- **Photography is NOT the visual hero here.** Character renders + circuit traces + neon glow ARE the visual hero.
 - **Circuit-board background** (cyan + green traces on near-black) is a recurring backdrop motif. Reusable as a tileable SVG/PNG.
 - **Neon glow** on borders, headlines, and active states. NOT on body text.
 - **Drip treatment** on the NURD wordmark — green/yellow/teal default; can take orange variant on warm sections.
@@ -56,21 +58,23 @@ NURD CODE has **two complementary themes** sharing one Pooler-rooted identity:
 
 ---
 
-## 3. Color palette — Initiative-Cream (alternate)
+## 3. Color palette — Initiative-Light NURD-drip-identity (alternate)
 
-Per `~/foai/coastal-brewing/design.md` and the existing `client/src/index.css` light tokens, unchanged from current Phase 1 ship:
+Re-derived from owner mockups IMG_1861, IMG_1866, IMG_1871, IMG_1878 — drip-stickered, multi-color, bright graphic-pop on cream/white.
 
 | Token | Hex | Usage |
 |---|---|---|
-| `--background` | **#F5EFE6** / **#F4EFE2** / **#FAF7F0** | Cream/off-white page background |
+| `--background` | **#F8F4EC** / **#FAF7F0** / **#FFFFFF** | Cream / off-white / pure white page backgrounds |
 | `--foreground` | **#1a1612** / **#0E1620** | Warm near-black text |
 | `--muted-foreground` | **#6a665d** | Secondary text |
 | `--border` | **#d8d2c4** | Hairline rules |
-| `--surface` | **#FFFFFF** | Card/product backdrop |
-| `--accent-purple` | **#5B2A8A** / **#7A4FE8** | Light-theme heading accent, drip-purple sticker variant |
-| `--accent-teal-coastal` | **#6b8e4e** | Coastal-aligned sage |
+| `--card` | **#FFFFFF** | Card / product backdrop |
+| `--nurd-drip-green` | **#3DE053** | V.I.B.E. drip-sticker, code surfaces, primary CTA |
+| `--nurd-drip-orange` | **#FF8A00** | ACHIEVERS drip-sticker, event accents, warm CTA |
+| `--nurd-drip-blue` | **#3EC6E0** | Skill Marketplace drip-sticker, exchange surfaces |
+| `--nurd-drip-purple` | **#5B2A8A** | Drip-sticker badge, light-theme heading accent |
 
-The existing Coastal-aligned tokens stay as documented in `client/src/index.css`. NURD-drip green/orange/blue accents reserved per surface (V.I.B.E. = green, ACHIEVERS = orange, Skill Marketplace = blue).
+In the light theme, drip-color accents are **first-class identity colors** — used as primary CTA fill, sticker badges, multi-color card borders, and bright graphic-pop type. Use them directly, not "sparingly as restraint."
 
 ---
 
@@ -88,8 +92,8 @@ The existing Coastal-aligned tokens stay as documented in `client/src/index.css`
 | **Special — "Marker neon" headline** | Custom (Bungee / Lilita One / display fill) | Used for "OUR SERVICES"-style chunky filled-neon section heads. Reserve for ~3 surfaces only — overuse kills it. |
 | **Special — "Drip-style" headline** | Custom layered SVG / image asset | Used for "Think It. Prompt It. Let's Build It." with per-word color drip. Render as image for highest fidelity unless we build a real SVG drip generator. |
 
-### Initiative-Cream
-Same as Coastal canon: **Inter** body / **Fraunces** serif (editorial only) / **JetBrains Mono** utility.
+### Initiative-Light NURD-drip-identity
+**Inter** body (graphic-pop, bright at heading scale) / **Fraunces** serif (editorial / about / long-form storytelling only) / **JetBrains Mono** utility (eyebrows, nav labels, footer caps). Drip-style display headlines may be used for hero callouts on light surfaces (image asset, per §5).
 
 ### Type rules
 - Editorial pull statements with terminal periods: "The pillars.", "Made in Pooler.", "Naturally Unstoppable Resourceful Dreamers."
@@ -128,7 +132,7 @@ NURD wordmark has **multiple canonical variants**:
 ### Made in PLR badge
 - Tropical palms + wood-stork-ish silhouette
 - "MADE IN PLR" text
-- Used as: footer signature, hero corner badge, sister-vertical signature with Coastal Brewing's "Made in PLR." (shared FOAI signature — see `~/foai/coastal-brewing/design.md` §1)
+- Used as: footer signature, hero corner badge. "MADE IN PLR" is a shared Pooler-vertical FOAI signature.
 
 ---
 
@@ -269,13 +273,14 @@ When working in **deeper-build** mode:
 - Use function-name labels: "AI Code Generation", "Multi-model reasoning", "Voice Lane", "Edge Functions", "Payments", "Repositories", "Realtime DB"
 - Photography is OK but secondary — character illustrations + neon are the visual leads
 - No glass panels, no unrestrained gradients on body text
-- Sharp corners on cards (`--radius: 0` continuing from Coastal canon) UNLESS a specific neon-glow card requires soft corner for halo effect
+- Sharp corners on cards (`--radius: 0`) UNLESS a specific neon-glow card requires soft corner for halo effect
 
-When working in **initiative-cream** mode:
-- Coastal-Brewing-aligned restraint applies
-- Photography leads (when used)
-- Drip motif is welcome but small / cornered — not centerpiece
-- Made in Pooler / drip-color accents reserved per surface (V.I.B.E. = green, ACHIEVERS = orange, Marketplace = blue)
+When working in **initiative-light NURD-drip-identity** mode:
+- Drip-sticker badges + multi-color card borders + bright graphic-pop type ARE the visual hero
+- Drip colors (green / orange / purple / blue) are first-class identity, used as primary CTA fill and sticker badges — not held back as restraint
+- Cream / white background; full-color drip motifs centerpiece
+- Character art + drip stickers welcome at hero scale
+- Photography is supplemental, not the lead
 
 ---
 
@@ -306,8 +311,8 @@ Phase 3 (operator-only, never customer-facing):
 15. **`/owner/circuit-box`** (IMG_1837) — system management panel
 16. **`/owner/execution`** (IMG_1854) — execution dashboard
 
-Cream-theme `/initiative` section:
-17. **`/initiative`** landing — preserves current Coastal-aligned hero
+Initiative-Light NURD-drip-identity section:
+17. **`/initiative`** landing — re-derive hero from drip-stickered, multi-color mockups (IMG_1861, IMG_1866, IMG_1871, IMG_1878)
 18. **`/initiative/about`** (IMG_1866)
 19. **`/initiative/projects`** (IMG_1878)
 20. **`/initiative/docs/api`** (IMG_1871) — pending tool-name scrub
