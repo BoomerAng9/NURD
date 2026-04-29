@@ -19,7 +19,7 @@ export default function Home() {
         <div className="grid gap-12 md:gap-16 md:grid-cols-12 items-center">
           <div className="md:col-span-7 space-y-6">
             <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground">
-              NURD by ACHIEVEMOR &middot; Made in Pooler.
+              Made in Pooler.
             </p>
             <h1 className="font-sans font-semibold tracking-tight text-[clamp(40px,7vw,80px)] leading-[1.05] text-foreground">
               NURDSCODE.
