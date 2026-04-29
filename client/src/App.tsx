@@ -51,6 +51,7 @@ import LandingPage from "@/pages/LandingPage";
 import Account from "@/pages/Account";
 import NurdInitiative from "@/pages/NurdInitiative";
 import AdvancedCheckout from "@/pages/AdvancedCheckout";
+import Pricing from "@/pages/Pricing";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 // Lazy load V.I.B.E. and Code Playground — these are heavy code surfaces
@@ -98,6 +99,7 @@ const AppContent = () => {
             <Route path="/partners/:id" component={ModuleDetail} />
             <Route path="/learning" component={Learning} />
             <Route path="/learn" component={Learning} />
+            <Route path="/pricing" component={Pricing} />
             <Route path="/subscription-plans" component={SubscriptionPlans} />
             <Route path="/advanced-checkout" component={AdvancedCheckout} />
             <Route path="/checkout" component={Checkout} />
