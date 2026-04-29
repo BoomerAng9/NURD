@@ -1,0 +1,206 @@
+# operator.yaml — NURDSCODE Self-Check input
+# Generated 2026-04-29 from repo evidence per Self-Check-Run-Directive.md
+# v0.1 — best-effort schema; will be reconciled against the actual
+# audit.py contract once the Self-Check Kit is located.
+
+application:
+  name: nurdscode
+  display_name: NURD by ACHIEVEMOR
+  description: >
+    Build control plane for the FOAI ecosystem — creates applications,
+    automations, AI-agent workflows, learning artifacts, and
+    deployment-ready systems through a governed A.I.M.S. workflow.
+    Carries V.I.B.E. (Vibrant Imagination Build Environment) for the
+    user-facing coding lane and bridges to OpenKlass AI for the
+    learning-platform lane.
+  repo: BoomerAng9/NURD
+  branch: nurdscode-aims-vnext
+  state: existing_build
+  redirect_state: vNext directive applied; Gate 0 in progress
+
+runtime:
+  language: TypeScript
+  node_version: ">=20.x"
+  framework: Express + React + Vite (single container, Phase 1)
+  port: 3000
+  health_endpoint: /api/health
+  health_status: PASS  # verified via /api/health 200 OK from inside container, evidence in docs/SHIP_RECEIPTS/PHASE_1_BATCH_3_2026_04_28.md
+  start_command: "node dist/index.js"
+  dev_command: "npm run dev"
+  build_command: "npm run build"
+
+database:
+  provider: Neon Postgres (serverless)
+  orm: Drizzle
+  connection_env: DATABASE_URL
+  migration_command: "npm run db:push"
+  status: UNVERIFIED  # connection requires owner-supplied DATABASE_URL
+
+auth:
+  current_implementation:
+    framework: Passport.js
+    strategies:
+      - local (scrypt password hash, sessions in connect-pg-simple)
+      - passport-google-oauth20
+      - passport-github2
+      - passport-facebook
+      - passport-microsoft
+    session_store: connect-pg-simple (Postgres-backed)
+    session_secret_env: SESSION_SECRET
+    fallback_secret_present: true  # server/auth.ts:39 — flagged for Phase 1.5 removal
+  vnext_target:
+    framework: Firebase Auth (primary), Better Auth (later if self-host required)
+  status: UNVERIFIED  # full flow not tested live
+
+ai_providers:
+  current:
+    - name: OpenAI
+      sdk: "@anthropic-ai/sdk: NO"  # OpenAI uses 'openai' npm
+      eager_init: true  # server/accessibility.ts, server/ai-code-tools.ts — flagged for Phase 1.5 lazy refactor
+      env: OPENAI_API_KEY
+    - name: Anthropic
+      sdk: "@anthropic-ai/sdk@0.37.0"
+      eager_init: true  # routes.ts:926 inline — flagged for Phase 1.5 extraction
+      env: ANTHROPIC_API_KEY
+    - name: GROQ
+      sdk: "groq-sdk@0.19.0"
+      env: GROQ_API_KEY
+    - name: AskCodi
+      env: ASKCODI_API_KEY
+    - name: Modal
+      sdk: "modal@0.2.0 (npm modal package — wrong: this is a UI lib, not Modal Labs SDK)"
+      status: probably_dead  # flagged for Phase 1.5 audit + removal
+  vnext_target:
+    primary: Vertex AI (GCP)
+    secondary: OpenRouter
+    status: not_yet_wired
+  governance: Universal Ecosystem Tool Warehouse v6.0 (docs/warehouse/Universal-Ecosystem-Tool-Warehouse-v6.0.md)
+
+payments:
+  - provider: Stripe
+    sdk_version: "stripe@18.0.0"
+    server_env:
+      - STRIPE_SECRET_KEY
+      - STRIPE_WEBHOOK_SECRET
+      - STRIPE_PRICE_BASIC
+      - STRIPE_PRICE_STANDARD
+      - STRIPE_PRICE_PREMIUM
+      - STRIPE_PRICE_BOOTCAMP
+      - STRIPE_PRICE_SUBSCRIPTION_MONTHLY
+      - STRIPE_PRICE_SUBSCRIPTION_YEARLY
+    client_env: VITE_STRIPE_PUBLIC_KEY
+    webhook_signature_verification: UNVERIFIED  # flagged for Phase 1.5 audit
+  - provider: PayPal
+    sdk: "@paypal/paypal-server-sdk@1.0.0"
+    env:
+      - PAYPAL_CLIENT_ID
+      - PAYPAL_CLIENT_SECRET
+      - PAYPAL_ENVIRONMENT
+
+email:
+  current: nodemailer SMTP
+  env:
+    - EMAIL_HOST
+    - EMAIL_PORT
+    - EMAIL_SECURE
+    - EMAIL_USER
+    - EMAIL_PASS
+    - EMAIL_FROM
+  also_in_deps_unused: "@sendgrid/mail@8.1.5 (Phase 1.5 audit)"
+
+storage:
+  uploads:
+    middleware: multer
+    destination: /opt/foai-data/nurdscode/uploads (Phase 1 docker volume)
+    size_caps: UNVERIFIED  # Phase 1.5 — add explicit limits + MIME guard
+  vnext_target: GCS or Firebase Storage
+
+deployment:
+  current_target:
+    type: VPS Docker container
+    host: myclaw-vps (FOAI canon for whole-app surfaces)
+    reverse_proxy: Traefik
+    tls: Let's Encrypt via Traefik certresolver
+    domain: nurdscode.com (+ www.nurdscode.com)
+    image:
+      base: node:20-alpine
+      multi_stage: true
+      size: 696MB
+      sha256: 33b77230fe4701eb07be0edb6c01d0997e6a4b5622b560d23761249548ad6608
+      non_root_user: nurd:nodejs (uid 1001)
+    status: image_proven_local  # PR #1 merged 2026-04-29 (24c0fb9)
+  dns:
+    provider: Cloudflare
+    zone_id: 1819fd1dfd27964244dfe3b3021e406a
+    account_id: 49d710612f9fc6359ac0f067482b5684
+    proxy_status: OFF (DNS-only, A records → myclaw-vps IP)
+    status: not_yet_cut_over
+
+phasing:
+  current_phase: Gate 0 — directive package + Self-Check
+  phase_1: Single-container deploy at nurdscode.com (LOCAL proven, LIVE owner-blocked)
+  phase_1_5: Code-rot cleanup — modularize routes.ts/storage.ts/schema.ts; eager-AI lazy refactor; CORS fix; SESSION_SECRET fallback removal; dead-dep removal (crypto, modal, jade, localtunnel); duplicate page audit
+  phase_2: V.I.B.E. extraction to vibe.nurdscode.com + Anthropic Managed Agents wiring
+  phase_3: OpenKlass split to ok.foai.cloud (Hostinger DNS) with shared identity (JWT redirect handoff) + entitlement API
+  vnext_full: Spinner/Stepper/Tool Selector wired; Vertex AI + OpenRouter routing; mobile output via Expo + EAS; sandbox via Daytona or Cloud Run Jobs; warehouse v6.0 governance live
+
+ship_gates:
+  current_gate: 0
+  gate_0_directive_present:
+    docs_package: PASS
+    self_check_kit_present: BLOCKED  # see docs/ship/receipts/2026-04-29-self-check-blocker.md
+    operator_yaml_present: PASS  # this file
+    audit_run: BLOCKED  # cannot run without kit
+    receipt_present: PARTIAL  # blocker recorded; full audit deferred
+  gate_1_does_it_run:
+    container_boots: PASS  # /api/health 200 OK from inside container
+    type_check: PARTIAL  # tsc clean except 1 pre-existing storage.ts:1687 issue
+    build: PASS  # npm run build exit 0
+    runtime_smoke: PARTIAL  # local boot proven; live boot pending owner action
+  gate_2_through_8: UNVERIFIED  # require live deploy + secrets
+
+evidence_paths:
+  build_control_pack: docs/BUILD_CONTROL_PACK.md
+  ship_gate_map: docs/ship/NURDSCODE-Ship-Gate-Map.md
+  ship_receipts:
+    - docs/SHIP_RECEIPTS/PHASE_1_BATCH_1_2026_04_28.md  # Replit prune + scaffolding
+    - docs/SHIP_RECEIPTS/PHASE_1_BATCH_2_2026_04_28.md  # Build verification
+    - docs/SHIP_RECEIPTS/PHASE_1_BATCH_3_2026_04_28.md  # Bug fix + runtime proof
+  vnext_directive_docs:
+    - docs/architecture/NURDSCODE-vNext-Architecture.md
+    - docs/agents/Coding-Agent-Execution-Brief.md
+    - docs/agents/AIMS-Spinner-Stepper-Operating-Model.md
+    - docs/bridge/OpenKlass-AI-Bridge-Spec-v1.0.md
+    - docs/runbooks/First-Implementation-Runbook.md
+    - docs/ship/NURDSCODE-Ship-Gate-Map.md
+    - docs/ship/Self-Check-Run-Directive.md
+    - docs/ux/AIMS-Carrier-Interface-Spec-v1.0.md
+    - docs/warehouse/Universal-Ecosystem-Tool-Warehouse-v6.0.md
+    - docs/warehouse/Tool-Card-Schema-v6.0.yaml
+    - docs/warehouse/Warehouse-Postgres-Schema-v6.0.sql
+    - docs/warehouse/Warehouse-Migration-Map-v5-to-v6.md
+  deploy_runbook: docs/DEPLOY_TO_MYCLAW_VPS.md
+  phase_1_5_plan: docs/PHASE_1_5_CLEANUP_PLAN.md
+  phase_3_plan: docs/PHASE_3_OPENKLASS_SPLIT.md
+  claude_md: CLAUDE.md
+
+known_blockers:
+  - id: SELF_CHECK_KIT_MISSING
+    severity: gate_0_blocker
+    summary: Self-Check Kit (ai-managed-solutions-self-check/audit.py) not present in repo or any FOAI sibling
+    path_checked: ./ai-managed-solutions-self-check/
+    command_attempted: python ai-managed-solutions-self-check/audit.py ./operator.yaml
+    next_fix: Owner provides kit location or kit zip; receipt at docs/ship/receipts/2026-04-29-self-check-blocker.md
+  - id: NURD_CODEBASE_ZOMBIE
+    severity: low
+    summary: 67MB duplicate of the entire repo at nurd-codebase/ awaiting owner deletion approval
+    next_fix: Owner approves "yes delete"
+  - id: PHASE_1_LIVE_OWNER_BLOCKED
+    severity: gate_5_blocker
+    summary: nurdscode.com not yet live on myclaw-vps
+    next_fix: Owner runs DEPLOY_TO_MYCLAW_VPS.md sections 2-10
+
+next_required_action:
+  primary: Locate Self-Check Kit (audit.py) so Gate 0 can complete
+  secondary: Run DEPLOY_TO_MYCLAW_VPS.md to clear Gate 1+5 blockers (LIVE deploy)
+  tertiary: Begin Phase 1.5 cleanup (no behavior change refactor) so Phase 2 V.I.B.E. extraction is not blocked by mega-router/mega-storage coupling

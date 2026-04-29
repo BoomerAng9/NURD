@@ -2,23 +2,62 @@
 
 This file pins the operating doctrine, repo identity, target architecture, and known hazards for any session working in `~/foai/nurdscode/`.
 
+## ⚠️ READ FIRST — vNext directive supersedes the Phase 1 architecture below
+
+**As of 2026-04-29**, owner shipped `nurdscode-vnext-directive-package.zip` redefining the architectural target. The directive lives in-repo at:
+
+- `docs/agents/Coding-Agent-Execution-Brief.md` — operating brief (READ THIS BEFORE EVERY SESSION)
+- `docs/architecture/NURDSCODE-vNext-Architecture.md` — vNext stack canon
+- `docs/agents/AIMS-Spinner-Stepper-Operating-Model.md` — A.I.M.S. governs · Spinner routes · Stepper automates
+- `docs/warehouse/Universal-Ecosystem-Tool-Warehouse-v6.0.md` — owner-neutral tool registry (24 shelves)
+- `docs/bridge/OpenKlass-AI-Bridge-Spec-v1.0.md` — OK.FOAI.cloud bridge API
+- `docs/ux/AIMS-Carrier-Interface-Spec-v1.0.md` — radio/pager-inspired UI canon
+- `docs/ship/NURDSCODE-Ship-Gate-Map.md` — current evidence-backed gate state
+- `docs/ship/Self-Check-Run-Directive.md` — Gate 0 enforcement
+- `docs/runbooks/First-Implementation-Runbook.md` — execution path
+
+**Key vNext stack shifts vs the Phase 1 substrate below:**
+
+| Layer | Phase 1 (current, deployed) | vNext (target) |
+|---|---|---|
+| Web | React + Vite + Wouter (single Express container) | Next.js or React + dashboards |
+| Mobile | none | React Native + Expo + EAS |
+| Auth | Passport.js (Google/GitHub/Facebook/Microsoft + scrypt local) | Firebase Auth first; Better Auth later if self-host needed |
+| AI | Direct OpenAI / Anthropic / GROQ / askcodi SDKs | Vertex AI + OpenRouter |
+| Routing | Hardcoded Express routes | **Spinner** (intent classification + routing) |
+| Automation | None | **Stepper** (recipe execution) |
+| Tool selection | None | **Tool Selector** + Tool Warehouse v6.0 governance |
+| Sandbox | None | Daytona, OpenSandbox, or isolated Cloud Run Jobs |
+| Storage | Local volume (Multer) | GCS or Firebase Storage |
+| Bridge | Phase 3 design only | OpenKlass AI bridge endpoint (`POST /api/bridge/openklass/ingest`) |
+| Carrier UI | Generic SPA | A.I.M.S. Carrier Interface (Flip / Pager / Swarm / Builder / Tool House modes) |
+
+**Non-negotiable rule from the directive:** No new feature work begins until the vNext docs package is in the repo (✅ done 2026-04-29) AND the Self-Check Kit has run OR a truthful blocker has been recorded (✅ blocker recorded — kit owner-side).
+
+The Phase 1 substrate documented below is the **deployed reality** (single container at `nurdscode.com` on myclaw-vps). vNext is the **target direction**. Phase 1 ships, then Phase 1.5 modularizes, then Phase 2/3/vNext layers on. See the directive docs for the full vNext path.
+
+---
+
 ## Identity
 
 - **Active GitHub repo:** `BoomerAng9/NURD` — clone present at this path
 - **ABANDONED — DO NOT TOUCH:** `ACHVMR/Nurds_Code_Dot_Com` — was the Cloudflare-stack attempt, walked away from 2026-04-28. Local relic at `~/temp_nurds_code` is dead weight.
-- **Product:** NURD Summer Initiative — youth tech-education platform by ACHIEVEMOR
+- **Product:** Build control plane for the FOAI ecosystem (per vNext directive). Carries V.I.B.E. (Vibrant Imagination Build Environment) as the user-side coding lane and bridges to OpenKlass AI for the learning-platform lane. The "NURD Summer Initiative youth-education" framing was the prior product positioning; the vNext directive expands NURDSCODE into the ecosystem build control plane.
 - **Public domain:** `nurdscode.com`
-- **Currently:** offline. Last deployed on Replit. Last push 2025-09-15.
+- **Currently:** offline. Phase 1 substrate proven LOCAL; LIVE deploy owner-blocked. Last deployed on Replit (now stripped). Last push 2025-09-15 before this work.
 
 ## Operating doctrine (load order)
 
-This project operates under three layered docs. All three live in iCloud:
+This project operates under four layered docs:
 
-1. `C:\Users\rishj\iCloudDrive\ACHIEVEMOR_\Projects_\The Deploy Platform_\Claude Code\A.I.M.S. UNIFIED SKILL.md` — global doctrine (Teleological Anchor, compute field, brain function, state assessment, Hard Halt / Calculated Bet)
-2. `…\A.I.M.S. UNIFIED SKILL COMPANION.md` — Build Control Pack + Evidence-Based Shipping Protocol (9-section BCP, 8 ship gates, "Done" rule, Build Session Receipt format)
-3. `…\NURDSCODE REVISION.md` — original product direction. **Note:** the infra recommendations (Cloudflare Workers / D1 / R2 / Pages) are **obsolete** — owner walked away from that stack. The methodology (BCP, vertical slice, evidence-based shipping, owned platform with security gates) still applies.
+1. **`docs/agents/Coding-Agent-Execution-Brief.md`** — in-repo, mandatory first read. The vNext operating brief.
+2. **`C:\Users\rishj\iCloudDrive\ACHIEVEMOR_\Projects_\The Deploy Platform_\Claude Code\A.I.M.S. UNIFIED SKILL.md`** — global doctrine (Teleological Anchor, compute field, brain function, state assessment, Hard Halt / Calculated Bet)
+3. **`…\A.I.M.S. UNIFIED SKILL COMPANION.md`** — Build Control Pack + Evidence-Based Shipping Protocol (9-section BCP, 8 ship gates, "Done" rule, Build Session Receipt format)
+4. **`…\NURDSCODE REVISION.md`** — earlier product direction. **Note:** the infra recommendations (Cloudflare Workers / D1 / R2 / Pages) are **obsolete** — walked away from that stack on 2026-04-28. Methodology (BCP, vertical slice, evidence-based shipping) still applies.
 
-The Build Control Pack lives at `docs/BUILD_CONTROL_PACK.md`.
+The Build Control Pack lives at `docs/BUILD_CONTROL_PACK.md` (Phase 1 detail) AND is referenced by the vNext directive at `docs/agents/Coding-Agent-Execution-Brief.md`.
+
+**Self-Check + Ship Gate state:** `docs/ship/NURDSCODE-Ship-Gate-Map.md`. Most recent receipts in `docs/ship/receipts/` (vNext path) and `docs/SHIP_RECEIPTS/` (Phase 1 path; consolidate later).
 
 ## Target architecture (Phase 1)
 
