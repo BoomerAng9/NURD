@@ -22,10 +22,12 @@ export default function Home() {
               NURD by ACHIEVEMOR &middot; Made in Pooler.
             </p>
             <h1 className="font-sans font-semibold tracking-tight text-[clamp(40px,7vw,80px)] leading-[1.05] text-foreground">
-              Naturally Unstoppable<br />
-              Resourceful Dreamers.
+              NURDSCODE.
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-prose leading-relaxed">
+            <p className="text-2xl md:text-3xl text-foreground/90 font-light leading-tight max-w-prose">
+              An FOAI Space for Modern Dreamers.
+            </p>
+            <p className="text-base md:text-lg text-muted-foreground max-w-prose leading-relaxed">
               Build platform from Pooler, GA. AI-paired coding through V.I.B.E., peer skill exchange,
               and cohort programs for youth. A vertical of the FOAI ecosystem.
             </p>
