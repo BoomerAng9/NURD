@@ -1,66 +1,86 @@
 import { Link } from "wouter";
-import nurdSkateboardImg from "@/assets/nurd-skateboard.png";
+import { motion } from "framer-motion";
 import madeInPoolerImg from "@/assets/made-in-pooler.png";
+import nurdCoastalHeroImg from "@/assets/nurd-coastal-hero.png";
 
 /**
- * NURD by ACHIEVEMOR — Home page.
+ * NURD CODE — Home page.
  *
- * FOAI vertical, Coastal-Brewing-aligned. Same Pooler discipline, distinct
- * skateboard motif. No glass, no gradient text, no fake animated counters.
- * Operator-grade voice: V.I.B.E. is a serious build environment for builders;
- * NURD Summer Initiative + ACHIEVERS Program are the youth verticals (8-18)
- * inside the broader platform.
+ * FOAI vertical. Hero adapts the kokonut-style two-column layout (owner-supplied
+ * pattern 2026-04-29): image right, content left with hover-lift pillar list,
+ * H1 + section heading + body. Owner-supplied hero image (NURD x Coastal scene
+ * with Pooler palms + lowcountry storks) anchors the right column.
+ *
+ * Below the hero: "What is a NURD?" / "Is that you?" / Footer with
+ * "Powered by: A.I.M.S."
  */
 export default function Home() {
+  const pillars = [
+    { label: "V.I.B.E.", href: "/access-ai" },
+    { label: "Code Playground", href: "/code-playground" },
+    { label: "Skill Marketplace", href: "/skill-marketplace" },
+    { label: "ACHIEVERS Program", href: "/achievers" },
+    { label: "NURD Summer Initiative", href: "/summer-initiative" },
+    { label: "Subscriptions", href: "/subscription-plans" },
+  ];
+
   return (
     <div className="bg-background text-foreground">
       {/* ============== HERO ============== */}
-      <section className="container py-16 md:py-24 lg:py-32">
-        <div className="grid gap-12 md:gap-16 md:grid-cols-12 items-center">
-          <div className="md:col-span-7 space-y-6">
-            <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground">
-              Made in Pooler.
-            </p>
-            <h1 className="font-sans font-semibold tracking-tight text-[clamp(40px,7vw,80px)] leading-[1.05] text-foreground">
-              NURDS CODE.
-            </h1>
-            <p className="text-2xl md:text-3xl text-foreground/90 font-light leading-tight max-w-prose">
-              An FOAI Space for Modern Dreamers.
-            </p>
-            <p className="text-base md:text-lg text-muted-foreground max-w-prose leading-relaxed">
-              Build the world you want to live in.
-            </p>
-            <div className="flex flex-wrap gap-3 pt-2">
-              <Link
-                href="/access-ai"
-                className="inline-flex items-center gap-2 px-5 py-3 bg-foreground text-background border border-foreground font-sans text-sm font-medium hover:bg-background hover:text-foreground transition-colors vibe-surface"
-              >
-                Open V.I.B.E.
-              </Link>
-              <Link
-                href="/auth"
-                className="inline-flex items-center gap-2 px-5 py-3 border border-border bg-transparent text-foreground font-sans text-sm font-medium hover:border-foreground transition-colors"
-              >
-                Sign in / Register
-              </Link>
-              <Link
-                href="/achievers"
-                className="inline-flex items-center gap-2 px-5 py-3 border border-border bg-transparent text-foreground font-sans text-sm font-medium hover:border-foreground transition-colors achievers-surface"
-              >
-                ACHIEVERS Program
-                <span className="font-mono text-[10px] uppercase tracking-wordmark text-muted-foreground">
-                  ages 8-18
-                </span>
-              </Link>
+      <section>
+        <div className="container py-12 md:py-24">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 relative overflow-x-hidden">
+            {/* Right column: owner-supplied hero image */}
+            <div className="md:order-2 relative">
+              <div className="absolute -z-10 w-72 h-72 rounded-full bg-foreground/5 blur-3xl opacity-60 -top-10 -left-10"></div>
+              <img
+                src={nurdCoastalHeroImg}
+                alt="NURD CODE — Made in Pooler, lowcountry scene"
+                className="rounded-2xl shadow-2xl w-full object-cover"
+              />
             </div>
-          </div>
 
-          <div className="md:col-span-5">
-            <img
-              src={nurdSkateboardImg}
-              alt="NURD skateboard — Made in Pooler, GA"
-              className="w-full max-w-md mx-auto"
-            />
+            {/* Left column: wordmark + pillar list + tagline */}
+            <div className="md:order-1 flex flex-col justify-between">
+              <div className="flex flex-col h-full justify-between gap-10 md:gap-0">
+                <div>
+                  <p className="font-mono uppercase tracking-wordmark text-[10px] text-muted-foreground mb-6">
+                    Made in Pooler.
+                  </p>
+                  <h1 className="text-6xl md:text-7xl font-bold text-foreground leading-[1.05] tracking-tighter">
+                    NURDS CODE.
+                  </h1>
+                </div>
+
+                <ul className="space-y-2 tracking-tighter text-lg text-foreground/90 mt-8 md:mt-0">
+                  {pillars.map((pillar, index) => (
+                    <motion.li
+                      key={pillar.label}
+                      initial={{ opacity: 0.8 }}
+                      whileHover={{
+                        opacity: 1,
+                        y: -3,
+                        transition: { duration: 0.3, ease: "easeOut" },
+                      }}
+                      transition={{ delay: index * 0.08 }}
+                    >
+                      <Link href={pillar.href} className="cursor-pointer hover:underline underline-offset-4">
+                        {pillar.label}
+                      </Link>
+                    </motion.li>
+                  ))}
+                </ul>
+
+                <div className="mt-8 md:mt-0">
+                  <h2 className="text-2xl md:text-3xl font-medium text-foreground">
+                    An FOAI Space for Modern Dreamers.
+                  </h2>
+                  <p className="text-lg text-foreground/95 max-w-md pt-4 tracking-tight">
+                    Build the world you want to live in.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
