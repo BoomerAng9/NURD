@@ -100,3 +100,8 @@ uploads/*
 # Cache directories
 .cache/
 .upm/
+
+# Explainer-video staging (large media, secrets)
+/_explainer-staging/
+/_tailwind-pages/
+/scripts/explainers/.env

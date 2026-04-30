@@ -29,6 +29,7 @@ import ProfileSettings from "@/pages/ProfileSettings";
 import JoinOurTeam from "@/pages/Join-Our-Team";
 import Cohorts from "@/pages/Cohorts";
 import AuthPage from "@/pages/auth-page";
+import Auth from "@/pages/Auth";
 import DiscordConnect from "@/pages/DiscordConnect";
 import AvatarCreator from "@/pages/AvatarCreator";
 import Achievers from "@/pages/Achievers";
@@ -118,7 +119,8 @@ const AppContent = () => {
             <Route path="/cohorts" component={Cohorts} />
             <Route path="/discord" component={DiscordConnect} />
             <Route path="/avatar" component={AvatarCreator} />
-            <Route path="/auth" component={AuthPage} />
+            <Route path="/auth" component={Auth} />
+            <Route path="/auth/legacy" component={AuthPage} />
             <Route path="/achievers" component={Achievers} />
             <Route path="/access-ai" component={AccessAI} />
             <Route path="/code-tools" component={CodeTools} />
