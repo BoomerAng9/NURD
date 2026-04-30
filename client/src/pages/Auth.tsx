@@ -209,14 +209,14 @@ export default function Auth() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <a
-                    href="/api/auth/github"
+                    href="/auth/github"
                     className="bg-secondary border border-border rounded-lg py-2.5 flex items-center justify-center gap-2 hover:bg-muted transition-colors"
                   >
                     <span className="material-symbols-outlined text-[18px]">code</span>
                     <span className="font-mono uppercase tracking-wordmark text-[11px]">GitHub</span>
                   </a>
                   <a
-                    href="/api/auth/google"
+                    href="/auth/google"
                     className="bg-white text-black border border-border rounded-lg py-2.5 flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors"
                   >
                     <span className="material-symbols-outlined text-[18px]">g_translate</span>
