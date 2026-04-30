@@ -1,23 +1,36 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { chatCompletion, type LiteLLMMessage } from "@/lib/litellm";
 
 /**
  * /chat — ACHEEVY chat surface, IDE-shell layout per IMG_1865 mockup
  * (deeper-build dark canon). Sometimes called the Carrier Interface
  * Builder Mode in the vNext docs.
  *
- * Phase 1 scope: visual layout + local-state chat input. The thread
- * is seeded with a single welcome message from ACHEEVY; user sends
- * append to local state but DO NOT hit a real backend yet — that's
- * Phase 2 wiring (POST /api/chat + voice relay reuse from
- * ~/foai/voice_relay/ at wss://voice.foai.cloud).
+ * Stage A wiring (FOAI vNext canon):
+ *   - Submit hits the LiteLLM proxy (`@/lib/litellm`), the canonical model
+ *     gateway per `reference_litellm_in_front_of_openrouter_canon.md`. App
+ *     never calls model providers direct.
+ *   - Default model: `kimi-k2-6` (production alias). Owner-tunable.
+ *   - Firebase ID token (foai-aims project) attached when the user is
+ *     signed in — proxy gates billing + rate limiting on that.
+ *   - Customer copy: ACHEEVY persona only, NEVER name the underlying model.
  *
  * Phase 2 (deferred):
- *   - Real /api/chat round trip
- *   - Voice mic capture via existing Gemini Live relay
- *   - File-tree wired to project state
- *   - Right-rail metadata wired to live session
+ *   - Spinner intent classification ahead of LiteLLM (Stepper recipe routing)
+ *   - Voice mic capture via existing Gemini Live relay (wss://voice.foai.cloud)
+ *   - File-tree wired to project / Workspace state
+ *   - Right-rail metadata wired to live session telemetry
  */
+
+const ACHEEVY_SYSTEM_PROMPT =
+  "You are ACHEEVY, the digital twin and primary orchestrator inside the FOAI " +
+  "(The Future of AI) ecosystem on NurdsCode. You speak directly, with quiet " +
+  "confidence. You help builders go from idea to working code. You never name " +
+  "the underlying language model, provider, or internal tools you may be using; " +
+  "you are ACHEEVY. Keep responses tight unless the user asks for depth.";
 
 type ChatMessage = {
   id: string;
@@ -38,27 +51,70 @@ const WELCOME_MESSAGE: ChatMessage = {
 export default function Chat() {
   const [input, setInput] = useState("");
   const [thread, setThread] = useState<ChatMessage[]>([WELCOME_MESSAGE]);
+  const [isResponding, setIsResponding] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  function nowStamp(): string {
+    return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const trimmed = input.trim();
-    if (!trimmed) return;
+    if (!trimmed || isResponding) return;
 
     const userMsg: ChatMessage = {
       id: `u-${Date.now()}`,
       role: "user",
       text: trimmed,
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      timestamp: nowStamp(),
     };
     setThread((prev) => [...prev, userMsg]);
     setInput("");
-    // TODO Phase 2: wire to /api/chat with voice-relay handoff
-    // eslint-disable-next-line no-console
-    console.log("Phase 2 wires to /api/chat", { message: trimmed });
+    setIsResponding(true);
+
+    try {
+      // Build the LiteLLM message list: system prompt + the existing thread
+      // (mapped to OpenAI roles) + the new user message.
+      const history: LiteLLMMessage[] = [{ role: "system", content: ACHEEVY_SYSTEM_PROMPT }];
+      for (const m of thread) {
+        history.push({
+          role: m.role === "acheevy" ? "assistant" : "user",
+          content: m.text,
+        });
+      }
+      history.push({ role: "user", content: trimmed });
+
+      // Attach Firebase ID token if the user is signed in (foai-aims project).
+      // The LiteLLM proxy uses it for billing + rate limiting attribution.
+      const idToken = auth.currentUser ? await auth.currentUser.getIdToken() : undefined;
+
+      const { text } = await chatCompletion(history, { idToken });
+      const acheevyMsg: ChatMessage = {
+        id: `a-${Date.now()}`,
+        role: "acheevy",
+        text: text.trim() || "(no response)",
+        timestamp: nowStamp(),
+      };
+      setThread((prev) => [...prev, acheevyMsg]);
+    } catch (err) {
+      const errorMsg: ChatMessage = {
+        id: `err-${Date.now()}`,
+        role: "acheevy",
+        text:
+          "I hit a snag connecting to the build runtime. " +
+          (err instanceof Error ? err.message : "Try again in a moment.") +
+          " — ACHEEVY",
+        timestamp: nowStamp(),
+      };
+      setThread((prev) => [...prev, errorMsg]);
+    } finally {
+      setIsResponding(false);
+    }
   }
+
+  // Suppress unused-import warning if onAuthStateChanged isn't called above.
+  // (Reserved for Phase 2 — live auth-state listener for session telemetry.)
+  void onAuthStateChanged;
 
   return (
     <div
