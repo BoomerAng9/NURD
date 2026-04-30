@@ -62,7 +62,7 @@ Rule: UNVERIFIED is not PASS.
 | 1 | Orchestration & Agent Core | Agent frameworks, multi-agent systems, planning engines |
 | 2 | Router / Tool Selection | Spinner, tool selector, stack selector, policy routing |
 | 3 | Automation Recipes | Stepper recipes, workflow automation, build scripts |
-| 4 | Sandbox & Runtime Isolation | Daytona, Modal, OpenSandbox-style execution, containers |
+| 4 | Sandbox & Runtime Isolation | Claude managed agents (Anthropic Claude Agent SDK), Cloud Run Jobs, isolated containers |
 | 5 | Code Generation & Coding Agents | Claude Code, Gemini CLI, Codex, Goose, Aider, Cursor, OpenCode-style tools |
 | 6 | App Builders & Vibe Builders | VibeCode-style builders, Bolt, v0, Lovable, Replit, mobile/web builders |
 | 7 | Web Frameworks | Next.js, React, Vite, Remix, Astro, SvelteKit |

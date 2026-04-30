@@ -39,7 +39,7 @@ Use this vNext stack direction:
 - ORM: Prisma or Drizzle
 - AI: Vertex AI + OpenRouter
 - Agent runtime: Cloud Run
-- Sandbox: Daytona, OpenSandbox-style runtime, or isolated Cloud Run Jobs
+- Sandbox: Claude managed agents (Anthropic Claude Agent SDK), or isolated Cloud Run Jobs
 - Tool governance: Universal Ecosystem Tool Warehouse v6.0
 - Routing: Spinner
 - Automation: Stepper

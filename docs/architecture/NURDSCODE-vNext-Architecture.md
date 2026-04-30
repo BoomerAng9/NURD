@@ -33,7 +33,7 @@ Prompt -> Mission Anchor -> Route -> Tool Match -> Sandbox -> Build -> Verify ->
 | Storage | Google Cloud Storage or Firebase Storage |
 | AI model access | Vertex AI + OpenRouter |
 | Agent runtime | Cloud Run |
-| Sandbox | Daytona, OpenSandbox-style runtime, or isolated Cloud Run Jobs |
+| Sandbox | Claude managed agents (Anthropic Claude Agent SDK), or isolated Cloud Run Jobs |
 | Automation | Stepper recipes + GitHub Actions + Cloud Run Jobs |
 | Tool governance | Universal Ecosystem Tool Warehouse v6.0 |
 | Routing | Spinner / Router |

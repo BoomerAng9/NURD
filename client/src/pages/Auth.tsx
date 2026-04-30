@@ -1,14 +1,45 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signInWithPopup,
+} from "firebase/auth";
+import { auth, googleProvider, githubProvider, isFirebaseConfigured } from "@/lib/firebase";
+
+/** Translate Firebase Auth error codes into customer-readable copy. */
+function friendlyAuthError(err: unknown): string {
+  const code = (err && typeof err === "object" && "code" in err && typeof err.code === "string")
+    ? err.code
+    : "";
+  switch (code) {
+    case "auth/invalid-email": return "That email doesn't look right.";
+    case "auth/user-not-found":
+    case "auth/wrong-password":
+    case "auth/invalid-credential": return "Wrong email or password.";
+    case "auth/email-already-in-use": return "That email is already registered. Try signing in.";
+    case "auth/weak-password": return "Password too weak — use at least 6 characters.";
+    case "auth/popup-closed-by-user": return "Sign-in popup closed before completion.";
+    case "auth/popup-blocked": return "Popup blocked. Allow popups and try again.";
+    case "auth/network-request-failed": return "Network error. Check your connection.";
+    case "auth/too-many-requests": return "Too many attempts. Try again in a minute.";
+    default:
+      return err instanceof Error ? err.message : "Try again.";
+  }
+}
 
 /**
  * /auth — deeper-build canon, derived from owner mockup IMG_1870.
  * 3-column layout: Login + 3-step Registration + Chat with ACHEEVY assist.
- * Wires to existing backend: POST /api/login, POST /api/register, OAuth via
- * GET /api/auth/{google,github,facebook,microsoft}.
  *
- * Phase 1 scope: visual + auth/register form submission to existing endpoints.
+ * Wires to FOAI vNext stack — Firebase Auth in the foai-aims project (per
+ * `reference_nurdscode_in_foai_aims_firebase_project.md`). Email + password
+ * via signInWithEmailAndPassword / createUserWithEmailAndPassword; OAuth
+ * via signInWithPopup with Google + GitHub providers configured at the
+ * foai-aims project level.
+ *
  * Phase 2 (deferred): live ACHEEVY chat thread + voice mic capture.
  */
 export default function Auth() {
@@ -30,27 +61,31 @@ export default function Auth() {
   const [regPassConfirm, setRegPassConfirm] = useState("");
   const [submittingReg, setSubmittingReg] = useState(false);
 
+  function ensureFirebase(): boolean {
+    if (!isFirebaseConfigured()) {
+      toast({
+        title: "Auth not configured",
+        description: "Firebase env vars missing. Contact ops.",
+        variant: "destructive",
+      });
+      return false;
+    }
+    return true;
+  }
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     if (!loginUser || !loginPass) return;
+    if (!ensureFirebase()) return;
     setSubmittingLogin(true);
     try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ username: loginUser, password: loginPass }),
-      });
-      if (!res.ok) {
-        const t = await res.text().catch(() => "");
-        throw new Error(t || `Sign-in failed (${res.status})`);
-      }
+      await signInWithEmailAndPassword(auth, loginUser, loginPass);
       toast({ title: "Welcome back, Nurd.", description: "Routing you to your dashboard." });
       navigate("/dashboard");
     } catch (err) {
       toast({
         title: "Sign-in failed",
-        description: err instanceof Error ? err.message : "Try again.",
+        description: friendlyAuthError(err),
         variant: "destructive",
       });
     } finally {
@@ -65,33 +100,39 @@ export default function Auth() {
       toast({ title: "Passwords don't match.", variant: "destructive" });
       return;
     }
+    if (!ensureFirebase()) return;
     setSubmittingReg(true);
     try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          username: regEmail,
-          email: regEmail,
-          password: regPass,
-          fullName: regName,
-        }),
-      });
-      if (!res.ok) {
-        const t = await res.text().catch(() => "");
-        throw new Error(t || `Sign-up failed (${res.status})`);
+      const cred = await createUserWithEmailAndPassword(auth, regEmail, regPass);
+      if (cred.user && regName) {
+        await updateProfile(cred.user, { displayName: regName });
       }
       toast({ title: "Welcome to the Tribe.", description: "Account created." });
       navigate("/dashboard");
     } catch (err) {
       toast({
         title: "Sign-up failed",
-        description: err instanceof Error ? err.message : "Try again.",
+        description: friendlyAuthError(err),
         variant: "destructive",
       });
     } finally {
       setSubmittingReg(false);
+    }
+  }
+
+  async function handleOAuth(provider: "google" | "github") {
+    if (!ensureFirebase()) return;
+    try {
+      const p = provider === "google" ? googleProvider : githubProvider;
+      await signInWithPopup(auth, p);
+      toast({ title: "Welcome.", description: "Routing you to your dashboard." });
+      navigate("/dashboard");
+    } catch (err) {
+      toast({
+        title: `${provider === "google" ? "Google" : "GitHub"} sign-in failed`,
+        description: friendlyAuthError(err),
+        variant: "destructive",
+      });
     }
   }
 
@@ -208,20 +249,22 @@ export default function Auth() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <a
-                    href="/auth/github"
+                  <button
+                    type="button"
+                    onClick={() => handleOAuth("github")}
                     className="bg-secondary border border-border rounded-lg py-2.5 flex items-center justify-center gap-2 hover:bg-muted transition-colors"
                   >
                     <span className="material-symbols-outlined text-[18px]">code</span>
                     <span className="font-mono uppercase tracking-wordmark text-[11px]">GitHub</span>
-                  </a>
-                  <a
-                    href="/auth/google"
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleOAuth("google")}
                     className="bg-white text-black border border-border rounded-lg py-2.5 flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors"
                   >
                     <span className="material-symbols-outlined text-[18px]">g_translate</span>
                     <span className="font-mono uppercase tracking-wordmark text-[11px]">Google</span>
-                  </a>
+                  </button>
                 </div>
 
                 <button
