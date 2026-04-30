@@ -30,6 +30,8 @@ import JoinOurTeam from "@/pages/Join-Our-Team";
 import Cohorts from "@/pages/Cohorts";
 import AuthPage from "@/pages/auth-page";
 import Auth from "@/pages/Auth";
+import Chat from "@/pages/Chat";
+import Build from "@/pages/Build";
 import DiscordConnect from "@/pages/DiscordConnect";
 import AvatarCreator from "@/pages/AvatarCreator";
 import Achievers from "@/pages/Achievers";
@@ -107,6 +109,8 @@ const AppContent = () => {
             <Route path="/tribe" component={Tribe} />
             <Route path="/community" component={Tribe} />
             <Route path="/services" component={Services} />
+            <Route path="/chat" component={Chat} />
+            <Route path="/build" component={Build} />
             <Route path="/dreamers" component={Dreamers} />
             <Route path="/subscription-plans" component={SubscriptionPlans} />
             <Route path="/advanced-checkout" component={AdvancedCheckout} />
