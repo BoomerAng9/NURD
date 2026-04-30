@@ -57,6 +57,10 @@ import AdvancedCheckout from "@/pages/AdvancedCheckout";
 import Pricing from "@/pages/Pricing";
 import Tribe from "@/pages/Tribe";
 import Services from "@/pages/Services";
+import Learn from "@/pages/Learn";
+import Projects from "@/pages/Projects";
+import Think from "@/pages/Think";
+import Agents from "@/pages/Agents";
 import Dreamers from "@/pages/Dreamers";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -104,13 +108,18 @@ const AppContent = () => {
             <Route path="/partners/create" component={AICourseCreator} />
             <Route path="/partners/:id" component={ModuleDetail} />
             <Route path="/learning" component={Learning} />
-            <Route path="/learn" component={Learning} />
+            <Route path="/learn" component={Learn} />
+            <Route path="/learn/legacy" component={Learning} />
             <Route path="/pricing" component={Pricing} />
             <Route path="/tribe" component={Tribe} />
             <Route path="/community" component={Tribe} />
             <Route path="/services" component={Services} />
             <Route path="/chat" component={Chat} />
             <Route path="/build" component={Build} />
+            <Route path="/projects" component={Projects} />
+            <Route path="/think" component={Think} />
+            <Route path="/agents" component={Agents} />
+            <Route path="/account" component={Account} />
             <Route path="/dreamers" component={Dreamers} />
             <Route path="/subscription-plans" component={SubscriptionPlans} />
             <Route path="/advanced-checkout" component={AdvancedCheckout} />
